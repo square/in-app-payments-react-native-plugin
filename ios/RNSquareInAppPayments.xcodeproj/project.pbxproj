@@ -1,0 +1,513 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		110233CD21F10C15008F6C3D /* RNSQIPCardEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 110233CB21F10C15008F6C3D /* RNSQIPCardEntry.m */; };
+		110233D821F12E38008F6C3D /* SQIPCardDetails+RNSQIPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 110233D221F12E37008F6C3D /* SQIPCardDetails+RNSQIPAdditions.m */; };
+		110233D921F12E38008F6C3D /* SQIPCard+RNSQIPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 110233D321F12E37008F6C3D /* SQIPCard+RNSQIPAdditions.m */; };
+		110233DA21F12E38008F6C3D /* UIColor+RNSQIPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 110233D421F12E37008F6C3D /* UIColor+RNSQIPAdditions.m */; };
+		110233DB21F12E38008F6C3D /* UIFont+RNSQIPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 110233D521F12E37008F6C3D /* UIFont+RNSQIPAdditions.m */; };
+		110233DE21F130FC008F6C3D /* RNSQIPErrorUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 110233DD21F130FB008F6C3D /* RNSQIPErrorUtilities.m */; };
+		110233E121F14851008F6C3D /* RNSQIPApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 110233DF21F14851008F6C3D /* RNSQIPApplePay.m */; };
+		11AC19C8220375D400928799 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11AC19BF220375D400928799 /* Localizable.strings */; };
+		11AC19C92203760400928799 /* RNSquareInAppPayments-Resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 11AC1995220373B100928799 /* RNSquareInAppPayments-Resources.bundle */; };
+		B3E7B58A1CC2AC0600A0062D /* RNSquareInAppPayments.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNSquareInAppPayments.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		11AC199D2203743200928799 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58B511D31A9E6C8500147676 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 11AC1994220373B100928799;
+			remoteInfo = "RNSquareInAppPayments-Resources";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		58B511D91A9E6C8500147676 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		110233CB21F10C15008F6C3D /* RNSQIPCardEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSQIPCardEntry.m; sourceTree = "<group>"; };
+		110233CC21F10C15008F6C3D /* RNSQIPCardEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSQIPCardEntry.h; sourceTree = "<group>"; };
+		110233D021F12E37008F6C3D /* UIColor+RNSQIPAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RNSQIPAdditions.h"; sourceTree = "<group>"; };
+		110233D121F12E37008F6C3D /* SQIPCard+RNSQIPAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SQIPCard+RNSQIPAdditions.h"; sourceTree = "<group>"; };
+		110233D221F12E37008F6C3D /* SQIPCardDetails+RNSQIPAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SQIPCardDetails+RNSQIPAdditions.m"; sourceTree = "<group>"; };
+		110233D321F12E37008F6C3D /* SQIPCard+RNSQIPAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SQIPCard+RNSQIPAdditions.m"; sourceTree = "<group>"; };
+		110233D421F12E37008F6C3D /* UIColor+RNSQIPAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RNSQIPAdditions.m"; sourceTree = "<group>"; };
+		110233D521F12E37008F6C3D /* UIFont+RNSQIPAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+RNSQIPAdditions.m"; sourceTree = "<group>"; };
+		110233D621F12E37008F6C3D /* SQIPCardDetails+RNSQIPAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SQIPCardDetails+RNSQIPAdditions.h"; sourceTree = "<group>"; };
+		110233D721F12E38008F6C3D /* UIFont+RNSQIPAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+RNSQIPAdditions.h"; sourceTree = "<group>"; };
+		110233DC21F130FB008F6C3D /* RNSQIPErrorUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSQIPErrorUtilities.h; sourceTree = "<group>"; };
+		110233DD21F130FB008F6C3D /* RNSQIPErrorUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSQIPErrorUtilities.m; sourceTree = "<group>"; };
+		110233DF21F14851008F6C3D /* RNSQIPApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSQIPApplePay.m; sourceTree = "<group>"; };
+		110233E021F14851008F6C3D /* RNSQIPApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSQIPApplePay.h; sourceTree = "<group>"; };
+		110A11DF21EEA30D00501C1D /* RNSquareInAppPayments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSquareInAppPayments.h; sourceTree = "<group>"; };
+		11AC1995220373B100928799 /* RNSquareInAppPayments-Resources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RNSquareInAppPayments-Resources.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		11AC1997220373B100928799 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		11AC19C1220375D400928799 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		11AC19C2220375D400928799 /* en-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-CA"; path = "en-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		11AC19C3220375D400928799 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		11AC19C4220375D400928799 /* en-AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-AU"; path = "en-AU.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		11AC19C5220375D400928799 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		11AC19C6220375D400928799 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		11AC19D22203789900928799 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		11AC1A172203809C00928799 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		134814201AA4EA6300B7C361 /* libRNSquareInAppPayments.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSquareInAppPayments.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3E7B5891CC2AC0600A0062D /* RNSquareInAppPayments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSquareInAppPayments.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		11AC1992220373B100928799 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58B511D81A9E6C8500147676 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		110233CF21F12DCC008F6C3D /* Converters */ = {
+			isa = PBXGroup;
+			children = (
+				110233D121F12E37008F6C3D /* SQIPCard+RNSQIPAdditions.h */,
+				110233D321F12E37008F6C3D /* SQIPCard+RNSQIPAdditions.m */,
+				110233D621F12E37008F6C3D /* SQIPCardDetails+RNSQIPAdditions.h */,
+				110233D221F12E37008F6C3D /* SQIPCardDetails+RNSQIPAdditions.m */,
+				110233D021F12E37008F6C3D /* UIColor+RNSQIPAdditions.h */,
+				110233D421F12E37008F6C3D /* UIColor+RNSQIPAdditions.m */,
+				110233D721F12E38008F6C3D /* UIFont+RNSQIPAdditions.h */,
+				110233D521F12E37008F6C3D /* UIFont+RNSQIPAdditions.m */,
+			);
+			path = Converters;
+			sourceTree = "<group>";
+		};
+		11AC1996220373B100928799 /* RNSquareInAppPayments-Resources */ = {
+			isa = PBXGroup;
+			children = (
+				11AC19BF220375D400928799 /* Localizable.strings */,
+				11AC1997220373B100928799 /* Info.plist */,
+			);
+			path = "RNSquareInAppPayments-Resources";
+			sourceTree = "<group>";
+		};
+		134814211AA4EA7D00B7C361 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				134814201AA4EA6300B7C361 /* libRNSquareInAppPayments.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		58B511D21A9E6C8500147676 = {
+			isa = PBXGroup;
+			children = (
+				110233CF21F12DCC008F6C3D /* Converters */,
+				110233E021F14851008F6C3D /* RNSQIPApplePay.h */,
+				110233DF21F14851008F6C3D /* RNSQIPApplePay.m */,
+				110233CC21F10C15008F6C3D /* RNSQIPCardEntry.h */,
+				110233CB21F10C15008F6C3D /* RNSQIPCardEntry.m */,
+				110233DC21F130FB008F6C3D /* RNSQIPErrorUtilities.h */,
+				110233DD21F130FB008F6C3D /* RNSQIPErrorUtilities.m */,
+				110A11DF21EEA30D00501C1D /* RNSquareInAppPayments.h */,
+				B3E7B5891CC2AC0600A0062D /* RNSquareInAppPayments.m */,
+				11AC1996220373B100928799 /* RNSquareInAppPayments-Resources */,
+				134814211AA4EA7D00B7C361 /* Products */,
+				11AC1995220373B100928799 /* RNSquareInAppPayments-Resources.bundle */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		11AC1994220373B100928799 /* RNSquareInAppPayments-Resources */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11AC199A220373B100928799 /* Build configuration list for PBXNativeTarget "RNSquareInAppPayments-Resources" */;
+			buildPhases = (
+				11AC1991220373B100928799 /* Sources */,
+				11AC1992220373B100928799 /* Frameworks */,
+				11AC1993220373B100928799 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RNSquareInAppPayments-Resources";
+			productName = "RNSquareInAppPayments-Resources";
+			productReference = 11AC1995220373B100928799 /* RNSquareInAppPayments-Resources.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		58B511DA1A9E6C8500147676 /* RNSquareInAppPayments */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSquareInAppPayments" */;
+			buildPhases = (
+				58B511D71A9E6C8500147676 /* Sources */,
+				58B511D81A9E6C8500147676 /* Frameworks */,
+				58B511D91A9E6C8500147676 /* CopyFiles */,
+				11AC19B22203750400928799 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				11AC199E2203743200928799 /* PBXTargetDependency */,
+			);
+			name = RNSquareInAppPayments;
+			productName = RCTDataManager;
+			productReference = 134814201AA4EA6300B7C361 /* libRNSquareInAppPayments.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		58B511D31A9E6C8500147676 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+					11AC1994220373B100928799 = {
+						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Automatic;
+					};
+					58B511DA1A9E6C8500147676 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSquareInAppPayments" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ja,
+				"fr-CA",
+				es,
+				"en-GB",
+				"en-CA",
+				Base,
+				"en-AU",
+			);
+			mainGroup = 58B511D21A9E6C8500147676;
+			productRefGroup = 58B511D21A9E6C8500147676;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				58B511DA1A9E6C8500147676 /* RNSquareInAppPayments */,
+				11AC1994220373B100928799 /* RNSquareInAppPayments-Resources */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		11AC1993220373B100928799 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11AC19C8220375D400928799 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11AC19B22203750400928799 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11AC19C92203760400928799 /* RNSquareInAppPayments-Resources.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		11AC1991220373B100928799 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58B511D71A9E6C8500147676 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				110233DA21F12E38008F6C3D /* UIColor+RNSQIPAdditions.m in Sources */,
+				110233E121F14851008F6C3D /* RNSQIPApplePay.m in Sources */,
+				110233D921F12E38008F6C3D /* SQIPCard+RNSQIPAdditions.m in Sources */,
+				110233DE21F130FC008F6C3D /* RNSQIPErrorUtilities.m in Sources */,
+				B3E7B58A1CC2AC0600A0062D /* RNSquareInAppPayments.m in Sources */,
+				110233D821F12E38008F6C3D /* SQIPCardDetails+RNSQIPAdditions.m in Sources */,
+				110233DB21F12E38008F6C3D /* UIFont+RNSQIPAdditions.m in Sources */,
+				110233CD21F10C15008F6C3D /* RNSQIPCardEntry.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		11AC199E2203743200928799 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 11AC1994220373B100928799 /* RNSquareInAppPayments-Resources */;
+			targetProxy = 11AC199D2203743200928799 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		11AC19BF220375D400928799 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				11AC19C1220375D400928799 /* en-GB */,
+				11AC19C2220375D400928799 /* en-CA */,
+				11AC19C3220375D400928799 /* Base */,
+				11AC19C4220375D400928799 /* en-AU */,
+				11AC19C5220375D400928799 /* fr-CA */,
+				11AC19C6220375D400928799 /* en */,
+				11AC19D22203789900928799 /* es */,
+				11AC1A172203809C00928799 /* ja */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		11AC1998220373B100928799 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "RNSquareInAppPayments-Resources/Info.plist";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "sqip.RNSquareInAppPayments-Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		11AC1999220373B100928799 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "RNSquareInAppPayments-Resources/Info.plist";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "sqip.RNSquareInAppPayments-Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		58B511ED1A9E6C8500147676 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		58B511EE1A9E6C8500147676 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		58B511F01A9E6C8500147676 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../../../ios/",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../../React/**",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = RNSquareInAppPayments;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		58B511F11A9E6C8500147676 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../../../ios/",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../../React/**",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = RNSquareInAppPayments;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		11AC199A220373B100928799 /* Build configuration list for PBXNativeTarget "RNSquareInAppPayments-Resources" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11AC1998220373B100928799 /* Debug */,
+				11AC1999220373B100928799 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSquareInAppPayments" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58B511ED1A9E6C8500147676 /* Debug */,
+				58B511EE1A9E6C8500147676 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSquareInAppPayments" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58B511F01A9E6C8500147676 /* Debug */,
+				58B511F11A9E6C8500147676 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 58B511D31A9E6C8500147676 /* Project object */;
+}

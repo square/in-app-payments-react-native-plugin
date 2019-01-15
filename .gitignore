@@ -43,4 +43,15 @@ local.properties
 buck-out/
 \.buckd/
 *.keystore
-      
+android/.settings/org.eclipse.buildship.core.prefs
+android/.project
+.vscode/settings.json
+android/.classpath
+android/gradle/wrapper/gradle-wrapper.properties
+android/gradlew
+android/gradlew.bat
+android/gradle/wrapper/gradle-wrapper.jar
+android/bin/
+.clang-format
+.vscode/launch.json
+coverage/

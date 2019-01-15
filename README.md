@@ -1,53 +1,79 @@
+# React Native plugin for In-App Payments SDK
 
-# react-native-in-app-payments-react-native-plugin
+The In-App Payments plugin for Square [In-App Payments SDK] is a wrapper for the native Android and iOS SDKs and 
+supports the following native In-App Payments SDK versions:
 
-## Getting started
+  * iOS: 1.0.1
+  * Android: 1.0.3
 
-`$ npm install react-native-in-app-payments-react-native-plugin --save`
+## Additional documentation
 
-### Mostly automatic installation
+In addition to this README, the following is available in the [React Native plugin GitHub repo]:
 
-`$ react-native link react-native-in-app-payments-react-native-plugin`
+* [Getting started guide]
+* [Enable Apple Pay guide]
+* [Enable Google Pay guide]
+* [Technical reference]
+* [Troubleshooting guide]
+* [`docs`] - Root directory for all documentation.
+* [`example`] - Root directory of the React Native sample app (with walkthrough).
+* [Getting started with the example app]
 
-### Manual installation
+## Build requirements
 
+### Android
 
-#### iOS
+* Android minSdkVersion is API 21 (Lollipop, 5.0) or higher. 
+* Android Target SDK version: API 27 (Oreo, 8.1).
+* Android Gradle Plugin: 3.0.0 or greater.
 
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-in-app-payments-react-native-plugin` and add `RNInAppPaymentsReactNativePlugin.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libRNInAppPaymentsReactNativePlugin.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
+### iOS
 
-#### Android
+* Xcode version: 9.1 or greater.
+* iOS Base SDK: 11.0 or greater.
+* Deployment target: iOS 11.0 or greater.
 
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-  - Add `import com.reactlibrary.RNInAppPaymentsReactNativePluginPackage;` to the imports at the top of the file
-  - Add `new RNInAppPaymentsReactNativePluginPackage()` to the list returned by the `getPackages()` method
-2. Append the following lines to `android/settings.gradle`:
-  	```
-  	include ':react-native-in-app-payments-react-native-plugin'
-  	project(':react-native-in-app-payments-react-native-plugin').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-in-app-payments-react-native-plugin/android')
-  	```
-3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```
-      compile project(':react-native-in-app-payments-react-native-plugin')
-  	```
+## In-App Payments SDK requirements and limitations
 
-#### Windows
-[Read it! :D](https://github.com/ReactWindows/react-native)
+* In-App Payments SDK cannot issue refunds. Refunds can be issued programmatically using
+  the Transactions API or manually in the [Square Dashboard].
+* In-App Payments SDK is not supported in the Square sandbox. See [Testing Mobile Apps]
+  for testing recommendations.
 
-1. In Visual Studio add the `RNInAppPaymentsReactNativePlugin.sln` in `node_modules/react-native-in-app-payments-react-native-plugin/windows/RNInAppPaymentsReactNativePlugin.sln` folder to their solution, reference from their app.
-2. Open up your `MainPage.cs` app
-  - Add `using In.App.Payments.React.Native.Plugin.RNInAppPaymentsReactNativePlugin;` to the usings at the top of the file
-  - Add `new RNInAppPaymentsReactNativePluginPackage()` to the `List<IReactPackage>` returned by the `Packages` method
+## Sample applications
+* **[Quick start React Native app]:** You can learn how the In-App-Payments React Native plugin is used by [getting started with the example app], a quick-start React Native app that lets you take a payment after completing 6 setup steps. 
+* **Quick start backend app:** The [In-App Payments Server Quickstart](https://github.com/square/in-app-payments-server-quickstart) 
+takes the nonce created by the React Native app and uses it to create a payment credited to your Square account. Use this backend sample to quickly create a complete payment flow.
 
+## License
 
-## Usage
-```javascript
-import RNInAppPaymentsReactNativePlugin from 'react-native-in-app-payments-react-native-plugin';
-
-// TODO: What to do with the module?
-RNInAppPaymentsReactNativePlugin;
 ```
-  
+Copyright 2019 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+[//]: # "Link anchor definitions"
+[In-App Payments SDK]: https://docs.connect.squareup.com/payments/inapppayments/intro
+[Square Dashboard]: https://squareup.com/dashboard/
+[Testing Mobile Apps]: https://docs.connect.squareup.com/testing/mobile
+[`docs`]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/docs
+[`example`]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/example
+[Getting started guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/get-started.md
+[Enable Apple Pay guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/enable-applepay.md
+[Enable Google Pay guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/enable-googlepay.md
+[Technical reference]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/reference.md
+[Troubleshooting guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/troubleshooting.md
+[React Native plugin GitHub repo]: https://github.com/square/in-app-payments-react-native-plugin/tree/master
+[Getting started with the example app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/example/README.md
+[Quick start React Native app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/example
