@@ -110,11 +110,11 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void startCardEntryFlow(final Promise promise) {
+  public void startCardEntryFlow(final Boolean collectPostalCode, final Promise promise) {
     mainLooperHandler.post(new Runnable() {
       @Override
       public void run() {
-        CardEntry.startCardEntryActivity(getCurrentActivity());
+        CardEntry.startCardEntryActivity(Objects.requireNonNull(getCurrentActivity()), collectPostalCode);
         promise.resolve(null);
       }
     });

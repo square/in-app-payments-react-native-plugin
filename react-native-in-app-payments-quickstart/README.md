@@ -1,6 +1,6 @@
 #  React Native Plugin for In-App Payments SDK Quick Start
 
-<img src="https://docs.connect.squareup.com/images/github/in-app-payments-sample-triscreen.png">
+<img src="./in-app-payments-sample-triscreen.png">
 
 
 ## Assumptions and prerequisites
@@ -54,17 +54,15 @@ Change to the quick start sample folder and install the plugin using `yarn`:
 
 ## Step 3: Run the React Native sample app for iOS
 
-**NOTE**: XCode 10+ uses a different build system that may cause compile errors.
-See the [Troubleshooting guide](../docs/troubleshooting.md) if you run into
-problems building the sample app.
-
 Run the React Native project from the `react-native-in-app-payments-quickstart` project folder:
 
-    ```bash
-    cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart
-    react-native run-ios
-    ```
+  ```bash
+  cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart
+  react-native run-ios
+  ```
 
+> **NOTE**: Make sure the folder `/PATH/TO/LOCAL/react-native-in-app-payments-quickstart/node_modules/react-native-square-in-app-payments/node_modules`
+  is empty before you run `run-ios`.
 
 ## Step 4: Run the React Native sample app for Android
 
@@ -82,6 +80,8 @@ Run the React Native project from the `react-native-in-app-payments-quickstart` 
     $ react-native run-android
     ```
 
+> **NOTE**: Make sure the folder `/PATH/TO/LOCAL/react-native-in-app-payments-quickstart/node_modules/react-native-square-in-app-payments/node_modules`
+  is empty before you run `run-android`.
 
 ## Step 5: Use the nonce in a cURL payment command
 Take a payment with the card nonce by executing the cURL command written into the debug output.

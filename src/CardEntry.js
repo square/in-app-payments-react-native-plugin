@@ -40,10 +40,22 @@ cardEntryEmitter.addListener('cardEntryCancel', onNativeCardEntryCanceled);
 cardEntryEmitter.addListener('cardEntryDidObtainCardDetails', onNativeCardEntryDidObtainCardDetails);
 cardEntryEmitter.addListener('cardEntryComplete', onNativeCardEntryComplete);
 
-async function startCardEntryFlow(onCardNonceRequestSuccess, onCardEntryCancel) {
+async function startCardEntryFlow(cardEntryConfig, onCardNonceRequestSuccess, onCardEntryCancel) {
+  let cardEntryInternalConfig = {};
+  if (cardEntryConfig) {
+    Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
+    cardEntryInternalConfig = cardEntryConfig;
+  }
+  if (cardEntryInternalConfig.collectPostalCode != null) {
+    Utilities.verifyBooleanType(cardEntryInternalConfig.collectPostalCode, 'cardEntryConfig.collectPostalCode should be a boolean.');
+  } else {
+    // the default collectPostalCode is true
+    cardEntryInternalConfig.collectPostalCode = true;
+  }
+
   cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   cardEntryCancelCallback = onCardEntryCancel;
-  await RNSQIPCardEntry.startCardEntryFlow();
+  await RNSQIPCardEntry.startCardEntryFlow(cardEntryInternalConfig.collectPostalCode);
 }
 
 async function completeCardEntry(onCardEntryComplete) {

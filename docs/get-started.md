@@ -234,10 +234,14 @@ Add a button and start the card entry in button `onPress` event handler.
     }
 
     /**
-     * An event listner to start card entry flow
+     * An event listener to start card entry flow
      */
     async onStartCardEntry() {
+      const cardEntryConfig = {
+        collectPostalCode: false,
+      };
       await SQIPCardEntry.startCardEntryFlow(
+        cardEntryConfig,
         this.onCardNonceRequestSuccess,
         this.onCardEntryCancel,
       );

@@ -13,7 +13,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-
 import {
   NativeModules, MockEventEmitter,
 } from 'react-native';
@@ -55,7 +54,7 @@ describe('Test CardEntry', () => {
     try {
       const mockCardDetails = { nonce: 'fake_nonce' };
       const onCardNonceRequestSuccess = jest.fn();
-      await SQIPCardEntry.startCardEntryFlow(onCardNonceRequestSuccess);
+      await SQIPCardEntry.startCardEntryFlow(null, onCardNonceRequestSuccess, null);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
       MockEventEmitter.listeners.cardEntryDidObtainCardDetails(mockCardDetails);
       expect(onCardNonceRequestSuccess).toHaveBeenCalledTimes(1);
@@ -70,10 +69,73 @@ describe('Test CardEntry', () => {
     expect.assertions(2);
     try {
       const canceledCallback = jest.fn();
-      await SQIPCardEntry.startCardEntryFlow(null, canceledCallback);
+      await SQIPCardEntry.startCardEntryFlow(null, null, canceledCallback);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
       MockEventEmitter.listeners.cardEntryCancel();
       expect(canceledCallback).toHaveBeenCalledTimes(1);
+      done();
+    } catch (ex) {
+      console.error(ex);
+    }
+  });
+
+  it('startCardEntryFlow works with null config', async (done) => {
+    expect.assertions(3);
+    const spyVerifyObjectType = jest.spyOn(Utilities, 'verifyObjectType').mockImplementation();
+    try {
+      await SQIPCardEntry.startCardEntryFlow(null, null, null);
+      expect(spyVerifyObjectType).not.toHaveBeenCalled();
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(true);
+      done();
+    } catch (ex) {
+      console.error(ex);
+    }
+  });
+
+  it('startCardEntryFlow works with empty config', async (done) => {
+    expect.assertions(3);
+    const spyVerifyObjectType = jest.spyOn(Utilities, 'verifyObjectType').mockImplementation();
+    const cardEntryConfig = {};
+    try {
+      await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
+      expect(spyVerifyObjectType).toHaveBeenCalled();
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(true);
+      done();
+    } catch (ex) {
+      console.error(ex);
+    }
+  });
+
+  it('startCardEntryFlow works with collectPostalCode false config', async (done) => {
+    expect.assertions(3);
+    const spyVerifyBooleanType = jest.spyOn(Utilities, 'verifyBooleanType').mockImplementation();
+    const cardEntryConfig = {
+      collectPostalCode: false,
+    };
+    try {
+      await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
+      expect(spyVerifyBooleanType).toHaveBeenCalled();
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(false);
+      done();
+    } catch (ex) {
+      console.error(ex);
+    }
+  });
+
+  it('startCardEntryFlow works with collectPostalCode null config', async (done) => {
+    expect.assertions(3);
+    const spyVerifyBooleanType = jest.spyOn(Utilities, 'verifyBooleanType').mockImplementation();
+    const cardEntryConfig = {
+      collectPostalCode: null,
+    };
+    try {
+      await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
+      expect(spyVerifyBooleanType).not.toHaveBeenCalled();
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
+      expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(true);
       done();
     } catch (ex) {
       console.error(ex);

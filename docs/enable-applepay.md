@@ -122,7 +122,7 @@ export default class App extends Component {
   }
 
   /**
-   * An event listner to start digital wallet flow
+   * An event listener to start digital wallet flow
    */
   async onStartDigitalWallet() {
     if (Platform.OS === 'ios') {

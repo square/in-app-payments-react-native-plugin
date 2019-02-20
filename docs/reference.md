@@ -80,13 +80,14 @@ await SQIPCore.setSquareApplicationId('APPLICATION_ID');
 ---
 ### startCardEntryFlow
 
-Displays a full-screen card entry view. The method takes two callback parameters which correspond
+Displays a full-screen card entry view. The method takes one configuration object and two call back parameters which correspond
 to the possible results of the request. 
 
-Parameter       | Type                                     | Description
-:-------------- | :--------------------------------------- | :-----------
-onCardNonceRequestSuccess | [cardEntryNonceRequestSuccessCallback](#cardentrynoncerequestsuccesscallback) | Invoked when card entry is completed and the SDK has processed the payment card information.
-onCardEntryCancel | [cardEntryCancelCallback](#cardentrycancelcallback) | Invoked when card entry is canceled.
+Parameter                          | Type                                                                          | Description
+:----------------------------------| :---------------------------------------------------------------------------- | :-----------
+cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Configuration object for card entry behavior, pass `null` for default configuration
+onCardNonceRequestSuccess          | [cardEntryNonceRequestSuccessCallback](#cardentrynoncerequestsuccesscallback) | Invoked when card entry is completed and the SDK has processed the payment card information.
+onCardEntryCancel                  | [cardEntryCancelCallback](#cardentrycancelcallback)                           | Invoked when card entry is canceled.
 
 #### Example usage
 
@@ -96,6 +97,7 @@ import {
 } from 'react-native-square-in-app-payments';
 
 await SQIPCardEntry.startCardEntryFlow(
+  null,
   (cardDetails) => { ... }, // onCardNonceRequestSuccess
   () => { ... }, // onCardEntryCancel
 );
@@ -767,13 +769,15 @@ card            | [Card](#card)   | Non-confidential details about the entered c
 
 Represents the non-confidential details of a card.
 
-Field           | Type              | Description
-:---------------| :---------------- | :-----------------
-brand           | [Brand](#brand)   | The brand (for example, VISA) of the card.
-lastFourDigits  | String            | The last 4 digits of this card's number.
-expirationMonth | int               | The expiration month of the card. Ranges between 1 and 12, with 1 corresponding to January and 12 to December.
-expirationYear  | int               | The four-digit expiration year of the card.
-postalCode      | @nullable String  | The billing postal code associated with the card.
+Field           | Type                         | Description
+:---------------| :--------------------------- | :-----------------
+brand           | [Brand](#brand)              | The brand (for example, VISA) of the card.
+lastFourDigits  | String                       | The last 4 digits of this card's number.
+expirationMonth | int                          | The expiration month of the card. Ranges between 1 and 12, with 1 corresponding to January and 12 to December.
+expirationYear  | int                          | The four-digit expiration year of the card.
+postalCode      | @nullable String             | The billing postal code associated with the card.
+type            | [CardType](#cardtype)        | The type of card (for example, Credit or Debit). <br/>**Note**: This property is experimental and will always return `UNKNOWN`.
+prepaidType     | [CardPrepaidType](#cardprepaidType) | The prepaid type of the credit card (for example, a Prepaid Gift Card). <br/>**Note**: This property is experimental and will always return `UNKNOWN`.
 
 #### Example JSON
 
@@ -784,6 +788,24 @@ postalCode      | @nullable String  | The billing postal code associated with th
   "expirationMonth": 12,
   "expirationYear": 12,
   "postalCode": "98001"
+}
+```
+
+
+---
+### cardEntryConfig 
+
+Represents the Apple Pay configuration.
+
+Field              | Type              | Description
+:----------------- | :---------------- | :-----------------
+collectPostalCode  | Boolean           | Indicates that the customer must enter the postal code associated with their payment card. When false, the postal code field will not be displayed. Defaults to `true`.<br/>**Notes**: A Postal code must be collected for processing payments for Square accounts based in the United States, Canada, and United Kingdom. Disabling postal code collection in those regions will result in all credit card transactions being declined.
+
+#### Example JSON
+
+```json
+{
+  "collectPostalCode": false,
 }
 ```
 
@@ -1001,6 +1023,28 @@ flow.
 * `JCB` - Japan Credit Bureau credit card.
 * `CHINA_UNION_PAY` - China UnionPay credit card.
 * `OTHER_BRAND` - An unexpected card type.
+
+---
+
+
+### CardType
+
+The type of card (for example, Credit or Debit). **Note**: This property is experimental and will always return `UNKNOWN`.
+
+* `DEBIT` - Debit card.
+* `CREDIT` - Credit card.
+* `UNKNOWN` - Unable to determine type of the card.
+
+---
+
+
+### CardPrepaidType
+
+The prepaid type of the credit card (for example, a Prepaid Gift Card). **Note**: This property is experimental and will always return `UNKNOWN`
+
+* `PREPAID` - Prepaid card.
+* `NOT_PREPAID` - Card that is not prepaid.
+* `UNKNOWN` - Unable to determine whether the card is prepaid or not.
 
 ---
 
