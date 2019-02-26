@@ -23,6 +23,8 @@ import sqip.Card;
 
 public final class CardConverter {
   private static final Map<Card.Brand, String> brandStringMap;
+  private static final Map<Card.Type, String> typeStringMap;
+  private static final Map<Card.PrepaidType, String> prepaidTypeStringMap;
 
   static {
     brandStringMap = new LinkedHashMap<>();
@@ -56,6 +58,38 @@ public final class CardConverter {
           throw new RuntimeException("Unexpected brand value: " + brand.name());
       }
     }
+    typeStringMap = new LinkedHashMap<>();
+    for (Card.Type type : Card.Type.values()) {
+      switch(type) {
+        case DEBIT:
+          typeStringMap.put(type, "DEBIT");
+          break;
+        case CREDIT:
+          typeStringMap.put(type, "CREDIT");
+          break;
+        case UNKNOWN:
+          typeStringMap.put(type, "UNKNOWN");
+          break;
+        default:
+          throw new RuntimeException("Unexpected card type value: " + type.name());
+      }
+    }
+    prepaidTypeStringMap = new LinkedHashMap<>();
+    for (Card.PrepaidType prepaidType : Card.PrepaidType.values()) {
+      switch(prepaidType) {
+        case PREPAID:
+          prepaidTypeStringMap.put(prepaidType, "PREPAID");
+          break;
+        case NOT_PREPAID:
+          prepaidTypeStringMap.put(prepaidType, "NOT_PREPAID");
+          break;
+        case UNKNOWN:
+          prepaidTypeStringMap.put(prepaidType, "UNKNOWN");
+          break;
+        default:
+          throw new RuntimeException("Unexpected card prepaidType value: " + prepaidType.name());
+      }
+    }
   }
 
   public WritableMap toMapObject(Card card) {
@@ -65,6 +99,8 @@ public final class CardConverter {
     mapToReturn.putInt("expirationMonth", card.getExpirationMonth());
     mapToReturn.putInt("expirationYear", card.getExpirationYear());
     mapToReturn.putString("postalCode", card.getPostalCode());
+    mapToReturn.putString("type", typeStringMap.get(card.getType()));
+    mapToReturn.putString("prepaidType", prepaidTypeStringMap.get(card.getPrepaidType()));
     return mapToReturn;
   }
 }

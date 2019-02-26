@@ -261,7 +261,11 @@ export default class HomeScreen extends Component {
 
   async startCardEntry() {
     this.setState({ showingCardEntry: false });
+    const cardEntryConfig = {
+      collectPostalCode: true,
+    };
     await SQIPCardEntry.startCardEntryFlow(
+      cardEntryConfig,
       this.onCardNonceRequestSuccess,
       this.onCardEntryCancel,
     );

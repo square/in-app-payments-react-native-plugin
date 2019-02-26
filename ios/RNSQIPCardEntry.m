@@ -49,6 +49,8 @@ RCT_EXPORT_MODULE();
 }
 
 RCT_REMAP_METHOD(startCardEntryFlow,
+                 collectPostalCode
+                 : (BOOL)collectPostalCode
                  startCardEntryFlowWithResolver
                  : (RCTPromiseResolveBlock)resolve
                      rejecter
@@ -56,6 +58,7 @@ RCT_REMAP_METHOD(startCardEntryFlow,
 {
     dispatch_async([self methodQueue], ^{
         SQIPCardEntryViewController *cardEntryForm = [self _makeCardEntryForm];
+        cardEntryForm.collectPostalCode = collectPostalCode;
         cardEntryForm.delegate = self;
 
         UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
@@ -193,6 +196,7 @@ RCT_REMAP_METHOD(setTheme,
     if (self.theme == nil) {
         self.theme = [[SQIPTheme alloc] init];
     }
+
     return [[SQIPCardEntryViewController alloc] initWithTheme:self.theme];
 }
 

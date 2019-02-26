@@ -103,18 +103,6 @@ are just examples.
     }
     ```
 
-1. Add the **Square** public repository:
-    ```gradle
-    allprojects {
-        repositories {
-            ...
-            maven {
-                url 'https://sdk.squareup.com/public/android'
-            }
-        }
-    }
-    ```
-
 ## Card Entry Usage
 Complete the following steps to add the **In-App Payments** card entry screen to
 your React Native project and use the card entry screen to get a nonce.
@@ -246,10 +234,14 @@ Add a button and start the card entry in button `onPress` event handler.
     }
 
     /**
-     * An event listner to start card entry flow
+     * An event listener to start card entry flow
      */
     async onStartCardEntry() {
+      const cardEntryConfig = {
+        collectPostalCode: false,
+      };
       await SQIPCardEntry.startCardEntryFlow(
+        cardEntryConfig,
         this.onCardNonceRequestSuccess,
         this.onCardEntryCancel,
       );
