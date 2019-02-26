@@ -14,7 +14,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 21
@@ -27,12 +26,12 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-    google()
-    maven {
-        url 'https://sdk.squareup.com/public/android'
+rootProject.allprojects {
+    repositories {
+        google()
+        maven {
+            url 'https://sdk.squareup.com/public/android'
+        }
     }
 }
 

@@ -19,8 +19,9 @@ This quick start guide makes the following assumptions:
 
 ### Install the required tools
 
-* Follow the **Install** instructions in the [React Native Getting Started] guide to
-  setup your React Native development environment.
+* Follow the **Building Projects with Native Code** instructions in the
+[React Native Getting Started] guide to setup your React Native development
+environment.
 * Install `yarn` from [yarnpkg.com]
 * Confirm your environment meets the In-App Payments SDK build requirements listed in the [root README] for this repo.
 * Clone this repo (if you have not already):
@@ -30,10 +31,10 @@ This quick start guide makes the following assumptions:
 
 Change to the quick start sample folder and install the plugin using `yarn`:
 
-```bash
-cd <YOUR_PROJECT_DIRECTORY>/react-native-in-app-payments-quickstart
-yarn
-```
+  ```bash
+  cd <YOUR_PROJECT_DIRECTORY>/react-native-in-app-payments-quickstart
+  yarn
+  ```
 
 ## Step 1: Get a Square Application ID and Location ID 
 

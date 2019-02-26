@@ -103,18 +103,6 @@ are just examples.
     }
     ```
 
-1. Add the **Square** public repository:
-    ```gradle
-    allprojects {
-        repositories {
-            ...
-            maven {
-                url 'https://sdk.squareup.com/public/android'
-            }
-        }
-    }
-    ```
-
 ## Card Entry Usage
 Complete the following steps to add the **In-App Payments** card entry screen to
 your React Native project and use the card entry screen to get a nonce.
