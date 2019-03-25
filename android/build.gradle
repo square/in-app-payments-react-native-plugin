@@ -12,6 +12,8 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
+def MIN_IAP_SDK_VERSION = '1.1.0'
+
 android {
     compileSdkVersion 27
 
@@ -36,8 +38,9 @@ rootProject.allprojects {
 }
 
 dependencies {
+    def sqipVersion = rootProject.hasProperty('sqipVersion') ? rootProject.sqipVersion : MIN_IAP_SDK_VERSION
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.squareup.sdk.in-app-payments:card-entry:1.1.0'
-    implementation 'com.squareup.sdk.in-app-payments:google-pay:1.1.0'
+    implementation "com.squareup.sdk.in-app-payments:card-entry:$sqipVersion"
+    implementation "com.squareup.sdk.in-app-payments:google-pay:$sqipVersion"
     implementation 'com.google.android.gms:play-services-wallet:16.0.1'
 }
