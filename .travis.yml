@@ -3,7 +3,8 @@ matrix:
     - language: node_js
       node_js: 8
       script:
-        - yarn && yarn lint && cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
+        - yarn && yarn lint && yarn test
+        - cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
 
     - language: android
       sudo: false
