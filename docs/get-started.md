@@ -68,7 +68,10 @@ To use the In-App Payments plugin on iOS devices, install **In-App Payments SDK 
 to make it an available resource for the React Native plugin. 
 
 1. Open your iOS project `myRNInAppPaymentsSample.xcodeproj` with **Xcode** and complete 
-[Build on iOS: Add the In-App Payments SDK to your project (Manual installation)].
+[Build on iOS: Add the In-App Payments SDK to your project (Manual Installation)]. You **MUST**
+put the **SquareInAppPaymentsSDK.framework** in folder `<YOUR_PROJECT_DIRECTORY>/ios`, otherwise
+the project won't compile.
+    > Check the minimum supported SDK version in the top of [root README].
 1. Set the `iOS Deployment Target` to 11.0 or above
 1. Add an In-App Payments SDK build phase:
     1. Open the **Xcode** project for your application.
@@ -90,6 +93,9 @@ to make it an available resource for the React Native plugin.
 The `buildToolsVersion`, `compileSdkVersion`, `targetSdkVersion`, and `supportLibVersion` values
 are just examples. 
 
+1. (Optional) If you want to pick a different In-App Payments Android SDK version, you can override the `sqipVersion`.
+    > Check the minimum supported SDK version in the top of [root README].
+
     ```gradle
     buildscript {
       ext {
@@ -98,6 +104,7 @@ are just examples.
           compileSdkVersion = 28
           targetSdkVersion = 27
           supportLibVersion = "28.0.0"
+          sqipVersion = "1.1.0"
       }
       ...
     }
