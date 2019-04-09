@@ -160,13 +160,13 @@ See [BackendQuickStart Sample] to learn about building an app that processes pay
 
 [//]: # "Link anchor definitions"
 [docs.connect.squareup.com]: https://docs.connect.squareup.com
-[In-App Payments SDK]: https://docs.connect.squareup.com/payments/readersdk/overview
+[In-App Payments SDK]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/what-it-does
 [Square Dashboard]: https://squareup.com/dashboard/
 [Testing Mobile Apps]: https://docs.connect.squareup.com/testing/mobile
 [squareup.com/activate]: https://squareup.com/activate
 [Square Application Dashboard]: https://connect.squareup.com/apps/
-[In-App Payments SDK Android Setup Guide]: https://docs.connect.squareup.com/payments/readersdk/setup-android
-[In-App Payments SDK iOS Setup Guide]: https://docs.connect.squareup.com/payments/readersdk/setup-ios
+[In-App Payments SDK Android Setup Guide]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/build-on-android
+[In-App Payments SDK iOS Setup Guide]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/build-on-ios
 [root README]: ../README.md
 [React Native Getting Started]: https://facebook.github.io/react-native/docs/getting-started.html
 [Google Pay]: https://developers.google.com/pay/api/android/overview
