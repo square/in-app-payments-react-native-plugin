@@ -2,7 +2,7 @@
 name: "\U0001F4C3 Documentation Bug"
 about: You want to report something that is wrong or missing from the documentation.
 title: ''
-labels: ''
+labels: documentation
 assignees: ''
 
 ---
