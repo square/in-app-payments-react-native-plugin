@@ -63,12 +63,20 @@ async function requestApplePayNonce(
   applePayNonceRequestFailureCallback = onApplePayNonceRequestFailure;
   applePayCompleteCallback = onApplePayComplete;
 
+  let { paymentType } = applePayConfig;
+  if (!applePayConfig.paymentType) {
+    paymentType = PaymentTypeFinal;
+  } else {
+    Utilities.verifyIntegerType(applePayConfig.paymentType, 'applePayConfig.paymentType should be a valid integer');
+  }
+
   try {
     await RNSQIPApplePay.requestApplePayNonce(
       applePayConfig.price,
       applePayConfig.summaryLabel,
       applePayConfig.countryCode,
       applePayConfig.currencyCode,
+      paymentType,
     );
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
@@ -82,9 +90,14 @@ async function completeApplePayAuthorization(isSuccess, errorMessage = '') {
   await RNSQIPApplePay.completeApplePayAuthorization(isSuccess, errorMessage);
 }
 
+const PaymentTypePending = 1;
+const PaymentTypeFinal = 2;
+
 export default {
   initializeApplePay,
   canUseApplePay,
   requestApplePayNonce,
   completeApplePayAuthorization,
+  PaymentTypePending,
+  PaymentTypeFinal,
 };

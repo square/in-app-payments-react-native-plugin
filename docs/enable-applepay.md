@@ -131,6 +131,7 @@ export default class App extends Component {
         summaryLabel: 'Test Item',
         countryCode: 'US',
         currencyCode: 'USD',
+        paymentType: SQIPApplePay.PaymentTypeFinal,
       };
       try {
         await SQIPApplePay.requestApplePayNonce(

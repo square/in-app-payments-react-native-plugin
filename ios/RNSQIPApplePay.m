@@ -82,12 +82,14 @@ RCT_REMAP_METHOD(canUseApplePay,
 RCT_REMAP_METHOD(requestApplePayNonce,
                  price
                  : (NSString *)price
-                     summaryLabel
+                    summaryLabel
                  : (NSString *)summaryLabel
                      countryCode
                  : (NSString *)countryCode
                      currencyCode
                  : (NSString *)currencyCode
+                     paymentType
+                 : (nonnull NSNumber *)paymentType
                      requestApplePayNonceWithResolver
                  : (RCTPromiseResolveBlock)resolve
                      rejecter
@@ -105,11 +107,20 @@ RCT_REMAP_METHOD(requestApplePayNonce,
         [PKPaymentRequest squarePaymentRequestWithMerchantIdentifier:self.applePayMerchantId
                                                          countryCode:countryCode
                                                         currencyCode:currencyCode];
-    paymentRequest.paymentSummaryItems = @[
-        [PKPaymentSummaryItem summaryItemWithLabel:summaryLabel
-                                            amount:[NSDecimalNumber decimalNumberWithString:price]]
-    ];
 
+    if ([paymentType integerValue] == 1) {
+        paymentRequest.paymentSummaryItems = @[
+            [PKPaymentSummaryItem summaryItemWithLabel:summaryLabel
+                                                amount:[NSDecimalNumber decimalNumberWithString:price]
+                                                type:PKPaymentSummaryItemTypePending]
+        ];
+    } else {
+        paymentRequest.paymentSummaryItems = @[
+            [PKPaymentSummaryItem summaryItemWithLabel:summaryLabel
+                                                amount:[NSDecimalNumber decimalNumberWithString:price]
+                                                  type:PKPaymentSummaryItemTypeFinal]
+        ];
+    }
 
     dispatch_async([self methodQueue], ^{
         PKPaymentAuthorizationViewController *paymentAuthorizationViewController =

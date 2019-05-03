@@ -284,6 +284,7 @@ export default class HomeScreen extends Component {
             summaryLabel: 'Test Item',
             countryCode: 'US',
             currencyCode: 'USD',
+            paymentType: SQIPApplePay.PaymentTypeFinal,
           },
           this.onApplePayRequestNonceSuccess,
           this.onApplePayRequestNonceFailure,
