@@ -73,18 +73,20 @@ describe('Test Apple Pay', () => {
   });
 
   it('requestApplePayNonce works with onApplePayNonceRequestSuccess callback', async (done) => {
-    expect.assertions(9);
+    expect.assertions(11);
     try {
       const testApplePayConfig = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
+        paymentType: SQIPApplePay.PaymentTypePending,
       };
       const mockCardDetails = { nonce: 'fake_nonce' };
       const onApplePayNonceRequestSuccess = jest.fn();
       const spyVerifyObjectType = jest.spyOn(Utilities, 'verifyObjectType');
       const spyVerifyStringType = jest.spyOn(Utilities, 'verifyStringType');
+      const spyVerifyIntegerType = jest.spyOn(Utilities, 'verifyIntegerType');
       await SQIPApplePay.requestApplePayNonce(
         testApplePayConfig,
         onApplePayNonceRequestSuccess,
@@ -92,16 +94,85 @@ describe('Test Apple Pay', () => {
         null,
       );
       expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledTimes(1);
+      expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledWith(
+        testApplePayConfig.price,
+        testApplePayConfig.summaryLabel,
+        testApplePayConfig.countryCode,
+        testApplePayConfig.currencyCode,
+        testApplePayConfig.paymentType,
+      );
       expect(spyVerifyObjectType).toHaveBeenCalledTimes(1);
       expect(spyVerifyStringType).toHaveBeenCalledTimes(4);
       expect(spyVerifyStringType).toHaveBeenCalledWith(testApplePayConfig.price, 'applePayConfig.price should be a valid string');
       expect(spyVerifyStringType).toHaveBeenCalledWith(testApplePayConfig.summaryLabel, 'applePayConfig.summaryLabel should be a valid string');
       expect(spyVerifyStringType).toHaveBeenCalledWith(testApplePayConfig.countryCode, 'applePayConfig.countryCode should be a valid string');
       expect(spyVerifyStringType).toHaveBeenCalledWith(testApplePayConfig.currencyCode, 'applePayConfig.currencyCode should be a valid string');
+      expect(spyVerifyIntegerType).toHaveBeenCalledWith(testApplePayConfig.paymentType, 'applePayConfig.paymentType should be a valid integer');
 
       MockEventEmitter.listeners.onApplePayNonceRequestSuccess(mockCardDetails);
       expect(onApplePayNonceRequestSuccess).toHaveBeenCalledTimes(1);
       expect(onApplePayNonceRequestSuccess).toHaveBeenCalledWith(mockCardDetails);
+      done();
+    } catch (ex) {
+      console.error(ex);
+    }
+  });
+
+  it('requestApplePayNonce works with default paymentType when paymentType is undefined', async (done) => {
+    expect.assertions(2);
+    try {
+      const testApplePayConfig = {
+        price: '1.00',
+        summaryLabel: 'test label',
+        countryCode: 'test-US',
+        currencyCode: 'test-USD',
+      };
+      const onApplePayNonceRequestSuccess = jest.fn();
+      await SQIPApplePay.requestApplePayNonce(
+        testApplePayConfig,
+        onApplePayNonceRequestSuccess,
+        null,
+        null,
+      );
+      expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledTimes(1);
+      expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledWith(
+        testApplePayConfig.price,
+        testApplePayConfig.summaryLabel,
+        testApplePayConfig.countryCode,
+        testApplePayConfig.currencyCode,
+        SQIPApplePay.PaymentTypeFinal,
+      );
+      done();
+    } catch (ex) {
+      console.error(ex);
+    }
+  });
+
+  it('requestApplePayNonce works with default paymentType when paymentType is null', async (done) => {
+    expect.assertions(2);
+    try {
+      const testApplePayConfig = {
+        price: '1.00',
+        summaryLabel: 'test label',
+        countryCode: 'test-US',
+        currencyCode: 'test-USD',
+        paymentType: null,
+      };
+      const onApplePayNonceRequestSuccess = jest.fn();
+      await SQIPApplePay.requestApplePayNonce(
+        testApplePayConfig,
+        onApplePayNonceRequestSuccess,
+        null,
+        null,
+      );
+      expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledTimes(1);
+      expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledWith(
+        testApplePayConfig.price,
+        testApplePayConfig.summaryLabel,
+        testApplePayConfig.countryCode,
+        testApplePayConfig.currencyCode,
+        SQIPApplePay.PaymentTypeFinal,
+      );
       done();
     } catch (ex) {
       console.error(ex);
@@ -116,6 +187,7 @@ describe('Test Apple Pay', () => {
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
+        paymentType: SQIPApplePay.PaymentTypePending,
       };
       const mockErrorInfo = { message: 'fake_message' };
       const onApplePayNonceRequestFailureCallback = jest.fn();
@@ -143,6 +215,7 @@ describe('Test Apple Pay', () => {
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
+        paymentType: SQIPApplePay.PaymentTypeFinal,
       };
       const onApplePayCompleteCallback = jest.fn();
       await SQIPApplePay.requestApplePayNonce(

@@ -309,6 +309,7 @@ if (Platform.OS === 'ios') {
     summaryLabel: 'Test Item',
     countryCode: 'US',
     currencyCode: 'USD',
+    paymentType: SQIPApplePay.PaymentTypeFinal,
   };
   try{ 
     await SQIPApplePay.requestApplePayNonce(
@@ -821,6 +822,7 @@ price           | String            | The payment authorization amount as a stri
 summaryLabel    | String            | A label that displays the checkout summary in the Apple Pay view.
 countryCode     | String            | The Apple Pay country code.
 currencyCode    | String            | ISO currency code of the payment amount.
+**Optional**:paymentType     | Int               | Type of the payment summary item, `PaymentTypeFinal` for default, check [apple_pay_payment_type](#apple-pay-payment-type-values).
 
 #### Example JSON
 
@@ -830,6 +832,7 @@ currencyCode    | String            | ISO currency code of the payment amount.
   "summaryLabel": "Apple Pay Sample",
   "countryCode": "US",
   "currencyCode": "USD",
+  "paymentType": SQIPApplePay.PaymentTypeFinal,
 }
 ```
 
@@ -990,25 +993,36 @@ Field                              | Type               | Description
 }
 ```
 
-
 ---
 ## Constants
+
+### Apple Pay Payment Type values
+
+Constant                  | Type  | Value | Description
+:------------------------ | :---- | :-----| :-----------------
+PaymentTypePending        | int   | 1     | A summary item representing an estimated or unknown cost.
+PaymentTypeFinal          | int   | 2     | A summary item representing the known, final cost.
+
+---
 
 ### Google Pay Price Status values
 
 Constant                          | Type | Value  |Description
 :-------------------------------- | :--- | :------| :-----------------
-totalPriceStatusNotCurrentlyKnown | int  | 1      | Used for a capability check
-totalPriceStatusEstimated         | int  | 2      | Total price may adjust based on the details of the response, such as sales tax collected based on a billing address
-totalPriceStatusFinal             | int  | 3      | Total price will not change from the amount presented to the user
+TotalPriceStatusNotCurrentlyKnown | int  | 1      | Used for a capability check.
+TotalPriceStatusEstimated         | int  | 2      | Total price may adjust based on the details of the response, such as sales tax collected based on a billing address.
+TotalPriceStatusFinal             | int  | 3      | Total price will not change from the amount presented to the user.
+
 ---
+
 ### Google Pay environment values
 
 Constant                  | Type  | Value | Description
 :------------------------ | :---- | :-----| :-----------------
-environmentProduction     | int   | 1     | Environment to be used when an app is granted access to the Google Pay production environment
-environmentTest           | int   | 3     | Environment to be used for development and testing an application before approval for production.
+EnvironmentProduction     | int   | 1     | Environment to be used when an app is granted access to the Google Pay production environment.
+EnvironmentTest           | int   | 3     | Environment to be used for development and testing an application before approval for production.
 
+---
 
 ### Brand
 
