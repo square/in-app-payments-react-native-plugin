@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.2.1 June 5, 2019
+
+* Added `paymentType` parameter to support apple pay pending amount configuration.
+
 ### v1.1.2 Mar 28, 2019
 
 * Support android In-App Payments SDK version override.
