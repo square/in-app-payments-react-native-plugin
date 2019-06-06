@@ -58,11 +58,11 @@ Run the React Native project from the `react-native-in-app-payments-quickstart` 
 
   ```bash
   cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart
-  react-native run-ios
+  react-native start
   ```
 
 > **NOTE**: Make sure the folder `/PATH/TO/LOCAL/react-native-in-app-payments-quickstart/node_modules/react-native-square-in-app-payments/node_modules`
-  is empty before you run `run-ios`.
+  is empty before you run `start`.
 
 ## Step 4: Run the React Native sample app for Android
 
