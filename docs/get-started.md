@@ -67,7 +67,7 @@ react-native link react-native-square-in-app-payments
 To use the In-App Payments plugin on iOS devices, install **In-App Payments SDK for iOS** 
 to make it an available resource for the React Native plugin. 
 
-1. Open your iOS project `myRNInAppPaymentsSample.xcodeproj` with **Xcode** and install In-App Payments by following  
+1. Open your iOS project `myRNInAppPaymentsSample.xcodeproj` with **Xcode** and install **In-App Payments SDK** by following  
 [Install In-App Payments SDK - Swift(iOS) Option 3: Manual Installation]. You **MUST**
 put the **SquareInAppPaymentsSDK.framework** in folder `<YOUR_PROJECT_DIRECTORY>/ios`, otherwise
 the project won't compile.
