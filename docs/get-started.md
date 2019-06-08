@@ -71,7 +71,7 @@ to make it an available resource for the React Native plugin.
 [Install In-App Payments SDK - Swift(iOS) Option 3: Manual Installation]. You **MUST**
 put the **SquareInAppPaymentsSDK.framework** in folder `<YOUR_PROJECT_DIRECTORY>/ios`, otherwise
 the project won't compile.
-    > Check the minimum supported SDK version in the top of [root README].
+    > Check the supported SDK version in the top of [root README].
 1. Set the `iOS Deployment Target` to 11.0 or above
 1. Add an In-App Payments SDK build phase:
     1. Open the **Xcode** project for your application.
