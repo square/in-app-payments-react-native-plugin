@@ -30,18 +30,22 @@ import {
 
 import Modal from 'react-native-modal';
 import OrderModal from '../components/OrderModal';
+import CardsOnFileModal from '../components/CardsOnFileModal';
 import GreenButton from '../components/GreenButton';
 import {
   SQUARE_APP_ID,
   CHARGE_SERVER_HOST,
   GOOGLE_PAY_LOCATION_ID,
   APPLE_PAY_MERCHANT_ID,
+  CUSTOMER_ID
 } from '../Constants';
 import {
   printCurlCommand,
   showAlert,
 } from '../Utilities';
 import chargeCardNonce from '../service/Charge';
+import createCustomerCard from '../service/CreateCustomerCard';
+// import chargeCustomerCard from '../service/ChargeCustomerCard';
 
 require('../images/iconCookie.png');
 
@@ -56,11 +60,13 @@ const applePayStatus = {
 export default class HomeScreen extends Component {
   state = {
     showingBottomSheet: false,
+    showingCardsOnFile: false,
     showingCardEntry: false,
     showingDigitalWallet: false,
     canUseDigitalWallet: false,
     applePayState: applePayStatus.none,
     applePayError: null,
+    cardsOnFile: [],
   }
 
   constructor() {
@@ -79,6 +85,8 @@ export default class HomeScreen extends Component {
     this.showOrderScreen = this.showOrderScreen.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
+    this.showCardsOnFileScreen = this.showCardsOnFileScreen.bind(this);
+    this.closeCardsOnFileScreen = this.closeCardsOnFileScreen.bind(this);
   }
 
   async componentDidMount() {
@@ -191,29 +199,47 @@ export default class HomeScreen extends Component {
   }
 
   async onCardNonceRequestSuccess(cardDetails) {
+
+    // here we would call the backend to add the card to the customer
+
     if (this.chargeServerHostIsSet()) {
       try {
-        await chargeCardNonce(cardDetails.nonce);
+        // create the customer card record and add it to the state
+        const customerCard = await createCustomerCard(CUSTOMER_ID, cardDetails.nonce);
+        this.setState({ cardsOnFile: [...this.state.cardsOnFile, customerCard] });
         SQIPCardEntry.completeCardEntry(() => {
-          showAlert('Your order was successful',
-            'Go to your Square dashbord to see this order reflected in the sales tab.');
+          showAlert('Your card was saved');
         });
       } catch (error) {
         SQIPCardEntry.showCardNonceProcessingError(error.message);
       }
     } else {
-      SQIPCardEntry.completeCardEntry(() => {
-        printCurlCommand(cardDetails.nonce);
-        showAlert(
-          'Nonce generated but not charged',
-          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
-        );
-      });
+      console.log("Card would be saved");
     }
+
+    // if (this.chargeServerHostIsSet()) {
+    //   try {
+    //     await chargeCardNonce(cardDetails.nonce);
+    //     SQIPCardEntry.completeCardEntry(() => {
+    //       showAlert('Your order was successful',
+    //         'Go to your Square dashbord to see this order reflected in the sales tab.');
+    //     });
+    //   } catch (error) {
+    //     SQIPCardEntry.showCardNonceProcessingError(error.message);
+    //   }
+    // } else {
+    // SQIPCardEntry.completeCardEntry(() => {
+    //   printCurlCommand(cardDetails.nonce);
+    //   showAlert(
+    //     'Nonce generated but not charged',
+    //     'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+    //   );
+    // });
+    // }
   }
 
   onCardEntryCancel() {
-    this.showOrderScreen();
+    this.showCardsOnFileScreen();
   }
 
   onShowDigitalWallet() {
@@ -227,11 +253,27 @@ export default class HomeScreen extends Component {
   }
 
   showOrderScreen() {
-    this.setState({ showingBottomSheet: true });
+    this.setState({
+      showingBottomSheet: true,
+      showingCardsOnFile: false
+    });
   }
 
   closeOrderScreen() {
     this.setState({ showingBottomSheet: false });
+  }
+
+  showCardsOnFileScreen() {
+    this.setState({
+      showingCardsOnFile: true,
+      showingBottomSheet: true
+    });
+  }
+
+  closeCardsOnFileScreen() {
+    this.setState({
+      showingCardsOnFile: false
+    });
   }
 
   applicationIdIsSet() { return SQUARE_APP_ID !== 'REPLACE_ME'; }
@@ -260,6 +302,7 @@ export default class HomeScreen extends Component {
   }
 
   async startCardEntry() {
+    console.log("STARTING card entry")
     this.setState({ showingCardEntry: false });
     const cardEntryConfig = {
       collectPostalCode: true,
@@ -332,11 +375,18 @@ export default class HomeScreen extends Component {
           onModalHide={() => setTimeout(() => this.checkStateAndPerform(), 200)}
         >
           <View style={styles.modalContent}>
-            <OrderModal
-              onCloseOrderScreen={this.closeOrderScreen}
-              onShowCardEntry={this.onShowCardEntry}
-              onShowDigitalWallet={this.onShowDigitalWallet}
-            />
+            {this.state.showingCardsOnFile ?
+              <CardsOnFileModal
+                onCloseCardsOnFileScreen={this.closeCardsOnFileScreen}
+                onShowCardEntry={this.onShowCardEntry}
+                cards={this.state.cardsOnFile}
+              /> :
+              <OrderModal
+                onCloseOrderScreen={this.closeOrderScreen}
+                onShowCardsOnFileScreen={this.showCardsOnFileScreen}
+                onShowDigitalWallet={this.onShowDigitalWallet}
+              />
+            }
           </View>
         </Modal>
       </View>

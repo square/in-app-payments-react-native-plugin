@@ -21,55 +21,27 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-import OrderTitleView from './OrderTitleView';
+import CardsOnFileTitleView from './CardsOnFileTitleView';
 import OrderInformationTitleView from './OrderInformationTitleView';
 import OrderInformationDescriptionView from './OrderInformationDescriptionView';
 import AddressView from './AddressView';
 import GreenButton from './GreenButton';
 import DigitalWalletButton from './DigitalWalletButton';
 
-OrderModal.propTypes = {
-  onCloseOrderScreen: PropTypes.func.isRequired,
-  onShowCardsOnFileScreen: PropTypes.func.isRequired,
-  onShowDigitalWallet: PropTypes.func.isRequired,
+CardsOnFileModal.propTypes = {
+  cardsOnFile: PropTypes.array.isRequired,
+  onCloseCardsOnFileScreen: PropTypes.func.isRequired,
+  onShowCardEntry: PropTypes.func.isRequired
 };
 
-export default function OrderModal({ onCloseOrderScreen, onShowCardsOnFileScreen, onShowDigitalWallet }) {
+export default function CardsOnFileModal({ cardsOnFile, onCloseCardsOnFileScreen, onShowCardEntry }) {
   return (
     <View style={styles.container}>
-      <OrderTitleView onCloseOrderScreen={() => onCloseOrderScreen()} />
-      <View style={styles.bodyContent}>
-        <View style={styles.row}>
-          <View style={styles.titleColumn}>
-            <OrderInformationTitleView title="Ship To" />
-          </View>
-          <View style={styles.descriptionColumn}>
-            <OrderInformationDescriptionView description="Lauren Nobel" />
-            <AddressView address={'1455 Market Street\nSan Francisco, CA, 94103'} />
-          </View>
-        </View>
-        <View style={styles.horizontalLine} />
-        <View style={styles.row}>
-          <View style={styles.titleColumn}>
-            <OrderInformationTitleView title="Total" />
-          </View>
-          <View style={styles.descriptionColumn}>
-            <OrderInformationDescriptionView description="$1.00" />
-          </View>
-        </View>
-        <View style={styles.horizontalLine} />
-        <Text style={styles.refundText}>
-          You can refund this transaction through your Square dashboard,
-          go to squareup.com/dashboard.
-        </Text>
-      </View>
+      <CardsOnFileTitleView onCloseCardsOnFileScreen={() => onCloseCardsOnFileScreen()} />
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onShowCardsOnFileScreen}
-          text="Use Card"
-        />
-        <DigitalWalletButton
-          onPress={() => onShowDigitalWallet()}
+          onPress={onShowCardEntry}
+          text="Add new card"
         />
       </View>
     </View>
