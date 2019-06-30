@@ -22,20 +22,18 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-CardsOnFileListView.propTypes = {
-  card: PropTypes.object.isRequired,
-  onSelectCard: PropTypes.func.isRequired,
+CardsOnFileCardView.propTypes = {
+  cardOnFile: PropTypes.object.isRequired,
+  onSelectCardOnFile: PropTypes.func.isRequired,
 };
 
-export default function CardsOnFileCardView({ card, onSelectCard }) {
+export default function CardsOnFileCardView({ cardOnFile, onSelectCardOnFile }) {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={onSelectCard}
-        style={styles.row}>
-        <Text style={styles.card}>{card.brand} {card.last_4}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      onPress={() => onSelectCardOnFile(cardOnFile)}
+      style={styles.row}>
+      <Text style={styles.card}>{cardOnFile.card_brand} {cardOnFile.last_4}</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -43,11 +41,10 @@ const styles = StyleSheet.create({
   container: {
   },
   card: {
-    borderColor: '#123456',
-    borderWidth: 2,
-    flex: 1,
+    // borderColor: '#123456',
+    // borderWidth: 2,
+    // flex: 1,
   },
   row: {
-
   },
 });

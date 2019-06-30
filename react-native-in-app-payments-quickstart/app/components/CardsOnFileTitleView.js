@@ -43,7 +43,7 @@ export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }) {
           source={closeButton}
         />
       </TouchableHighlight>
-      <Text style={styles.title}>Lauren's cards</Text>
+      <Text style={styles.title}>My Saved Cards</Text>
     </View>
   );
 }

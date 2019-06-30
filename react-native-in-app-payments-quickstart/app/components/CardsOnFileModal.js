@@ -22,26 +22,27 @@ import {
 import PropTypes from 'prop-types';
 
 import CardsOnFileTitleView from './CardsOnFileTitleView';
-import OrderInformationTitleView from './OrderInformationTitleView';
-import OrderInformationDescriptionView from './OrderInformationDescriptionView';
-import AddressView from './AddressView';
+import CardsOnFileCardView from './CardsOnFileCardView';
 import GreenButton from './GreenButton';
-import DigitalWalletButton from './DigitalWalletButton';
 
 CardsOnFileModal.propTypes = {
   cardsOnFile: PropTypes.array.isRequired,
+  onSelectCardOnFile: PropTypes.func.isRequired,
   onCloseCardsOnFileScreen: PropTypes.func.isRequired,
-  onShowCardEntry: PropTypes.func.isRequired
+  onShowCustomerCardEntry: PropTypes.func.isRequired
 };
 
-export default function CardsOnFileModal({ cardsOnFile, onCloseCardsOnFileScreen, onShowCardEntry }) {
+export default function CardsOnFileModal({ cardsOnFile, onCloseCardsOnFileScreen, onShowCustomerCardEntry, onSelectCardOnFile }) {
   return (
     <View style={styles.container}>
       <CardsOnFileTitleView onCloseCardsOnFileScreen={() => onCloseCardsOnFileScreen()} />
+      {cardsOnFile.map(cardOnFile => (
+        <CardsOnFileCardView key={cardOnFile.id} cardOnFile={cardOnFile} onSelectCardOnFile={onSelectCardOnFile} />
+      ))}
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onShowCardEntry}
-          text="Add new card"
+          onPress={onShowCustomerCardEntry}
+          text="Add card"
         />
       </View>
     </View>
