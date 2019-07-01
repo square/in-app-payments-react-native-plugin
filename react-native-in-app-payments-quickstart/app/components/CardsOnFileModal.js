@@ -36,9 +36,21 @@ export default function CardsOnFileModal({ cardsOnFile, onCloseCardsOnFileScreen
   return (
     <View style={styles.container}>
       <CardsOnFileTitleView onCloseCardsOnFileScreen={() => onCloseCardsOnFileScreen()} />
-      {cardsOnFile.map(cardOnFile => (
-        <CardsOnFileCardView key={cardOnFile.id} cardOnFile={cardOnFile} onSelectCardOnFile={onSelectCardOnFile} />
-      ))}
+      <View style={styles.bodyContent}>
+        {cardsOnFile.length == 0 ?
+          <Text style={styles.noCardsText}>
+            No cards on file found. Please tap the button to add a card that you can use for future transactions.
+        </Text> :
+          cardsOnFile.map(cardOnFile => (
+            <React.Fragment key={cardOnFile.id}>
+              <View style={styles.row}>
+                <CardsOnFileCardView cardOnFile={cardOnFile} onSelectCardOnFile={onSelectCardOnFile} />
+              </View>
+              <View style={styles.horizontalLine} />
+            </React.Fragment>
+          ))
+        }
+      </View>
       <View style={styles.buttonRow}>
         <GreenButton
           onPress={onShowCustomerCardEntry}
@@ -51,6 +63,7 @@ export default function CardsOnFileModal({ cardsOnFile, onCloseCardsOnFileScreen
 
 const styles = StyleSheet.create({
   bodyContent: {
+    width: '100%',
     marginLeft: '10%',
     marginRight: '10%',
     marginTop: '3%',
@@ -59,7 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: '5%',
+    marginBottom: '6%',
     width: '100%',
   },
   descriptionColumn: {
@@ -72,10 +85,11 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
     marginTop: '3%',
   },
-  refundText: {
+  noCardsText: {
     color: '#7B7B7B',
     fontSize: 12,
     marginBottom: '3%',
+    minHeight: 50,
   },
   row: {
     flexDirection: 'row',

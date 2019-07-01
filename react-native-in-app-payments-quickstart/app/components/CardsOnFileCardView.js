@@ -22,6 +22,8 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
+import GreenButton from './GreenButton';
+
 CardsOnFileCardView.propTypes = {
   cardOnFile: PropTypes.object.isRequired,
   onSelectCardOnFile: PropTypes.func.isRequired,
@@ -29,22 +31,56 @@ CardsOnFileCardView.propTypes = {
 
 export default function CardsOnFileCardView({ cardOnFile, onSelectCardOnFile }) {
   return (
-    <TouchableOpacity
-      onPress={() => onSelectCardOnFile(cardOnFile)}
-      style={styles.row}>
-      <Text style={styles.card}>{cardOnFile.card_brand} {cardOnFile.last_4}</Text>
-    </TouchableOpacity>
+    <>
+      <View style={styles.titleColumn}>
+        <Text style={styles.titleText}>💳</Text>
+      </View>
+      <View style={styles.descriptionColumn}>
+        <Text>{cardOnFile.card_brand} {cardOnFile.last_4}</Text>
+        <Text style={styles.muted}>expires {cardOnFile.exp_month}/{cardOnFile.exp_year}</Text>
+      </View>
+      <View style={styles.buttonColumn}>
+        <TouchableOpacity
+          onPress={() => onSelectCardOnFile(cardOnFile)}
+          style={styles.button}>
+          <Text style={styles.buttonText}>Pay</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  descriptionColumn: {
+    flex: 2,
+    flexDirection: 'column',
   },
-  card: {
-    // borderColor: '#123456',
-    // borderWidth: 2,
-    // flex: 1,
+  titleColumn: {
+    flex: 0,
+    flexDirection: 'column',
   },
-  row: {
+  buttonColumn: {
+    flex: 1,
+    flexDirection: 'column',
   },
+  titleText: {
+    color: '#24988D',
+    fontSize: 16,
+    marginRight: '5%',
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#24988D',
+    borderRadius: 8,
+    justifyContent: 'center',
+    minHeight: 30,
+    // width: '40%',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+  },
+  muted: {
+    color: '#7B7B7B',
+  }
 });
