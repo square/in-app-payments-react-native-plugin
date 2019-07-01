@@ -319,6 +319,8 @@ export default class HomeScreen extends Component {
 
   applePayMerchantIsSet() { return APPLE_PAY_MERCHANT_ID !== 'REPLACE_ME'; }
 
+  customerIdIsSet() { return CUSTOMER_ID !== 'REPLACE_ME'; }
+
   checkStateAndPerform() {
     if (this.state.showingCardEntry) {
       // if application id is not set, we will let you know where to set it,
@@ -451,8 +453,7 @@ export default class HomeScreen extends Component {
               /> :
               <OrderModal
                 onCloseOrderScreen={this.closeOrderScreen}
-                onShowCardsOnFileScreen={this.showCardsOnFileScreen}
-                onShowCardEntry={this.onShowCardEntry}
+                onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
                 onShowDigitalWallet={this.onShowDigitalWallet}
               />
             }

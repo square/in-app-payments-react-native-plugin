@@ -30,12 +30,11 @@ import DigitalWalletButton from './DigitalWalletButton';
 
 OrderModal.propTypes = {
   onCloseOrderScreen: PropTypes.func.isRequired,
-  onShowCardEntry: PropTypes.func.isRequired,
-  onShowCardsOnFileScreen: PropTypes.func.isRequired,
+  onPayWithCard: PropTypes.func.isRequired,
   onShowDigitalWallet: PropTypes.func.isRequired,
 };
 
-export default function OrderModal({ onCloseOrderScreen, onShowCardEntry, onShowCardsOnFileScreen, onShowDigitalWallet }) {
+export default function OrderModal({ onCloseOrderScreen, onPayWithCard, onShowDigitalWallet }) {
   return (
     <View style={styles.container}>
       <OrderTitleView onCloseOrderScreen={() => onCloseOrderScreen()} />
@@ -66,7 +65,7 @@ export default function OrderModal({ onCloseOrderScreen, onShowCardEntry, onShow
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onShowCardsOnFileScreen}
+          onPress={onPayWithCard}
           text="Pay with card"
         />
         <DigitalWalletButton
