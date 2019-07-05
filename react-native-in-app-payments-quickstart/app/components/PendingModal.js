@@ -13,57 +13,44 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-/* eslint no-undef: */
 import React from 'react';
 import {
-  Text,
   View,
   StyleSheet,
-  TouchableHighlight,
-  Image,
+  Text,
+  ActivityIndicator,
 } from 'react-native';
-import PropTypes from 'prop-types';
 
-const closeButton = require('../images/btnClose.png');
-
-CardsOnFileTitleView.propTypes = {
-  onCloseCardsOnFileScreen: PropTypes.func.isRequired,
-};
-
-export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }) {
+export default function PendingModal() {
   return (
     <View style={styles.container}>
-      <TouchableHighlight
-        style={styles.closeButton}
-        underlayColor="#FFFFFF"
-        onPress={onCloseCardsOnFileScreen}
-      >
-        <Image
-          style={styles.button}
-          source={closeButton}
-        />
-      </TouchableHighlight>
-      <Text style={styles.title}>My Saved Cards</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Processing...</Text>
+      </View>
+      <View style={styles.activityContainer}>
+        <ActivityIndicator size="large" color="#24988D" />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  closeButton: {
-    zIndex: 1,
-  },
   container: {
+    width: '100%',
+  },
+  activityContainer: {
+    margin: '10% 0%',
+    height: '10%',
+  },
+  titleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    position: 'relative',
+    justifyContent: 'center',
+    margin: '3% 0%',
   },
   title: {
     color: '#000000',
     fontSize: 18,
     fontWeight: 'bold',
-    position: 'absolute',
-    textAlign: 'center',
-    width: '100%',
-    zIndex: 0,
   },
 });

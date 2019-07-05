@@ -18,16 +18,29 @@ import {
   Text,
   View,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 import PropTypes from 'prop-types';
-
-import GreenButton from './GreenButton';
 
 CardsOnFileCardView.propTypes = {
   cardOnFile: PropTypes.object.isRequired,
   onSelectCardOnFile: PropTypes.func.isRequired,
 };
+
+function showConfirmation(cardOnFile, onConfirm) {
+  Alert.alert('Confirm',
+    `Purchase a cookie for $1 using your ${cardOnFile.card_brand} ${cardOnFile.last_4} card`, [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Purchase',
+        onPress: onConfirm,
+      }
+    ]);
+}
 
 export default function CardsOnFileCardView({ cardOnFile, onSelectCardOnFile }) {
   return (
@@ -41,7 +54,7 @@ export default function CardsOnFileCardView({ cardOnFile, onSelectCardOnFile }) 
       </View>
       <View style={styles.buttonColumn}>
         <TouchableOpacity
-          onPress={() => onSelectCardOnFile(cardOnFile)}
+          onPress={() => showConfirmation(cardOnFile, onSelectCardOnFile)}
           style={styles.button}>
           <Text style={styles.buttonText}>Pay</Text>
         </TouchableOpacity>
@@ -74,7 +87,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     minHeight: 30,
-    // width: '40%',
   },
   buttonText: {
     color: '#FFFFFF',

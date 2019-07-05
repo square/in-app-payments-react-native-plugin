@@ -44,7 +44,7 @@ export default function CardsOnFileModal({ cardsOnFile, onCloseCardsOnFileScreen
           cardsOnFile.map(cardOnFile => (
             <React.Fragment key={cardOnFile.id}>
               <View style={styles.row}>
-                <CardsOnFileCardView cardOnFile={cardOnFile} onSelectCardOnFile={onSelectCardOnFile} />
+                <CardsOnFileCardView cardOnFile={cardOnFile} onSelectCardOnFile={onSelectCardOnFile.bind(this, cardOnFile)} />
               </View>
               <View style={styles.horizontalLine} />
             </React.Fragment>
@@ -62,8 +62,10 @@ export default function CardsOnFileModal({ cardsOnFile, onCloseCardsOnFileScreen
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%'
+  },
   bodyContent: {
-    width: '100%',
     marginLeft: '10%',
     marginRight: '10%',
     marginTop: '3%',
@@ -74,10 +76,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: '6%',
     width: '100%',
-  },
-  descriptionColumn: {
-    flex: 2,
-    flexDirection: 'column',
   },
   horizontalLine: {
     borderBottomColor: '#D8D8D8',
@@ -93,10 +91,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    width: '80%',
-  },
-  titleColumn: {
-    flex: 1,
-    flexDirection: 'column',
+    width: '100%',
   },
 });

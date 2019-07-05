@@ -31,6 +31,7 @@ import {
 import Modal from 'react-native-modal';
 import OrderModal from '../components/OrderModal';
 import CardsOnFileModal from '../components/CardsOnFileModal';
+import PendingModal from '../components/PendingModal';
 import GreenButton from '../components/GreenButton';
 import {
   SQUARE_APP_ID,
@@ -81,6 +82,7 @@ export default class HomeScreen extends Component {
   state = {
     showingBottomSheet: false,
     showingCardsOnFileScreen: false,
+    showingPendingScreen: false,
     showingCardEntry: false,
     showingCustomerCardEntry: false,
     showingDigitalWallet: false,
@@ -108,6 +110,7 @@ export default class HomeScreen extends Component {
     this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
     this.showOrderScreen = this.showOrderScreen.bind(this);
+    this.showPendingScreen = this.showPendingScreen.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
     this.showCardsOnFileScreen = this.showCardsOnFileScreen.bind(this);
     this.closeCardsOnFileScreen = this.closeCardsOnFileScreen.bind(this);
@@ -228,14 +231,16 @@ export default class HomeScreen extends Component {
 
   async onSelectCardOnFile(cardOnFile) {
     try {
+      this.showPendingScreen();
       await chargeCustomerCard(CUSTOMER_ID, cardOnFile.id);
       showAlert('Your order was successful',
         'Go to your Square dashbord to see this order reflected in the sales tab.',
         this.showOrderScreen);
     } catch (error) {
       showAlert(
-        'An error occured processing the card on file: ',
-        error.message
+        'An error occured processing the card on file',
+        error.message,
+        this.showCardsOnFileScreen
       );
     }
   }
@@ -245,7 +250,6 @@ export default class HomeScreen extends Component {
       try {
         // create the customer card record and add it to the state
         const customerCard = await createCustomerCard(CUSTOMER_ID, cardDetails.nonce);
-        console.log("customercard", customerCard);
         this.setState({ cardsOnFile: [...this.state.cardsOnFile, customerCard] });
         SQIPCardEntry.completeCardEntry(() => {
           showAlert('Your card was saved and is ready to use.');
@@ -290,7 +294,8 @@ export default class HomeScreen extends Component {
   showOrderScreen() {
     this.setState({
       showingBottomSheet: true,
-      showingCardsOnFileScreen: false
+      showingCardsOnFileScreen: false,
+      showingPendingScreen: false
     });
   }
 
@@ -301,7 +306,8 @@ export default class HomeScreen extends Component {
   showCardsOnFileScreen() {
     this.setState({
       showingBottomSheet: true,
-      showingCardsOnFileScreen: true
+      showingCardsOnFileScreen: true,
+      showingPendingScreen: false
     });
   }
 
@@ -309,6 +315,13 @@ export default class HomeScreen extends Component {
     this.setState({
       showingCardsOnFileScreen: false
     });
+  }
+
+  showPendingScreen() {
+    this.setState({
+      showingPendingScreen: true,
+      showingCardsOnFileScreen: false
+    })
   }
 
   applicationIdIsSet() { return SQUARE_APP_ID !== 'REPLACE_ME'; }
@@ -422,6 +435,25 @@ export default class HomeScreen extends Component {
     }
   }
 
+  renderModal() {
+    if (this.state.showingPendingScreen) {
+      return <PendingModal />;
+    } else if (this.state.showingCardsOnFileScreen) {
+      return <CardsOnFileModal
+        onCloseCardsOnFileScreen={this.closeCardsOnFileScreen}
+        onShowCustomerCardEntry={this.onShowCustomerCardEntry}
+        onSelectCardOnFile={this.onSelectCardOnFile}
+        cardsOnFile={this.state.cardsOnFile}
+      />;
+    } else {
+      return <OrderModal
+        onCloseOrderScreen={this.closeOrderScreen}
+        onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
+        onShowDigitalWallet={this.onShowDigitalWallet}
+      />;
+    }
+  }
+
   render() {
     console.log(this.state)
     return (
@@ -444,19 +476,7 @@ export default class HomeScreen extends Component {
           onModalHide={() => setTimeout(() => this.checkStateAndPerform(), 200)}
         >
           <View style={styles.modalContent}>
-            {this.state.showingCardsOnFileScreen ?
-              <CardsOnFileModal
-                onCloseCardsOnFileScreen={this.closeCardsOnFileScreen}
-                onShowCustomerCardEntry={this.onShowCustomerCardEntry}
-                onSelectCardOnFile={this.onSelectCardOnFile}
-                cardsOnFile={this.state.cardsOnFile}
-              /> :
-              <OrderModal
-                onCloseOrderScreen={this.closeOrderScreen}
-                onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
-                onShowDigitalWallet={this.onShowDigitalWallet}
-              />
-            }
+            {this.renderModal()}
           </View>
         </Modal>
       </View >
