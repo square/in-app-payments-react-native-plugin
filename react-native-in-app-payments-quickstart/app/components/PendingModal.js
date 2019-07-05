@@ -39,14 +39,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   activityContainer: {
-    margin: '10% 0%',
+    margin: '10%',
     height: '10%',
   },
   titleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    margin: '3% 0%',
+    margin: '3%',
   },
   title: {
     color: '#000000',
