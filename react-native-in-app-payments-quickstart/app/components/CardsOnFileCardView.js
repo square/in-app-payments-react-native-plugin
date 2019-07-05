@@ -49,7 +49,7 @@ export default function CardsOnFileCardView({ cardOnFile, onSelectCardOnFile }) 
         <Text style={styles.titleText}>💳</Text>
       </View>
       <View style={styles.descriptionColumn}>
-        <Text>{cardOnFile.card_brand} {cardOnFile.last_4}</Text>
+        <Text style={styles.cardInfo}>{cardOnFile.card_brand} {cardOnFile.last_4}</Text>
         <Text style={styles.muted}>expires {cardOnFile.exp_month}/{cardOnFile.exp_year}</Text>
       </View>
       <View style={styles.buttonColumn}>
@@ -94,5 +94,8 @@ const styles = StyleSheet.create({
   },
   muted: {
     color: '#7B7B7B',
+  },
+  cardInfo: {
+    color: '#0a0a0a'
   }
 });
