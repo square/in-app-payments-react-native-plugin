@@ -367,10 +367,12 @@ export default class HomeScreen extends Component {
     const cardEntryConfig = {
       collectPostalCode: true,
     };
-    await SQIPCardEntry.setIOSCardEntryTheme({
-      ...iOSCardEntryTheme,
-      saveButtonTitle: 'Pay 🍪'
-    });
+    if (Platform.OS === 'ios') {
+      await SQIPCardEntry.setIOSCardEntryTheme({
+        ...iOSCardEntryTheme,
+        saveButtonTitle: 'Pay 🍪'
+      });
+    }
     await SQIPCardEntry.startCardEntryFlow(
       cardEntryConfig,
       this.onCardNonceRequestSuccess,
@@ -384,10 +386,12 @@ export default class HomeScreen extends Component {
     const cardEntryConfig = {
       collectPostalCode: true,
     };
-    await SQIPCardEntry.setIOSCardEntryTheme({
-      ...iOSCardEntryTheme,
-      saveButtonTitle: 'Save 🍪'
-    });
+    if (Platform.OS === 'ios') {
+      await SQIPCardEntry.setIOSCardEntryTheme({
+        ...iOSCardEntryTheme,
+        saveButtonTitle: 'Save 🍪'
+      });
+    }
     await SQIPCardEntry.startCardEntryFlow(
       cardEntryConfig,
       this.onCustomerCardNonceRequestSuccess,
@@ -455,7 +459,6 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <View style={styles.container}>
         <Image source={cookieImage} />
