@@ -67,25 +67,12 @@ react-native link react-native-square-in-app-payments
 To use the In-App Payments plugin on iOS devices, install **In-App Payments SDK for iOS** 
 to make it an available resource for the React Native plugin. 
 
-1. Open your iOS project `myRNInAppPaymentsSample.xcodeproj` with **Xcode** and install **In-App Payments SDK** by following  
-[Install In-App Payments SDK - Swift(iOS) Option 3: Manual Installation]. You **MUST**
-put the **SquareInAppPaymentsSDK.framework** in folder `<YOUR_PROJECT_DIRECTORY>/ios`, otherwise
-the project won't compile.
-    > Check the supported SDK version in the top of [root README].
+1. Open your iOS project `myRNInAppPaymentsSample.xcodeproj` with **Xcode** and install **In-App Payments SDK** by adding the following to your Podfile:
+  ```
+  pod "SquareInAppPaymentsSDK"
+  ```
+1. Run `pod install`
 1. Set the `iOS Deployment Target` to 11.0 or above
-1. Add an In-App Payments SDK build phase:
-    1. Open the **Xcode** project for your application.
-    1. In the **Build Phases** tab for your application target, click the **+**
-        button at the top of the pane.
-    1. Select **New Run Script Phase**.
-    1. Paste the following into the editor panel of the new run script:
-        ```
-        FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
-        "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"
-        ```
-1. Correct the resource bundle location in your project target `myRNInAppPaymentsSample`
-    1. In the `Link Binary With Libraries` build phase, remove `RNSquareInAppPayments-Resources.bundle`.
-    1. In the `Copy Bundle Resources` build phase, add `RNSquareInAppPayments-Resources.bundle` from `Libraries`->`RNSquareInAppPayments.xcodeproj`.
 
 ## Step 4: Configure your Android project
 
@@ -104,7 +91,7 @@ are just examples.
           compileSdkVersion = 28
           targetSdkVersion = 27
           supportLibVersion = "28.0.0"
-          sqipVersion = "1.1.0"
+          sqipVersion = "1.2.0"
       }
       ...
     }
