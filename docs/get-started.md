@@ -90,7 +90,7 @@ the project won't compile.
 
 ## Step 3b: Add the In-App Payments SDK to your iOS project with CocoaPods
 
-If your iOS project is configured with CocoaPods (`Podfile` should be found in folder `ios`), your iOS project should be able
+If your iOS project is configured with CocoaPods (`Podfile` should be found in folder `ios`), your iOS project will be able
 to download In-App Payments SDK automatically by following the steps below.
 
 1. Open file `ios/Podfile`
@@ -111,7 +111,7 @@ to download In-App Payments SDK automatically by following the steps below.
 
     >**Note:** 
     If your project has **react-native** version `0.60.*`, there is an issue with `use_frameworks!`, please refer to
-    this [thread](https://github.com/react-native-community/releases/issues/140#issuecomment-523458708) for more update.
+    this [thread](https://github.com/react-native-community/releases/issues/140#issuecomment-523458708) for a resolution to the issue.
 
 1. In folder `<YOUR_PROJECT_DIRECTORY>/ios`, run the following command to install updated pod dependencies:
     ```bash
