@@ -93,9 +93,9 @@ the project won't compile.
 If your iOS project is configured with CocoaPods (`Podfile` should be found in folder `ios`), your iOS project will be able
 to download In-App Payments SDK automatically by following the steps below.
 
+1. Run `pod --version`, Make sure you have cocoapods version greater than `1.7.0`
 1. Open file `ios/Podfile`
     * make sure you set the **platform** to `11.0` or above
-    * enable `use_frameworks!` for the target
     * verify if `RNSquareInAppPayments` pod dependency is added
     ```pod
     platform :ios, '11.0' # set the platform version to 11.0
@@ -108,10 +108,6 @@ to download In-App Payments SDK automatically by following the steps below.
       pod 'RNSquareInAppPayments', :path => '../node_modules/react-native-square-in-app-payments'
     end
     ```
-
-    >**Note:** 
-    If your project has **react-native** version `0.60.*`, there is an issue with `use_frameworks!`, please refer to
-    this [thread](https://github.com/react-native-community/releases/issues/140#issuecomment-523458708) for a resolution to the issue.
 
 1. In folder `<YOUR_PROJECT_DIRECTORY>/ios`, run the following command to install updated pod dependencies:
     ```bash
