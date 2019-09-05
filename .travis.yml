@@ -52,4 +52,4 @@ matrix:
         - yarn
         - cd ios
       script:
-        - xcodebuild clean build -project RNInAppPaymentsQuickstart.xcodeproj -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone X" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO -quiet
+        - xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -configuration Debug -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone X" -derivedDataPath build/RNInAppPaymentsQuickstart
