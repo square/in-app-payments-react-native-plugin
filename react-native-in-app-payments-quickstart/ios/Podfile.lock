@@ -81,10 +81,6 @@ PODS:
     - React-Core (= 0.60.5)
   - RNGestureHandler (1.4.1):
     - React
-  - RNReanimated (1.2.0):
-    - React
-  - RNScreens (2.0.0-alpha.1):
-    - React
   - RNSquareInAppPayments (1.1.0):
     - React
     - SquareInAppPaymentsSDK
@@ -113,8 +109,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNReanimated (from `../node_modules/react-native-reanimated`)
-  - RNScreens (from `../node_modules/react-native-screens`)
   - RNSquareInAppPayments (from `../node_modules/react-native-square-in-app-payments`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -166,10 +160,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/WebSocket"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNReanimated:
-    :path: "../node_modules/react-native-reanimated"
-  RNScreens:
-    :path: "../node_modules/react-native-screens"
   RNSquareInAppPayments:
     :path: "../node_modules/react-native-square-in-app-payments"
   yoga:
@@ -198,8 +188,6 @@ SPEC CHECKSUMS:
   React-RCTVibration: 2105b2e0e2b66a6408fc69a46c8a7fb5b2fdade0
   React-RCTWebSocket: cd932a16b7214898b6b7f788c8bddb3637246ac4
   RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
-  RNReanimated: 1b52415c4302f198cb581282a0166690bad62c43
-  RNScreens: 35e771c226db35b0ef716d0eadaf5da3efa52365
   RNSquareInAppPayments: f824691a046b6fe7d23639bac3afc2828e845198
   SquareInAppPaymentsSDK: 4cd8143cfb21f2050cc6252596a1b8c910ad2fb9
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411

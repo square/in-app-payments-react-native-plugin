@@ -32,7 +32,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 import sqip.Callback;
 import sqip.CardDetails;
 import sqip.CardEntry;
@@ -86,7 +86,7 @@ class CardEntryModule extends ReactContextBaseJavaModule {
     });
 
     CardEntry.setCardNonceBackgroundHandler(new CardNonceBackgroundHandler() {
-      @NotNull @Override
+      @NonNull @Override
       public CardEntryActivityCommand handleEnteredCardInBackground(CardDetails cardDetails) {
         WritableMap mapToReturn = cardDetailsConverter.toMapObject(cardDetails);
         countDownLatch = new CountDownLatch(1);
