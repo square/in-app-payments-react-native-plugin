@@ -24,7 +24,7 @@ In addition to this README, the following is available in the [React Native plug
 ### Android
 
 * Android minSdkVersion is API 21 (Lollipop, 5.0) or higher. 
-* Android Target SDK version: API 27 (Oreo, 8.1).
+* Android Target SDK version: API 28 (Android 9).
 * Android Gradle Plugin: 3.0.0 or greater.
 
 ### iOS
