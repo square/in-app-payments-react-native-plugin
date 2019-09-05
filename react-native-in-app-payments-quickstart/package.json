@@ -10,6 +10,7 @@
   "dependencies": {
     "react": "16.8.6",
     "react-native": "0.60.5",
+    "react-native-gesture-handler": "^1.4.1",
     "react-native-modal": "^7.0.2",
     "react-native-square-in-app-payments": "file:../",
     "react-navigation": "^3.0.9"
