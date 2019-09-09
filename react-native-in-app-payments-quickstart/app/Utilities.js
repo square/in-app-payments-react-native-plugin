@@ -27,9 +27,9 @@ export function uuidv4() {
 }
 
 export function printCurlCommand(nonce, appId) {
-  let hostUrl = "https://connect.squareup.com";
-  if (appId.startsWith("sandbox")) {
-    hostUrl = "https://connect.squareupsandbox.com";
+  let hostUrl = 'https://connect.squareup.com';
+  if (appId.startsWith('sandbox')) {
+    hostUrl = 'https://connect.squareupsandbox.com';
   }
   const uuid = uuidv4();
   console.log(`Run this curl command to charge the nonce:
