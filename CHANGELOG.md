@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.2.2 September 6, 2019
+
+* Upgraded to Android SDK 28. Supports AndroidX.
+
 ### v1.2.1 June 5, 2019
 
 * Added `paymentType` parameter to support apple pay pending amount configuration.

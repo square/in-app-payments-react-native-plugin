@@ -55,6 +55,9 @@ buck-out/
 # Bundle artifact
 *.jsbundle
 
+# CocoaPods
+ios/Pods/
+
 android/app/.classpath
 android/app/.project
 android/app/.settings/org.eclipse.buildship.core.prefs

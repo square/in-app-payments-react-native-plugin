@@ -24,8 +24,8 @@ matrix:
           - tools
           - platform-tools
           - tools
-          - build-tools-28.0.2
-          - android-27
+          - build-tools-28.0.3
+          - android-28
           - extra-google-google_play_services
       install:
         - nvm install 8
@@ -39,7 +39,7 @@ matrix:
 
     - language: objective-c
       os: osx
-      osx_image: xcode9.4
+      osx_image: xcode11
       node_js: 8
       cache:
         directories:
@@ -52,4 +52,4 @@ matrix:
         - yarn
         - cd ios
       script:
-        - xcodebuild clean build -project RNInAppPaymentsQuickstart.xcodeproj -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=11.1,name=iPhone 8" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO -quiet
+        - xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -configuration Debug -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone X" -derivedDataPath build/RNInAppPaymentsQuickstart
