@@ -26,10 +26,14 @@ export function uuidv4() {
   });
 }
 
-export function printCurlCommand(nonce) {
+export function printCurlCommand(nonce, appId) {
+  // set host url based on application id
+  //   production: https://connect.squareup.com
+  //   sandbox: https://connect.squareupsandbox.com
+  const hostUrl = appId.startsWith('sandbox') ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com';
   const uuid = uuidv4();
   console.log(`Run this curl command to charge the nonce:
-          curl --request POST https://connect.squareup.com/v2/locations/SQUARE_LOCATION_ID/transactions \\
+          curl --request POST ${hostUrl}/v2/locations/SQUARE_LOCATION_ID/transactions \\
           --header "Content-Type: application/json" \\
           --header "Authorization: Bearer YOUR_ACCESS_TOKEN" \\
           --header "Accept: application/json" \\

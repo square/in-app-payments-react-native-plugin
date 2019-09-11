@@ -131,7 +131,7 @@ are just examples.
           compileSdkVersion = 28
           targetSdkVersion = 27
           supportLibVersion = "28.0.0"
-          sqipVersion = "1.1.0"
+          sqipVersion = "1.2.0"
       }
       ...
     }
