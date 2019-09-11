@@ -27,10 +27,10 @@ export function uuidv4() {
 }
 
 export function printCurlCommand(nonce, appId) {
-  let hostUrl = 'https://connect.squareup.com';
-  if (appId.startsWith('sandbox')) {
-    hostUrl = 'https://connect.squareupsandbox.com';
-  }
+  // set host url based on application id
+  //   production: https://connect.squareup.com
+  //   sandbox: https://connect.squareupsandbox.com
+  const hostUrl = appId.startsWith('sandbox') ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com';
   const uuid = uuidv4();
   console.log(`Run this curl command to charge the nonce:
           curl --request POST ${hostUrl}/v2/locations/SQUARE_LOCATION_ID/transactions \\
