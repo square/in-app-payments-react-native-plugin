@@ -37,8 +37,6 @@ In addition to this README, the following is available in the [React Native plug
 
 * In-App Payments SDK cannot issue refunds. Refunds can be issued programmatically using
   the Transactions API or manually in the [Square Dashboard].
-* In-App Payments SDK is not supported in the Square sandbox. See [Testing Mobile Apps]
-  for testing recommendations.
 
 ## Sample applications
 * **[Quick start React Native app]:** You can learn how the In-App-Payments React Native plugin is used by [getting started with the example app], a quick-start React Native app that lets you take a payment after completing 6 setup steps. 
