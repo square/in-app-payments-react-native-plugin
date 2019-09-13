@@ -1,5 +1,8 @@
 # React Native plugin for In-App Payments SDK
 
+[![Build Status](https://travis-ci.com/square/in-app-payments-react-native-plugin.svg?branch=master)](https://travis-ci.com/square/in-app-payments-react-native-plugin)
+[![npm version](https://badge.fury.io/js/react-native-square-in-app-payments.svg)](https://badge.fury.io/js/react-native-square-in-app-payments)
+
 The In-App Payments plugin for Square [In-App Payments SDK] is a wrapper for the native Android and iOS SDKs and 
 supports the following native In-App Payments SDK versions:
 
