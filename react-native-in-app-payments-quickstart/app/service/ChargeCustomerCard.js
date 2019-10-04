@@ -17,7 +17,7 @@
 import { CHARGE_CUSTOMER_CARD_SERVER_URL } from '../Constants';
 import ChargeCustomerCardError from '../ChargeCustomerCardError';
 
-export default async function createCustomerCard(customer_id, customer_card_id) {
+export default async function chargeCustomerCard(customer_id, customer_card_id) {
   const response = await fetch(CHARGE_CUSTOMER_CARD_SERVER_URL, {
     method: 'POST',
     headers: {
