@@ -168,7 +168,7 @@ export default class HomeScreen extends Component {
   async onApplePayComplete() {
     if (this.state.applePayState === applePayStatus.succeeded) {
       showAlert('Your order was successful',
-        'Go to your Square dashbord to see this order reflected in the sales tab.');
+        'Go to your Square dashboard to see this order reflected in the sales tab.');
     } else if (this.state.applePayState === applePayStatus.nonceNotCharged) {
       showAlert(
         'Nonce generated but not charged',
