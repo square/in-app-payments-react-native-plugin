@@ -35,22 +35,22 @@ export default function PendingModal() {
 }
 
 const styles = StyleSheet.create({
+  activityContainer: {
+    height: '10%',
+    margin: '10%',
+  },
   container: {
     width: '100%',
   },
-  activityContainer: {
-    margin: '10%',
-    height: '10%',
+  title: {
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   titleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
     margin: '3%',
-  },
-  title: {
-    color: '#000000',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });

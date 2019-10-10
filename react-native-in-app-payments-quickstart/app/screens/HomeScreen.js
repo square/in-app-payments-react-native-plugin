@@ -38,7 +38,7 @@ import {
   CHARGE_SERVER_HOST,
   GOOGLE_PAY_LOCATION_ID,
   APPLE_PAY_MERCHANT_ID,
-  CUSTOMER_ID
+  CUSTOMER_ID,
 } from '../Constants';
 import {
   printCurlCommand,
@@ -75,8 +75,8 @@ const iOSCardEntryTheme = {
     g: 152,
     b: 141,
     a: 0.9,
-  }
-}
+  },
+};
 
 export default class HomeScreen extends Component {
   state = {
@@ -240,7 +240,7 @@ export default class HomeScreen extends Component {
       showAlert(
         'An error occured processing the card on file',
         error.message,
-        this.showCardsOnFileScreen
+        this.showCardsOnFileScreen,
       );
     }
   }
@@ -250,6 +250,7 @@ export default class HomeScreen extends Component {
       try {
         // create the customer card record and add it to the state
         const customerCard = await createCustomerCard(CUSTOMER_ID, cardDetails.nonce);
+        // eslint-disable-next-line react/no-access-state-in-setstate
         this.setState({ cardsOnFile: [...this.state.cardsOnFile, customerCard] });
         SQIPCardEntry.completeCardEntry(() => {
           showAlert('Your card was saved and is ready to use.');
@@ -295,7 +296,7 @@ export default class HomeScreen extends Component {
     this.setState({
       showingBottomSheet: true,
       showingCardsOnFileScreen: false,
-      showingPendingScreen: false
+      showingPendingScreen: false,
     });
   }
 
@@ -307,21 +308,21 @@ export default class HomeScreen extends Component {
     this.setState({
       showingBottomSheet: true,
       showingCardsOnFileScreen: true,
-      showingPendingScreen: false
+      showingPendingScreen: false,
     });
   }
 
   closeCardsOnFileScreen() {
     this.setState({
-      showingCardsOnFileScreen: false
+      showingCardsOnFileScreen: false,
     });
   }
 
   showPendingScreen() {
     this.setState({
       showingPendingScreen: true,
-      showingCardsOnFileScreen: false
-    })
+      showingCardsOnFileScreen: false,
+    });
   }
 
   applicationIdIsSet() { return SQUARE_APP_ID !== 'REPLACE_ME'; }
@@ -362,7 +363,7 @@ export default class HomeScreen extends Component {
   }
 
   async startCardEntry() {
-    console.log("STARTING card entry")
+    console.log('STARTING card entry');
     this.setState({ showingCardEntry: false });
     const cardEntryConfig = {
       collectPostalCode: true,
@@ -370,7 +371,7 @@ export default class HomeScreen extends Component {
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
         ...iOSCardEntryTheme,
-        saveButtonTitle: 'Pay 🍪'
+        saveButtonTitle: 'Pay 🍪',
       });
     }
     await SQIPCardEntry.startCardEntryFlow(
@@ -381,7 +382,7 @@ export default class HomeScreen extends Component {
   }
 
   async startCustomerCardEntry() {
-    console.log("STARTING customer card entry")
+    console.log('STARTING customer card entry');
     this.setState({ showingCustomerCardEntry: false });
     const cardEntryConfig = {
       collectPostalCode: true,
@@ -389,7 +390,7 @@ export default class HomeScreen extends Component {
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
         ...iOSCardEntryTheme,
-        saveButtonTitle: 'Save 🍪'
+        saveButtonTitle: 'Save 🍪',
       });
     }
     await SQIPCardEntry.startCardEntryFlow(
@@ -442,19 +443,24 @@ export default class HomeScreen extends Component {
   renderModal() {
     if (this.state.showingPendingScreen) {
       return <PendingModal />;
+    // eslint-disable-next-line no-else-return
     } else if (this.state.showingCardsOnFileScreen) {
-      return <CardsOnFileModal
-        onCloseCardsOnFileScreen={this.closeCardsOnFileScreen}
-        onShowCustomerCardEntry={this.onShowCustomerCardEntry}
-        onSelectCardOnFile={this.onSelectCardOnFile}
-        cardsOnFile={this.state.cardsOnFile}
-      />;
+      return (
+        <CardsOnFileModal
+          onCloseCardsOnFileScreen={this.closeCardsOnFileScreen}
+          onShowCustomerCardEntry={this.onShowCustomerCardEntry}
+          onSelectCardOnFile={this.onSelectCardOnFile}
+          cardsOnFile={this.state.cardsOnFile}
+        />
+      );
     } else {
-      return <OrderModal
-        onCloseOrderScreen={this.closeOrderScreen}
-        onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
-        onShowDigitalWallet={this.onShowDigitalWallet}
-      />;
+      return (
+        <OrderModal
+          onCloseOrderScreen={this.closeOrderScreen}
+          onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
+          onShowDigitalWallet={this.onShowDigitalWallet}
+        />
+      );
     }
   }
 
@@ -482,7 +488,7 @@ export default class HomeScreen extends Component {
             {this.renderModal()}
           </View>
         </Modal>
-      </View >
+      </View>
     );
   }
 }
