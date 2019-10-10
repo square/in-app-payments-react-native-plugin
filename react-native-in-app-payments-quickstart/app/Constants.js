@@ -13,12 +13,12 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-const SQUARE_APP_ID = 'sq0idp-CFW8Y_2T55dtejd69UMLQg';
+const SQUARE_APP_ID = 'REPLACE_ME';
 // Make sure to remove trailing `/` since the CHARGE_SERVER_URL puts it
 const CHARGE_SERVER_HOST = 'REPLACE_ME';
 const CHARGE_SERVER_URL = `${CHARGE_SERVER_HOST}/chargeForCookie`;
 const GOOGLE_PAY_LOCATION_ID = 'REPLACE_ME';
-const APPLE_PAY_MERCHANT_ID = 'merchant.com.moot.swag';
+const APPLE_PAY_MERCHANT_ID = 'REPLACE_ME';
 // constants require for card on file transactions
 const CREATE_CUSTOMER_CARD_SERVER_URL = `${CHARGE_SERVER_HOST}/createCustomerCard`;
 const CHARGE_CUSTOMER_CARD_SERVER_URL = `${CHARGE_SERVER_HOST}/chargeCustomerCard`;
