@@ -1,5 +1,14 @@
 ## Changelog
 
+### v1.2.3 September 10, 2019
+
+* Bump Square In-App Payments SDK dependency to `1.2.0`.
+* Add support for Sandbox v2.
+
+### v1.2.2 September 6, 2019
+
+* Upgraded to Android SDK 28. Supports AndroidX.
+
 ### v1.2.1 June 5, 2019
 
 * Added `paymentType` parameter to support apple pay pending amount configuration.

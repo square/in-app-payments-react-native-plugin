@@ -12,14 +12,14 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
-def MIN_IAP_SDK_VERSION = '1.1.0'
+def MIN_IAP_SDK_VERSION = '1.2.0'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }

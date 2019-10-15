@@ -1,10 +1,13 @@
 # React Native plugin for In-App Payments SDK
 
+[![Build Status](https://travis-ci.com/square/in-app-payments-react-native-plugin.svg?branch=master)](https://travis-ci.com/square/in-app-payments-react-native-plugin)
+[![npm version](https://badge.fury.io/js/react-native-square-in-app-payments.svg)](https://badge.fury.io/js/react-native-square-in-app-payments)
+
 The In-App Payments plugin for Square [In-App Payments SDK] is a wrapper for the native Android and iOS SDKs and 
 supports the following native In-App Payments SDK versions:
 
-  * iOS: `1.1.1`
-  * Android: `1.1.0`
+  * iOS: `1.2.0`
+  * Android: `1.2.0`
 
 ## Additional documentation
 
@@ -24,7 +27,7 @@ In addition to this README, the following is available in the [React Native plug
 ### Android
 
 * Android minSdkVersion is API 21 (Lollipop, 5.0) or higher. 
-* Android Target SDK version: API 27 (Oreo, 8.1).
+* Android Target SDK version: API 28 (Android 9).
 * Android Gradle Plugin: 3.0.0 or greater.
 
 ### iOS
@@ -37,8 +40,6 @@ In addition to this README, the following is available in the [React Native plug
 
 * In-App Payments SDK cannot issue refunds. Refunds can be issued programmatically using
   the Transactions API or manually in the [Square Dashboard].
-* In-App Payments SDK is not supported in the Square sandbox. See [Testing Mobile Apps]
-  for testing recommendations.
 
 ## Sample applications
 * **[Quick start React Native app]:** You can learn how the In-App-Payments React Native plugin is used by [getting started with the example app], a quick-start React Native app that lets you take a payment after completing 6 setup steps. 

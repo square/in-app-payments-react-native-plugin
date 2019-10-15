@@ -20,7 +20,8 @@ environment.
 
 * [Step 1: Create a React Native project](#step-1-create-a-react-native-project)
 * [Step 2: Install and link the React Native plugin for In-App Payments SDK](#step-2-install-and-link-the-react-native-plugin-for-in-app-payments-sdk)
-* [Step 3: Add the In-App Payments SDK to your iOS project](#step-3-add-the-in-app-payments-sdk-to-your-ios-project)
+* [Step 3a: Add the In-App Payments SDK to your iOS project without Cocoapods](#step-3a-add-the-in-app-payments-sdk-to-your-ios-project-without-cocoapods)
+* [Step 3b: Add the In-App Payments SDK to your iOS project with Cocoapods](#step-3b-add-the-in-app-payments-sdk-to-your-ios-project-with-cocoapods)
 * [Step 4: Configure your Android project](#step-4-configure-your-android-project)
 
 **Card Entry Usage**
@@ -62,7 +63,7 @@ yarn add react-native-square-in-app-payments
 react-native link react-native-square-in-app-payments
 ```
 
-## Step 3: Add the In-App Payments SDK to your iOS project
+## Step 3a: Add the In-App Payments SDK to your iOS project without CocoaPods
 
 To use the In-App Payments plugin on iOS devices, install **In-App Payments SDK for iOS** 
 to make it an available resource for the React Native plugin. 
@@ -87,6 +88,32 @@ the project won't compile.
     1. In the `Link Binary With Libraries` build phase, remove `RNSquareInAppPayments-Resources.bundle`.
     1. In the `Copy Bundle Resources` build phase, add `RNSquareInAppPayments-Resources.bundle` from `Libraries`->`RNSquareInAppPayments.xcodeproj`.
 
+## Step 3b: Add the In-App Payments SDK to your iOS project with CocoaPods
+
+If your iOS project is configured with CocoaPods (`Podfile` should be found in folder `ios`), your iOS project will be able
+to download In-App Payments SDK automatically by following the steps below.
+
+1. Run `pod --version`, Make sure you have cocoapods version greater than `1.7.0`
+1. Open file `ios/Podfile`
+    * make sure you set the **platform** to `11.0` or above
+    * verify if `RNSquareInAppPayments` pod dependency is added
+    ```pod
+    platform :ios, '11.0' # set the platform version to 11.0
+
+    target 'myRNInAppPaymentsSample' do
+      use_frameworks! # enalbe use_frameworks!
+
+      # pod dependencies
+      ...
+      pod 'RNSquareInAppPayments', :path => '../node_modules/react-native-square-in-app-payments'
+    end
+    ```
+
+1. In folder `<YOUR_PROJECT_DIRECTORY>/ios`, run the following command to install updated pod dependencies:
+    ```bash
+    pod install
+    ```
+
 ## Step 4: Configure your Android project
 
 1. Open `android/build.gradle` and set your `minSdkVersion` to `21` or greater.
@@ -104,7 +131,7 @@ are just examples.
           compileSdkVersion = 28
           targetSdkVersion = 27
           supportLibVersion = "28.0.0"
-          sqipVersion = "1.1.0"
+          sqipVersion = "1.2.0"
       }
       ...
     }

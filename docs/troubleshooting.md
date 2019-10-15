@@ -70,3 +70,18 @@ There are 2 ways to address the issue:
     1. Open `File > Project Settings... > Per-User Project Settings`
     2. Choose `Legacy Build System`
     3. Run `react-native clean` from the command line.
+
+---
+
+
+## I get thre Error ":CFBundleIdentifier", Does Not Exist
+
+### The problem
+
+Your IOS configuration files are missing or not correctly configured.
+
+### Solution
+
+There is a stackoverflow question that adresses this problem:
+
+https://stackoverflow.com/questions/37461703/print-entry-cfbundleidentifier-does-not-exist.

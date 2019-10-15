@@ -156,7 +156,7 @@ export default class HomeScreen extends Component {
     } else {
       await SQIPApplePay.completeApplePayAuthorization(true);
       this.setState({ applePayState: applePayStatus.nonceNotCharged });
-      printCurlCommand(cardDetails.nonce);
+      printCurlCommand(cardDetails.nonce, SQUARE_APP_ID);
     }
   }
 
@@ -191,7 +191,7 @@ export default class HomeScreen extends Component {
         showAlert('Error processing GooglePay payment', error.message);
       }
     } else {
-      printCurlCommand(cardDetails.nonce);
+      printCurlCommand(cardDetails.nonce, SQUARE_APP_ID);
       showAlert(
         'Nonce generated but not charged',
         'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
@@ -220,7 +220,7 @@ export default class HomeScreen extends Component {
       }
     } else {
       SQIPCardEntry.completeCardEntry(() => {
-        printCurlCommand(cardDetails.nonce);
+        printCurlCommand(cardDetails.nonce, SQUARE_APP_ID);
         showAlert(
           'Nonce generated but not charged',
           'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
