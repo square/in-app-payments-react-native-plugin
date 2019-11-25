@@ -60,7 +60,6 @@ export function printCurlCommand(nonce, appId, verificationToken) {
           "verification_token": "${verificationToken}"
           }'`);
   }
-
 }
 
 export async function showAlert(title, message, onPress = null) {

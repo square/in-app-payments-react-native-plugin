@@ -230,6 +230,59 @@ export default class HomeScreen extends Component {
     this.setState({ showingCardEntry: true });
   }
 
+  async onBuyerVerificationSuccess(buyerVerificationDetails) {
+    if (this.chargeServerHostIsSet()) {
+      try {
+        await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
+        if (Platform.OS === 'ios') {
+          SQIPCardEntry.completeCardEntry(() => {
+            showAlert('Your order was successful',
+              'Go to your Square dashbord to see this order reflected in the sales tab.');
+          });
+        } else {
+          showAlert('Your order was successful',
+            'Go to your Square dashbord to see this order reflected in the sales tab.');
+        }
+      } catch (error) {
+        if (Platform.OS === 'ios') {
+          SQIPCardEntry.showCardNonceProcessingError(error.message);
+        } else {
+          showAlert('Error processing card payment', error.message);
+        }
+      }
+    } else if (Platform.OS === 'ios') {
+      SQIPCardEntry.completeCardEntry(() => {
+        printCurlCommand(
+          buyerVerificationDetails.nonce,
+          SQUARE_APP_ID,
+          buyerVerificationDetails.token,
+        );
+        showAlert(
+          'Nonce and verification token generated but not charged',
+          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+        );
+      });
+    } else {
+      printCurlCommand(
+        buyerVerificationDetails.nonce,
+        SQUARE_APP_ID,
+        buyerVerificationDetails.token,
+      );
+      showAlert(
+        'Nonce and verification token generated but not charged',
+        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+      );
+    }
+  }
+
+  async onBuyerVerificationFailure(errorInfo) {
+    if (Platform.OS === 'ios') {
+      SQIPCardEntry.showCardNonceProcessingError(errorInfo.message);
+    } else {
+      showAlert('Error verifying buyer', errorInfo.message);
+    }
+  }
+
   showOrderScreen() {
     this.setState({ showingBottomSheet: true });
   }
@@ -291,7 +344,7 @@ export default class HomeScreen extends Component {
       countryCode: 'GB',
       email: 'johndoe@example.com',
       phone: '8001234567',
-      postalCode: 'SE1 7'
+      postalCode: 'SE1 7',
     };
     await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
       cardEntryConfig,
@@ -299,53 +352,6 @@ export default class HomeScreen extends Component {
       this.onBuyerVerificationFailure,
       this.onCardEntryCancel,
     );
-  }
-
-  async onBuyerVerificationSuccess(buyerVerificationDetails) {
-    if (this.chargeServerHostIsSet()) {
-      try {
-        await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
-        if (Platform.OS === 'ios') {
-          SQIPCardEntry.completeCardEntry(() => {
-            showAlert('Your order was successful',
-              'Go to your Square dashbord to see this order reflected in the sales tab.');
-          });
-        } else {
-          showAlert('Your order was successful',
-              'Go to your Square dashbord to see this order reflected in the sales tab.');
-        }
-      } catch (error) {
-        if (Platform.OS === 'ios') {
-          SQIPCardEntry.showCardNonceProcessingError(error.message);
-        } else {
-          showAlert('Error processing card payment', error.message);
-        }
-      }
-    } else {
-      if (Platform.OS === 'ios') {
-        SQIPCardEntry.completeCardEntry(() => {
-          printCurlCommand(buyerVerificationDetails.nonce, SQUARE_APP_ID, buyerVerificationDetails.token);
-          showAlert(
-            'Nonce and verification token generated but not charged',
-            'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
-          );
-        });
-      } else {
-        printCurlCommand(buyerVerificationDetails.nonce, SQUARE_APP_ID, buyerVerificationDetails.token);
-        showAlert(
-          'Nonce and verification token generated but not charged',
-          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
-        );
-      }
-    }
-  }
-
-  async onBuyerVerificationFailure(errorInfo) {
-    if (Platform.OS === 'ios') {
-      SQIPCardEntry.showCardNonceProcessingError(errorInfo.message);
-    } else {
-      showAlert('Error verifying buyer', errorInfo.message);
-    }
   }
 
   async startDigitalWallet() {

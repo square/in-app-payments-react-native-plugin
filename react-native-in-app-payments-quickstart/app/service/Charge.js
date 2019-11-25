@@ -25,7 +25,7 @@ export default async function chargeCardNonce(nonce, verificationToken) {
   } else {
     body = JSON.stringify({
       nonce,
-      verificationToken
+      verificationToken,
     });
   }
   const response = await fetch(CHARGE_SERVER_URL, {
@@ -34,7 +34,7 @@ export default async function chargeCardNonce(nonce, verificationToken) {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: body
+    body,
   });
 
   try {
