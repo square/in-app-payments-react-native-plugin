@@ -5272,7 +5272,7 @@ react-native-safe-area-view@^0.14.1:
     debounce "^1.2.0"
 
 "react-native-square-in-app-payments@file:..":
-  version "1.2.2"
+  version "1.3.0"
 
 react-native-tab-view@^1.2.0, react-native-tab-view@^1.4.1:
   version "1.4.1"

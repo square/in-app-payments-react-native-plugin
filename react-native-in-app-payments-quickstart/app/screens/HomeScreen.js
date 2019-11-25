@@ -33,6 +33,7 @@ import OrderModal from '../components/OrderModal';
 import GreenButton from '../components/GreenButton';
 import {
   SQUARE_APP_ID,
+  SQUARE_LOCATION_ID,
   CHARGE_SERVER_HOST,
   GOOGLE_PAY_LOCATION_ID,
   APPLE_PAY_MERCHANT_ID,
@@ -78,7 +79,10 @@ export default class HomeScreen extends Component {
     this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
     this.showOrderScreen = this.showOrderScreen.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
+    this.startCardEntryWithBuyerVerification = this.startCardEntryWithBuyerVerification.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
+    this.onBuyerVerificationSuccess = this.onBuyerVerificationSuccess.bind(this);
+    this.onBuyerVerificationFailure = this.onBuyerVerificationFailure.bind(this);
   }
 
   async componentDidMount() {
@@ -249,9 +253,10 @@ export default class HomeScreen extends Component {
       if (!this.applicationIdIsSet()) {
         showAlert('Missing Square Application ID',
           'To request a nonce, replace SQUARE_APP_ID in Constants.js with an Square Application ID.',
-          this.startCardEntry);
+          this.startCardEntryWithBuyerVerification);
       } else {
-        this.startCardEntry();
+        // this.startCardEntry();
+        this.startCardEntryWithBuyerVerification();
       }
     } else if (this.state.showingDigitalWallet) {
       this.startDigitalWallet();
@@ -269,6 +274,78 @@ export default class HomeScreen extends Component {
       this.onCardNonceRequestSuccess,
       this.onCardEntryCancel,
     );
+  }
+
+  async startCardEntryWithBuyerVerification() {
+    this.setState({ showingCardEntry: false });
+    const cardEntryConfig = {
+      collectPostalCode: true,
+      squareLocationId: SQUARE_LOCATION_ID,
+      buyerAction: 'Charge',
+      amount: 100,
+      currencyCode: 'USD',
+      givenName: 'John',
+      familyName: 'Doe',
+      addressLines: ['London Eye', 'Riverside Walk'],
+      city: 'London',
+      countryCode: 'GB',
+      email: 'johndoe@example.com',
+      phone: '8001234567',
+      postalCode: 'SE1 7'
+    };
+    await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
+      cardEntryConfig,
+      this.onBuyerVerificationSuccess,
+      this.onBuyerVerificationFailure,
+      this.onCardEntryCancel,
+    );
+  }
+
+  async onBuyerVerificationSuccess(buyerVerificationDetails) {
+    if (this.chargeServerHostIsSet()) {
+      try {
+        await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
+        if (Platform.OS === 'ios') {
+          SQIPCardEntry.completeCardEntry(() => {
+            showAlert('Your order was successful',
+              'Go to your Square dashbord to see this order reflected in the sales tab.');
+          });
+        } else {
+          showAlert('Your order was successful',
+              'Go to your Square dashbord to see this order reflected in the sales tab.');
+        }
+      } catch (error) {
+        if (Platform.OS === 'ios') {
+          SQIPCardEntry.showCardNonceProcessingError(error.message);
+        } else {
+          showAlert('Error processing card payment', error.message);
+        }
+      }
+    } else {
+      if (Platform.OS === 'ios') {
+        SQIPCardEntry.completeCardEntry(() => {
+          printCurlCommand(buyerVerificationDetails.nonce, SQUARE_APP_ID, buyerVerificationDetails.token);
+          showAlert(
+            'Nonce and verification token generated but not charged',
+            'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+          );
+        });
+      } else {
+        printCurlCommand(buyerVerificationDetails.nonce, SQUARE_APP_ID, buyerVerificationDetails.token);
+        showAlert(
+          'Nonce and verification token generated but not charged',
+          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+        );
+      }
+    }
+  }
+
+  async onBuyerVerificationFailure(errorInfo) {
+    if (Platform.OS === 'ios') {
+      SQIPCardEntry.showCardNonceProcessingError(errorInfo.message);
+    } else {
+      showAlert('Error verifying buyer', errorInfo.message);
+    }
   }
 
   async startDigitalWallet() {
