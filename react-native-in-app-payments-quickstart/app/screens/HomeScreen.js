@@ -234,34 +234,11 @@ export default class HomeScreen extends Component {
     if (this.chargeServerHostIsSet()) {
       try {
         await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
-        if (Platform.OS === 'ios') {
-          SQIPCardEntry.completeCardEntry(() => {
-            showAlert('Your order was successful',
-              'Go to your Square dashbord to see this order reflected in the sales tab.');
-          });
-        } else {
-          showAlert('Your order was successful',
-            'Go to your Square dashbord to see this order reflected in the sales tab.');
-        }
+        showAlert('Your order was successful',
+          'Go to your Square dashbord to see this order reflected in the sales tab.');
       } catch (error) {
-        if (Platform.OS === 'ios') {
-          SQIPCardEntry.showCardNonceProcessingError(error.message);
-        } else {
-          showAlert('Error processing card payment', error.message);
-        }
+        showAlert('Error processing card payment', error.message);
       }
-    } else if (Platform.OS === 'ios') {
-      SQIPCardEntry.completeCardEntry(() => {
-        printCurlCommand(
-          buyerVerificationDetails.nonce,
-          SQUARE_APP_ID,
-          buyerVerificationDetails.token,
-        );
-        showAlert(
-          'Nonce and verification token generated but not charged',
-          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
-        );
-      });
     } else {
       printCurlCommand(
         buyerVerificationDetails.nonce,
@@ -276,11 +253,7 @@ export default class HomeScreen extends Component {
   }
 
   async onBuyerVerificationFailure(errorInfo) {
-    if (Platform.OS === 'ios') {
-      SQIPCardEntry.showCardNonceProcessingError(errorInfo.message);
-    } else {
-      showAlert('Error verifying buyer', errorInfo.message);
-    }
+    showAlert('Error verifying buyer', errorInfo.message);
   }
 
   showOrderScreen() {
