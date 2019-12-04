@@ -86,7 +86,9 @@ class CardEntryModule extends ReactContextBaseJavaModule {
               if (cardEntryActivityResult.isSuccess() && CardEntryModule.this.contact != null) {
                 cardResult = cardEntryActivityResult.getSuccessValue();
                 String paymentSourceId = cardResult.getNonce();
-                VerificationParameters verificationParameters = new VerificationParameters(paymentSourceId, CardEntryModule.this.buyerAction, CardEntryModule.this.squareIdentifier, CardEntryModule.this.contact);
+                VerificationParameters verificationParameters =
+                  new VerificationParameters(paymentSourceId, CardEntryModule.this.buyerAction, CardEntryModule.this.squareIdentifier,
+                    CardEntryModule.this.contact);
                 BuyerVerification.verify(Objects.requireNonNull(getCurrentActivity()), verificationParameters);
               } else {
                 // React Native UI doesn't know the context of fade_out animation
@@ -100,8 +102,7 @@ class CardEntryModule extends ReactContextBaseJavaModule {
                     if (cardEntryActivityResult.isCanceled()) {
                       getDeviceEventEmitter().emit("cardEntryCancel", null);
                     } else if (cardEntryActivityResult.isSuccess()) {
-                      WritableMap mapToReturn = cardDetailsConverter.toMapObject(cardEntryActivityResult.getSuccessValue());
-                      getDeviceEventEmitter().emit("cardEntryDidObtainCardDetails", mapToReturn);
+                      getDeviceEventEmitter().emit("cardEntryComplete", null);
                     }
                   }
                 }, delayDurationMs);
@@ -118,7 +119,9 @@ class CardEntryModule extends ReactContextBaseJavaModule {
               getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
             } else if (result.isError()) {
               sqip.BuyerVerificationResult.Error error = result.getErrorValue();
-              WritableMap errorMap = ErrorHandlerUtils.getCallbackErrorObject(error.getCode().name(), error.getMessage(), error.getDebugCode(), error.getDebugMessage());
+              WritableMap errorMap =
+                ErrorHandlerUtils.getCallbackErrorObject(error.getCode().name(), error.getMessage(), error.getDebugCode(),
+                  error.getDebugMessage());
               getDeviceEventEmitter().emit("onBuyerVerificationError", errorMap);
             }
           });
@@ -169,7 +172,9 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void startCardEntryFlowWithVerification(final Boolean collectPostalCode, final String locationId, final String buyerActionString, final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
+  public void startCardEntryFlowWithVerification(
+    final Boolean collectPostalCode, final String locationId, final String buyerActionString,
+    final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
     Money money = new Money(
       ((Integer)moneyMap.getInt("amount")),
       sqip.Currency.valueOf((String)moneyMap.getString("currencyCode")));
@@ -186,7 +191,8 @@ class CardEntryModule extends ReactContextBaseJavaModule {
     // Contact info
     String givenName = contactMap.hasKey("givenName") ? contactMap.getString("givenName") : "";
     String familyName = contactMap.hasKey("familyName") ? contactMap.getString("familyName") : "";
-    ArrayList<Object> inputList = contactMap.hasKey("addressLines") ? contactMap.getArray("addressLines").toArrayList() : new ArrayList<Object>();
+    ArrayList<Object> inputList =
+      contactMap.hasKey("addressLines") ? contactMap.getArray("addressLines").toArrayList() : new ArrayList<Object>();
     ArrayList<String> addressLines = new ArrayList<>(inputList.size());
     for (Object object : inputList) {
       addressLines.add(Objects.toString(object, null));
