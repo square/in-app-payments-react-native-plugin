@@ -283,7 +283,8 @@ export default class HomeScreen extends Component {
       } else {
         // call this.startCardEntry() to start Card Entry without buyer verification (SCA)
         this.startCardEntry();
-        // OR call this.startCardEntryWithBuyerVerification() to start Card Entry with buyer verification (SCA)
+        // OR call this.startCardEntryWithBuyerVerification() to
+        // start Card Entry with buyer verification (SCA)
         // NOTE this requires _squareLocationSet to be set
         // this.startCardEntryWithBuyerVerification();
       }
