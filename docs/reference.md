@@ -24,6 +24,7 @@ Method                                                       | Return Object    
 :----------------------------------------------------------- | :------------------------ | :------------------------------
 [setSquareApplicationId](#setsquareapplicationid)            | void                      | Sets the Square Application ID.
 [startCardEntryFlow](#startcardentryflow)                    | void                      | Displays a full-screen card entry view.
+[startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) | void | Displays a full-screen card entry view with buyer verification flow enabled.
 [completeCardEntry](#completecardentry)                      | void                      | Closes the card entry form on success.
 [showCardNonceProcessingError](#showcardnonceprocessingerror)| void                      | Shows an error in the card entry form without closing the form.
 [setIOSCardEntryTheme](#setioscardentrytheme)                | void                      | Sets the customization theme for the card entry view controller in the native layer.
@@ -102,6 +103,51 @@ await SQIPCardEntry.startCardEntryFlow(
   () => { ... }, // onCardEntryCancel
 );
 ```
+
+---
+### startCardEntryFlowWithBuyerVerification
+
+Displays a full-screen card entry view with buyer verification flow enabled. The method takes one configuration object and three call back parameters which correspond
+to the possible results of the request.
+
+Parameter                          | Type                                                                          | Description
+:----------------------------------| :---------------------------------------------------------------------------- | :-----------
+cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Configuration object for card entry behavior, pass `null` for default configuration
+onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when card entry with buyer verification is completed successfully.
+onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when card entry with buyer verification encounters errors.
+onCardEntryCancel                  | [cardEntryCancelCallback](#cardentrycancelcallback)                           | Invoked when card entry is canceled.
+
+#### Example usage
+
+```javascript
+import {
+  SQIPCardEntry
+} from 'react-native-square-in-app-payments';
+
+const cardEntryConfig = {
+  collectPostalCode: true,
+  squareLocationId: SQUARE_LOCATION_ID,
+  buyerAction: 'Charge',
+  amount: 100,
+  currencyCode: 'USD',
+  givenName: 'John',
+  familyName: 'Doe',
+  addressLines: ['London Eye', 'Riverside Walk'],
+  city: 'London',
+  countryCode: 'GB',
+  email: 'johndoe@example.com',
+  phone: '8001234567',
+  postalCode: 'SE1 7'
+};
+
+await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
+  cardEntryConfig,
+  (buyerVerificationDetails) => { ... }, // onBuyerVerificationSuccess
+  (errorInfo) => { ... }, // onBuyerVerificationFailure
+  () => { ... }, // onCardEntryCancel
+);
+```
+
 
 
 ---
@@ -542,6 +588,16 @@ onCardNonceRequestSuccess(cardDetails) {
 }
 ```
 
+---
+### BuyerVerificationSuccessCallback
+
+Callback invoked when Buyer Verification flow succeeds.
+
+
+---
+### BuyerVerificationErrorCallback
+
+Callback invoked when Buyer Verification flow fails.
 
 ---
 ### cardEntryCancelCallback
@@ -761,6 +817,31 @@ card            | [Card](#card)   | Non-confidential details about the entered c
     "brand": "VISA",
     "lastFourDigits": "1111"
   }
+}
+```
+
+---
+
+### buyerVerificationDetails
+
+Represents the result of a successful buyer verification request.
+
+Field           | Type            | Description
+:-------------- | :-------------- | :-----------------
+nonce           | String          | A one-time-use payment token that can be used with the Square Connect APIs to charge the card or save the card information.
+card            | [Card](#card)   | Non-confidential details about the entered card, such as the brand and last four digits of the card number.
+token           | String          | The token representing a verified buyer.
+
+#### Example JSON
+
+```json
+{
+  "nonce": "CARD_NONCE",
+  "card": {
+    "brand": "VISA",
+    "lastFourDigits": "1111"
+  },
+  "token": "VERIFICATION_TOKEN"
 }
 ```
 
@@ -1069,6 +1150,9 @@ ErrorCode                          | Cause                                      
 :--------------------------------- | :--------------------------------------------------------------- | :---
 <a id="e1">`usageError`</a>        | In-App Payments SDK was used in an unexpected or unsupported way.| all methods
 <a id="e2">`noNetwork`</a>         | In-App Payments SDK could not connect to the network.            | [applePayNonceRequestFailureCallback](#applepaynoncerequestfailurecallback), [googlePayNonceRequestFailureCallback](#googlepaynoncerequestfailurecallback)
+<a id="e3">`failed`</a> | Square Buyer Verification SDK could not verify the provided card. | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback)
+<a id="e4">`canceled`</a> | The result when the customer cancels the Square Buyer Verification flow before a card is successfully verified. | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback)
+<a id="e5">`unsupportedSDKVersion`</a> | The version of the Square Buyer Verification SDK used by this application is no longer supported | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback)
 
 
 [//]: # "Link anchor definitions"

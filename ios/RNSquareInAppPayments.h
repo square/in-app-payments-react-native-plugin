@@ -21,6 +21,7 @@
 #endif
 
 @import SquareInAppPaymentsSDK;
+@import SquareBuyerVerificationSDK;
 
 
 @interface RNSquareInAppPayments : NSObject <RCTBridgeModule>

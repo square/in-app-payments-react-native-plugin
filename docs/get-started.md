@@ -294,6 +294,7 @@ Add a button and start the card entry in button `onPress` event handler.
     }
   }
   ```
+  **Note**: To start the payment flow with Strong Customer Authentication, you should call `startCardEntryFlowWithBuyerVerification`.
 ---
 **Note:** the `chargeCard` method in this example shows a typical REST request on a backend process
 that uses the **Transactions API** to take a payment with the supplied nonce.
