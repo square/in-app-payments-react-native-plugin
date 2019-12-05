@@ -279,10 +279,13 @@ export default class HomeScreen extends Component {
       if (!this.applicationIdIsSet()) {
         showAlert('Missing Square Application ID',
           'To request a nonce, replace SQUARE_APP_ID in Constants.js with an Square Application ID.',
-          this.startCardEntryWithBuyerVerification);
+          this.startCardEntry);
       } else {
-        // this.startCardEntry();
-        this.startCardEntryWithBuyerVerification();
+        // call this.startCardEntry() to start Card Entry without buyer verification (SCA)
+        this.startCardEntry();
+        // OR call this.startCardEntryWithBuyerVerification() to start Card Entry with buyer verification (SCA)
+        // NOTE this requires _squareLocationSet to be set
+        // this.startCardEntryWithBuyerVerification();
       }
     } else if (this.state.showingDigitalWallet) {
       this.startDigitalWallet();
