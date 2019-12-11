@@ -296,7 +296,7 @@ export default class HomeScreen extends Component {
     this.closeOrderScreen();
     this.setState({ showingCustomerCardEntry: true });
   }
-  
+
   async onBuyerVerificationSuccess(buyerVerificationDetails) {
     if (this.chargeServerHostIsSet()) {
       try {
@@ -432,9 +432,9 @@ export default class HomeScreen extends Component {
       cardEntryConfig,
       this.onCustomerCardNonceRequestSuccess,
       this.onCustomerCardEntryCancel,
-    )
+    );
   }
-  
+
   async startCardEntryWithBuyerVerification() {
     this.setState({ showingCardEntry: false });
     const cardEntryConfig = {
