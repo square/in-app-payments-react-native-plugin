@@ -16,16 +16,25 @@
 import { CHARGE_SERVER_URL } from '../Constants';
 import ChargeError from '../ChargeError';
 
-export default async function chargeCardNonce(nonce) {
+export default async function chargeCardNonce(nonce, verificationToken) {
+  let body;
+  if (verificationToken === undefined) {
+    body = JSON.stringify({
+      nonce,
+    });
+  } else {
+    body = JSON.stringify({
+      nonce,
+      verificationToken,
+    });
+  }
   const response = await fetch(CHARGE_SERVER_URL, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      nonce,
-    }),
+    body,
   });
 
   try {

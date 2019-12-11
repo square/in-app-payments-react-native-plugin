@@ -25,7 +25,9 @@
 @import SquareInAppPaymentsSDK;
 @import SquareBuyerVerificationSDK;
 
+@interface RNSQIPBuyerVerification : NSObject
 
-@interface RNSQIPCardEntry : RCTEventEmitter <RCTBridgeModule, SQIPCardEntryViewControllerDelegate>
++ (SQIPCurrency)currencyForCurrencyCode:(nonnull NSString *)currencyCode;
++ (SQIPCountry)countryForCountryCode:(nonnull NSString *)countryCode;
 
 @end

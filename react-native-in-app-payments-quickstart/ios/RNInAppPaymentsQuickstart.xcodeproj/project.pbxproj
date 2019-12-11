@@ -235,10 +235,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-frameworks.sh",
-				"${PODS_ROOT}/SquareInAppPaymentsSDK/SquareInAppPaymentsSDK.framework",
+				"${PODS_ROOT}/SquareBuyerVerificationSDK/SquareInAppPaymentsSDKs.framework/SquareBuyerVerificationSDK.framework",
+				"${PODS_ROOT}/SquareInAppPaymentsSDK/SquareInAppPaymentsSDKs.framework/SquareInAppPaymentsSDK.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SquareBuyerVerificationSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SquareInAppPaymentsSDK.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

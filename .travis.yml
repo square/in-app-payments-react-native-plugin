@@ -1,55 +1,62 @@
 matrix:
   include:
-    - language: node_js
-      node_js: 8
-      script:
-        - yarn && yarn lint && yarn test
-        - cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
-
-    - language: android
-      sudo: false
-      jdk: oraclejdk8
-      os:
-        - linux
-      before_cache:
-        - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-      cache:
-        directories:
-          - $HOME/.yarn-cache
-          - $HOME/.gradle/caches/
-          - $HOME/.gradle/wrapper/
-      android:
-        components:
-          - tools
-          - platform-tools
-          - tools
-          - build-tools-28.0.3
-          - android-28
-          - extra-google-google_play_services
-      install:
-        - nvm install 8
-        - curl -o- -L https://yarnpkg.com/install.sh | bash
-        - export PATH="$HOME/.yarn/bin:$PATH"
-        - cd react-native-in-app-payments-quickstart
-        - yarn
-      script:
-        - cd android
-        - ./gradlew clean build
-
-    - language: objective-c
-      os: osx
-      osx_image: xcode11
-      node_js: 8
-      cache:
-        directories:
-          - $HOME/.yarn-cache
-      before_install:
-        - nvm install 8
-        - curl -o- -L https://yarnpkg.com/install.sh | bash
-        - export PATH="$HOME/.yarn/bin:$PATH"
-        - cd react-native-in-app-payments-quickstart
-        - yarn
-        - cd ios
-      script:
-        - xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -configuration Debug -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone X" -derivedDataPath build/RNInAppPaymentsQuickstart
+  - language: node_js
+    node_js: 8
+    script:
+    - yarn && yarn lint && yarn test
+    - cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
+  - language: android
+    sudo: false
+    jdk: oraclejdk8
+    os:
+    - linux
+    before_cache:
+    - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+    - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+    cache:
+      directories:
+      - "$HOME/.yarn-cache"
+      - "$HOME/.gradle/caches/"
+      - "$HOME/.gradle/wrapper/"
+    android:
+      components:
+      - tools
+      - platform-tools
+      - tools
+      - build-tools-28.0.3
+      - android-28
+      - extra-google-google_play_services
+    install:
+    - nvm install 8
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH="$HOME/.yarn/bin:$PATH"
+    - cd react-native-in-app-payments-quickstart
+    - yarn
+    script:
+    - cd android
+    - "./gradlew clean build"
+  - language: objective-c
+    os: osx
+    osx_image: xcode11.2
+    node_js: 8
+    cache:
+      directories:
+      - "$HOME/.yarn-cache"
+    before_install:
+    - nvm install 8
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH="$HOME/.yarn/bin:$PATH"
+    - cd react-native-in-app-payments-quickstart
+    - yarn
+    - cd ios
+    script:
+    - xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -configuration Debug
+      -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone
+      X" -derivedDataPath build/RNInAppPaymentsQuickstart
+notifications:
+  slack:
+    on_failure: change
+    on_success: change
+    template:
+    - "@oncall Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} in PR <%{pull_request_url}|#%{pull_request_number}> by %{author} %{result} in %{duration}"
+    secure: GVXwqHXI/uheLL8bujHlw/1n0Q+rVXiy2uW88T3b+1TgI79RM5Ne9sBzN5ChwGnULqqvHahalJBcEjau3gZFcJFzrV7pqmOfK0PJEknH58HUTCTc31YQc+EizfJVkNDIBKy7dFVuSubkERt3Cx/Hn7wkAzAbJdq4Y6yl4mY1XTKYiBlha5JTAfuXR8LyyhGtUH52nzjcRxSymHbnQZpRJ5NOlWixJjTfIfKsfmfN87UN0LEuDXbFE6e73ZR/a09KogioQd4ufzZDbRZ8HFzI8XuZCfHPeJarT42ydKIZoTWB3d/9FxB/JcjH4zCVH1NxWUfklIoXKv7ZsUEoI9clch1+6CkFkoDssQbBAIk54Pj3GiXkQ5ujSS0RjMB+zlYU2YJtv335Hv0moo8fOe/5n48aJcGk6yvPBxAzKckupQg+kWjahxgtYNxQNlLyGv62DxSAGjVq33cyf7Z79MsVWTd+VTXCO/AB4KeyI9ArcBPRsaKpbz3/GxtIPKZo8QRRaGIaWDwAS4Cu3bcC1OLliJlUAOz2nZjFzI1IqOPVUr7leFXIiag9qRd770aVy/NB9KC1pfKIp7YXZAbsx0XdD8X8sM0bmGRl2KYuOEGjcpArjdDp8B2CZO9N/PsdqGUh+n4tLu4l2rirA6E65q3KcnbsNGTsMtsse+mIlSB/Pi4=

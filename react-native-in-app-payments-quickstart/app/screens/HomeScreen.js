@@ -35,6 +35,7 @@ import PendingModal from '../components/PendingModal';
 import GreenButton from '../components/GreenButton';
 import {
   SQUARE_APP_ID,
+  SQUARE_LOCATION_ID,
   CHARGE_SERVER_HOST,
   GOOGLE_PAY_LOCATION_ID,
   APPLE_PAY_MERCHANT_ID,
@@ -115,6 +116,10 @@ export default class HomeScreen extends Component {
     this.showCardsOnFileScreen = this.showCardsOnFileScreen.bind(this);
     this.closeCardsOnFileScreen = this.closeCardsOnFileScreen.bind(this);
     this.onSelectCardOnFile = this.onSelectCardOnFile.bind(this);
+    this.startCardEntryWithBuyerVerification = this.startCardEntryWithBuyerVerification.bind(this);
+    this.closeOrderScreen = this.closeOrderScreen.bind(this);
+    this.onBuyerVerificationSuccess = this.onBuyerVerificationSuccess.bind(this);
+    this.onBuyerVerificationFailure = this.onBuyerVerificationFailure.bind(this);
   }
 
   async componentDidMount() {
@@ -291,6 +296,32 @@ export default class HomeScreen extends Component {
     this.closeOrderScreen();
     this.setState({ showingCustomerCardEntry: true });
   }
+  
+  async onBuyerVerificationSuccess(buyerVerificationDetails) {
+    if (this.chargeServerHostIsSet()) {
+      try {
+        await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
+        showAlert('Your order was successful',
+          'Go to your Square dashbord to see this order reflected in the sales tab.');
+      } catch (error) {
+        showAlert('Error processing card payment', error.message);
+      }
+    } else {
+      printCurlCommand(
+        buyerVerificationDetails.nonce,
+        SQUARE_APP_ID,
+        buyerVerificationDetails.token,
+      );
+      showAlert(
+        'Nonce and verification token generated but not charged',
+        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+      );
+    }
+  }
+
+  async onBuyerVerificationFailure(errorInfo) {
+    showAlert('Error verifying buyer', errorInfo.message);
+  }
 
   showOrderScreen() {
     this.setState({
@@ -344,7 +375,12 @@ export default class HomeScreen extends Component {
           'To request a nonce, replace SQUARE_APP_ID in Constants.js with an Square Application ID.',
           this.startCardEntry);
       } else {
+        // call this.startCardEntry() to start Card Entry without buyer verification (SCA)
         this.startCardEntry();
+        // OR call this.startCardEntryWithBuyerVerification() to
+        // start Card Entry with buyer verification (SCA)
+        // NOTE this requires _squareLocationSet to be set
+        // this.startCardEntryWithBuyerVerification();
       }
     } else if (this.state.showingCustomerCardEntry) {
       // if application id is not set, we will let you know where to set it,
@@ -382,7 +418,6 @@ export default class HomeScreen extends Component {
   }
 
   async startCustomerCardEntry() {
-    console.log('STARTING customer card entry');
     this.setState({ showingCustomerCardEntry: false });
     const cardEntryConfig = {
       collectPostalCode: true,
@@ -397,6 +432,31 @@ export default class HomeScreen extends Component {
       cardEntryConfig,
       this.onCustomerCardNonceRequestSuccess,
       this.onCustomerCardEntryCancel,
+    )
+  }
+  
+  async startCardEntryWithBuyerVerification() {
+    this.setState({ showingCardEntry: false });
+    const cardEntryConfig = {
+      collectPostalCode: true,
+      squareLocationId: SQUARE_LOCATION_ID,
+      buyerAction: 'Charge',
+      amount: 100,
+      currencyCode: 'USD',
+      givenName: 'John',
+      familyName: 'Doe',
+      addressLines: ['London Eye', 'Riverside Walk'],
+      city: 'London',
+      countryCode: 'GB',
+      email: 'johndoe@example.com',
+      phone: '8001234567',
+      postalCode: 'SE1 7',
+    };
+    await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
+      cardEntryConfig,
+      this.onBuyerVerificationSuccess,
+      this.onBuyerVerificationFailure,
+      this.onCardEntryCancel,
     );
   }
 

@@ -14,6 +14,7 @@
  limitations under the License.
 */
 const SQUARE_APP_ID = 'REPLACE_ME';
+const SQUARE_LOCATION_ID = 'REPLACE_ME';
 // Make sure to remove trailing `/` since the CHARGE_SERVER_URL puts it
 const CHARGE_SERVER_HOST = 'REPLACE_ME';
 const CHARGE_SERVER_URL = `${CHARGE_SERVER_HOST}/chargeForCookie`;
@@ -26,6 +27,7 @@ const CUSTOMER_ID = 'REPLACE_ME';
 
 module.exports = {
   SQUARE_APP_ID,
+  SQUARE_LOCATION_ID,
   CHARGE_SERVER_HOST,
   CHARGE_SERVER_URL,
   GOOGLE_PAY_LOCATION_ID,

@@ -16,6 +16,8 @@
 
 #import "RNSQIPCardEntry.h"
 #import "RNSQIPErrorUtilities.h"
+#import "RNSQIPBuyerVerification.h"
+#import "Converters/SQIPCard+RNSQIPAdditions.h"
 #import "Converters/SQIPCardDetails+RNSQIPAdditions.h"
 #import "Converters/UIFont+RNSQIPAdditions.h"
 #import "Converters/UIColor+RNSQIPAdditions.h"
@@ -27,12 +29,19 @@ typedef void (^CompletionHandler)(NSError *_Nullable);
 
 @property (strong, readwrite) SQIPTheme *theme;
 @property (strong, readwrite) CompletionHandler completionHandler;
+@property (strong, readwrite) SQIPCardEntryViewController *cardEntryViewController;
+@property (strong, readwrite) NSString *locationId;
+@property (strong, readwrite) SQIPBuyerAction *buyerAction;
+@property (strong, readwrite) SQIPContact *contact;
+@property (strong, readwrite) SQIPCardDetails *cardDetails;
 
 @end
 
 static NSString *const RNSQIPCardEntryCancelEventName = @"cardEntryCancel";
 static NSString *const RNSQIPCardEntryCompleteEventName = @"cardEntryComplete";
 static NSString *const RNSQIPCardEntryDidObtainCardDetailsEventName = @"cardEntryDidObtainCardDetails";
+static NSString *const RNSQIPOnBuyerVerificationSuccessEventName = @"onBuyerVerificationSuccess";
+static NSString *const RNSQIPOnBuyerVerificationErrorEventName = @"onBuyerVerificationError";
 
 @implementation RNSQIPCardEntry
 
@@ -45,7 +54,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[ RNSQIPCardEntryCancelEventName, RNSQIPCardEntryCompleteEventName, RNSQIPCardEntryDidObtainCardDetailsEventName ];
+    return @[ RNSQIPCardEntryCancelEventName, RNSQIPCardEntryCompleteEventName, RNSQIPCardEntryDidObtainCardDetailsEventName, RNSQIPOnBuyerVerificationSuccessEventName, RNSQIPOnBuyerVerificationErrorEventName ];
 }
 
 RCT_REMAP_METHOD(startCardEntryFlow,
@@ -60,6 +69,87 @@ RCT_REMAP_METHOD(startCardEntryFlow,
         SQIPCardEntryViewController *cardEntryForm = [self _makeCardEntryForm];
         cardEntryForm.collectPostalCode = collectPostalCode;
         cardEntryForm.delegate = self;
+        self.cardEntryViewController = cardEntryForm;
+
+        UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+        if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+            [((UINavigationController *)rootViewController) pushViewController:cardEntryForm animated:YES];
+        } else {
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
+            [rootViewController presentViewController:navigationController animated:YES completion:nil];
+        }
+        resolve([NSNull null]);
+    });
+}
+
+RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
+                 collectPostalCode
+                 : (BOOL)collectPostalCode
+                 locationId
+                 : (NSString *)locationId
+                 buyerActionString
+                 : (NSString *)buyerActionString
+                 moneyMap
+                 : (NSDictionary *)moneyMap
+                 contactMap
+                 : (NSDictionary *)contactMap
+                 startCardEntryFlowWithResolver
+                 : (RCTPromiseResolveBlock)resolve
+                     rejecter
+                 : (RCTPromiseRejectBlock)reject)
+{
+    dispatch_async([self methodQueue], ^{
+        SQIPMoney *money = [[SQIPMoney alloc] initWithAmount:[moneyMap[@"amount"] longValue]
+                            currency:[RNSQIPBuyerVerification currencyForCurrencyCode:moneyMap[@"currencyCode"]]];
+
+        SQIPBuyerAction *buyerAction = nil;
+        if ([@"Store" isEqualToString:buyerActionString]) {
+            buyerAction = [SQIPBuyerAction storeAction];
+        } else {
+            buyerAction = [SQIPBuyerAction chargeActionWithMoney:money];
+        }
+
+        SQIPContact *contact = [[SQIPContact alloc] init];
+        contact.givenName = contactMap[@"givenName"];
+
+        if (![contactMap[@"familyName"] isEqual:[NSNull null]]) {
+            contact.familyName = contactMap[@"familyName"];
+        }
+
+        if (![contactMap[@"email"] isEqual:[NSNull null]]) {
+            contact.email = contactMap[@"email"];
+        }
+
+        if (![contactMap[@"addressLines"] isEqual:[NSNull null]]) {
+            contact.addressLines = contactMap[@"addressLines"];
+            NSLog(@"%@", contactMap[@"addressLines"]);
+        }
+
+        if (![contactMap[@"city"] isEqual:[NSNull null]]) {
+            contact.city = contactMap[@"city"];
+        }
+
+        if (![contactMap[@"region"] isEqual:[NSNull null]]) {
+            contact.region = contactMap[@"region"];
+        }
+
+        if (![contactMap[@"postalCode"] isEqual:[NSNull null]]) {
+            contact.postalCode = contactMap[@"postalCode"];
+        }
+        
+        contact.country = [RNSQIPBuyerVerification countryForCountryCode:contactMap[@"countryCode"]];
+
+        if (![contactMap[@"phone"] isEqual:[NSNull null]]) {
+            contact.phone = contactMap[@"phone"];
+        }
+
+        self.locationId = locationId;
+        self.buyerAction = buyerAction;
+        self.contact = contact;
+        SQIPCardEntryViewController *cardEntryForm = [self _makeCardEntryForm];
+        cardEntryForm.collectPostalCode = collectPostalCode;
+        cardEntryForm.delegate = self;
+        self.cardEntryViewController = cardEntryForm;
 
         UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
         if ([rootViewController isKindOfClass:[UINavigationController class]]) {
@@ -163,13 +253,60 @@ RCT_REMAP_METHOD(setTheme,
 #pragma mark - Card Entry delegates Methods
 - (void)cardEntryViewController:(SQIPCardEntryViewController *)cardEntryViewController didObtainCardDetails:(SQIPCardDetails *)cardDetails completionHandler:(CompletionHandler)completionHandler
 {
-    self.completionHandler = completionHandler;
-    [self sendEventWithName:RNSQIPCardEntryDidObtainCardDetailsEventName body:[cardDetails jsonDictionary]];
+    if (self.contact) {
+        self.cardDetails = cardDetails;
+        // If buyer verification is needed, complete the card entry form so we can verify buyer
+        // This is to maintain consistent behavior with Android platform
+        completionHandler(nil);
+    } else {
+        self.completionHandler = completionHandler;
+        [self sendEventWithName:RNSQIPCardEntryDidObtainCardDetailsEventName body:[cardDetails jsonDictionary]];
+    }
 }
 
 - (void)cardEntryViewController:(SQIPCardEntryViewController *)cardEntryViewController didCompleteWithStatus:(SQIPCardEntryCompletionStatus)status
 {
     UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+
+    if (self.contact && status == SQIPCardEntryCompletionStatusSuccess) {
+        NSString *paymentSourceId = self.cardDetails.nonce;
+        SQIPVerificationParameters *params = [[SQIPVerificationParameters alloc] initWithPaymentSourceID:paymentSourceId
+                                                buyerAction:self.buyerAction
+                                                locationID:self.locationId
+                                                contact:self.contact];
+
+        if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+            [rootViewController.navigationController popViewControllerAnimated:YES];
+        } else {
+            [rootViewController dismissViewControllerAnimated:YES completion:nil];
+        }
+
+        [SQIPBuyerVerificationSDK.shared verifyWithParameters:params
+            theme:self.theme
+            viewController:rootViewController
+            success:^(SQIPBuyerVerifiedDetails *_Nonnull verifiedDetails) {
+                NSDictionary *verificationResult =
+                    @{
+                        @"nonce" : self.cardDetails.nonce,
+                        @"card" : [self.cardDetails.card jsonDictionary],
+                        @"token" : verifiedDetails.verificationToken
+                    };
+
+                [self sendEventWithName:RNSQIPOnBuyerVerificationSuccessEventName
+                    body:verificationResult];
+            }
+            failure:^(NSError *_Nonnull error) {
+                NSString *debugCode = error.userInfo[SQIPErrorDebugCodeKey];
+                NSString *debugMessage = error.userInfo[SQIPErrorDebugMessageKey];
+                [self sendEventWithName:RNSQIPOnBuyerVerificationErrorEventName
+                    body:[RNSQIPErrorUtilities callbackErrorObject:RNSQIPUsageError
+                                    message:error.localizedDescription
+                                    debugCode:debugCode
+                                    debugMessage:debugMessage]];
+            }];
+        return;
+    }
+
     if ([rootViewController isKindOfClass:[UINavigationController class]]) {
         [rootViewController.navigationController popViewControllerAnimated:YES];
         if (status == SQIPCardEntryCompletionStatusCanceled) {
