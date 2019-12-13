@@ -30,6 +30,8 @@ import {
 
 import Modal from 'react-native-modal';
 import OrderModal from '../components/OrderModal';
+import CardsOnFileModal from '../components/CardsOnFileModal';
+import PendingModal from '../components/PendingModal';
 import GreenButton from '../components/GreenButton';
 import {
   SQUARE_APP_ID,
@@ -37,12 +39,15 @@ import {
   CHARGE_SERVER_HOST,
   GOOGLE_PAY_LOCATION_ID,
   APPLE_PAY_MERCHANT_ID,
+  CUSTOMER_ID,
 } from '../Constants';
 import {
   printCurlCommand,
   showAlert,
 } from '../Utilities';
 import chargeCardNonce from '../service/Charge';
+import createCustomerCard from '../service/CreateCustomerCard';
+import chargeCustomerCard from '../service/ChargeCustomerCard';
 
 require('../images/iconCookie.png');
 
@@ -54,22 +59,49 @@ const applePayStatus = {
   nonceNotCharged: 2,
 };
 
+const iOSCardEntryTheme = {
+  saveButtonFont: {
+    size: 30,
+  },
+  saveButtonTitle: 'Pay 🍪',
+  keyboardAppearance: 'Light',
+  tintColor: {
+    r: 36,
+    g: 152,
+    b: 141,
+    a: 0.9,
+  },
+  textColor: {
+    r: 36,
+    g: 152,
+    b: 141,
+    a: 0.9,
+  },
+};
+
 export default class HomeScreen extends Component {
   state = {
     showingBottomSheet: false,
+    showingCardsOnFileScreen: false,
+    showingPendingScreen: false,
     showingCardEntry: false,
+    showingCustomerCardEntry: false,
     showingDigitalWallet: false,
     canUseDigitalWallet: false,
     applePayState: applePayStatus.none,
     applePayError: null,
+    cardsOnFile: [],
   }
 
   constructor() {
     super();
     this.onStartCardEntry = this.startCardEntry.bind(this);
     this.onShowCardEntry = this.onShowCardEntry.bind(this);
+    this.onShowCustomerCardEntry = this.onShowCustomerCardEntry.bind(this);
     this.onCardNonceRequestSuccess = this.onCardNonceRequestSuccess.bind(this);
+    this.onCustomerCardNonceRequestSuccess = this.onCustomerCardNonceRequestSuccess.bind(this);
     this.onCardEntryCancel = this.onCardEntryCancel.bind(this);
+    this.onCustomerCardEntryCancel = this.onCustomerCardEntryCancel.bind(this);
     this.onApplePayRequestNonceSuccess = this.onApplePayRequestNonceSuccess.bind(this);
     this.onApplePayRequestNonceFailure = this.onApplePayRequestNonceFailure.bind(this);
     this.onApplePayComplete = this.onApplePayComplete.bind(this);
@@ -77,8 +109,13 @@ export default class HomeScreen extends Component {
     this.onGooglePayRequestNonceFailure = this.onGooglePayRequestNonceFailure.bind(this);
     this.onGooglePayCanceled = this.onGooglePayCanceled.bind(this);
     this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
-    this.showOrderScreen = this.showOrderScreen.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
+    this.showOrderScreen = this.showOrderScreen.bind(this);
+    this.showPendingScreen = this.showPendingScreen.bind(this);
+    this.closeOrderScreen = this.closeOrderScreen.bind(this);
+    this.showCardsOnFileScreen = this.showCardsOnFileScreen.bind(this);
+    this.closeCardsOnFileScreen = this.closeCardsOnFileScreen.bind(this);
+    this.onSelectCardOnFile = this.onSelectCardOnFile.bind(this);
     this.startCardEntryWithBuyerVerification = this.startCardEntryWithBuyerVerification.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
     this.onBuyerVerificationSuccess = this.onBuyerVerificationSuccess.bind(this);
@@ -89,25 +126,6 @@ export default class HomeScreen extends Component {
     await SQIPCore.setSquareApplicationId(SQUARE_APP_ID);
     let digitalWalletEnabled = false;
     if (Platform.OS === 'ios') {
-      await SQIPCardEntry.setIOSCardEntryTheme({
-        saveButtonFont: {
-          size: 30,
-        },
-        saveButtonTitle: 'Pay 🍪',
-        keyboardAppearance: 'Light',
-        tintColor: {
-          r: 36,
-          g: 152,
-          b: 141,
-          a: 0.9,
-        },
-        textColor: {
-          r: 36,
-          g: 152,
-          b: 141,
-          a: 0.9,
-        },
-      });
       try {
         await SQIPApplePay.initializeApplePay(APPLE_PAY_MERCHANT_ID);
         digitalWalletEnabled = await SQIPApplePay.canUseApplePay();
@@ -155,7 +173,7 @@ export default class HomeScreen extends Component {
   async onApplePayComplete() {
     if (this.state.applePayState === applePayStatus.succeeded) {
       showAlert('Your order was successful',
-        'Go to your Square dashbord to see this order reflected in the sales tab.');
+        'Go to your Square dashboard to see this order reflected in the sales tab.');
     } else if (this.state.applePayState === applePayStatus.nonceNotCharged) {
       showAlert(
         'Nonce generated but not charged',
@@ -216,8 +234,52 @@ export default class HomeScreen extends Component {
     }
   }
 
+  async onSelectCardOnFile(cardOnFile) {
+    try {
+      this.showPendingScreen();
+      await chargeCustomerCard(CUSTOMER_ID, cardOnFile.id);
+      showAlert('Your order was successful',
+        'Go to your Square dashbord to see this order reflected in the sales tab.',
+        this.showOrderScreen);
+    } catch (error) {
+      showAlert(
+        'An error occured processing the card on file',
+        error.message,
+        this.showCardsOnFileScreen,
+      );
+    }
+  }
+
+  async onCustomerCardNonceRequestSuccess(cardDetails) {
+    if (this.chargeServerHostIsSet()) {
+      try {
+        // create the customer card record and add it to the state
+        const customerCard = await createCustomerCard(CUSTOMER_ID, cardDetails.nonce);
+        // eslint-disable-next-line react/no-access-state-in-setstate
+        this.setState({ cardsOnFile: [...this.state.cardsOnFile, customerCard] });
+        SQIPCardEntry.completeCardEntry(() => {
+          showAlert('Your card was saved and is ready to use.');
+        });
+        this.showCardsOnFileScreen();
+      } catch (error) {
+        SQIPCardEntry.showCardNonceProcessingError(error.message);
+      }
+    } else {
+      SQIPCardEntry.completeCardEntry(() => {
+        showAlert(
+          'Customer card nonce generated but not charged',
+          'Replace CHARGE_SERVER_HOST with your server host to enable saving the card.',
+        );
+      });
+    }
+  }
+
   onCardEntryCancel() {
     this.showOrderScreen();
+  }
+
+  onCustomerCardEntryCancel() {
+    this.showCardsOnFileScreen();
   }
 
   onShowDigitalWallet() {
@@ -228,6 +290,11 @@ export default class HomeScreen extends Component {
   onShowCardEntry() {
     this.closeOrderScreen();
     this.setState({ showingCardEntry: true });
+  }
+
+  onShowCustomerCardEntry() {
+    this.closeOrderScreen();
+    this.setState({ showingCustomerCardEntry: true });
   }
 
   async onBuyerVerificationSuccess(buyerVerificationDetails) {
@@ -257,11 +324,36 @@ export default class HomeScreen extends Component {
   }
 
   showOrderScreen() {
-    this.setState({ showingBottomSheet: true });
+    this.setState({
+      showingBottomSheet: true,
+      showingCardsOnFileScreen: false,
+      showingPendingScreen: false,
+    });
   }
 
   closeOrderScreen() {
     this.setState({ showingBottomSheet: false });
+  }
+
+  showCardsOnFileScreen() {
+    this.setState({
+      showingBottomSheet: true,
+      showingCardsOnFileScreen: true,
+      showingPendingScreen: false,
+    });
+  }
+
+  closeCardsOnFileScreen() {
+    this.setState({
+      showingCardsOnFileScreen: false,
+    });
+  }
+
+  showPendingScreen() {
+    this.setState({
+      showingPendingScreen: true,
+      showingCardsOnFileScreen: false,
+    });
   }
 
   applicationIdIsSet() { return SQUARE_APP_ID !== 'REPLACE_ME'; }
@@ -271,6 +363,8 @@ export default class HomeScreen extends Component {
   googlePayLocationIsSet() { return GOOGLE_PAY_LOCATION_ID !== 'REPLACE_ME'; }
 
   applePayMerchantIsSet() { return APPLE_PAY_MERCHANT_ID !== 'REPLACE_ME'; }
+
+  customerIdIsSet() { return CUSTOMER_ID !== 'REPLACE_ME'; }
 
   checkStateAndPerform() {
     if (this.state.showingCardEntry) {
@@ -288,6 +382,16 @@ export default class HomeScreen extends Component {
         // NOTE this requires _squareLocationSet to be set
         // this.startCardEntryWithBuyerVerification();
       }
+    } else if (this.state.showingCustomerCardEntry) {
+      // if application id is not set, we will let you know where to set it,
+      // but the card entry will still open due to allowing visuals to be shown
+      if (!this.applicationIdIsSet()) {
+        showAlert('Missing Square Application ID',
+          'To request a nonce, replace SQUARE_APP_ID in Constants.js with an Square Application ID.',
+          this.startCustomerCardEntry);
+      } else {
+        this.startCustomerCardEntry();
+      }
     } else if (this.state.showingDigitalWallet) {
       this.startDigitalWallet();
       this.setState({ showingDigitalWallet: false });
@@ -295,14 +399,39 @@ export default class HomeScreen extends Component {
   }
 
   async startCardEntry() {
+    console.log('STARTING card entry');
     this.setState({ showingCardEntry: false });
     const cardEntryConfig = {
       collectPostalCode: true,
     };
+    if (Platform.OS === 'ios') {
+      await SQIPCardEntry.setIOSCardEntryTheme({
+        ...iOSCardEntryTheme,
+        saveButtonTitle: 'Pay 🍪',
+      });
+    }
     await SQIPCardEntry.startCardEntryFlow(
       cardEntryConfig,
       this.onCardNonceRequestSuccess,
       this.onCardEntryCancel,
+    );
+  }
+
+  async startCustomerCardEntry() {
+    this.setState({ showingCustomerCardEntry: false });
+    const cardEntryConfig = {
+      collectPostalCode: true,
+    };
+    if (Platform.OS === 'ios') {
+      await SQIPCardEntry.setIOSCardEntryTheme({
+        ...iOSCardEntryTheme,
+        saveButtonTitle: 'Save 🍪',
+      });
+    }
+    await SQIPCardEntry.startCardEntryFlow(
+      cardEntryConfig,
+      this.onCustomerCardNonceRequestSuccess,
+      this.onCustomerCardEntryCancel,
     );
   }
 
@@ -371,6 +500,30 @@ export default class HomeScreen extends Component {
     }
   }
 
+  renderModal() {
+    if (this.state.showingPendingScreen) {
+      return <PendingModal />;
+    // eslint-disable-next-line no-else-return
+    } else if (this.state.showingCardsOnFileScreen) {
+      return (
+        <CardsOnFileModal
+          onCloseCardsOnFileScreen={this.closeCardsOnFileScreen}
+          onShowCustomerCardEntry={this.onShowCustomerCardEntry}
+          onSelectCardOnFile={this.onSelectCardOnFile}
+          cardsOnFile={this.state.cardsOnFile}
+        />
+      );
+    } else {
+      return (
+        <OrderModal
+          onCloseOrderScreen={this.closeOrderScreen}
+          onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
+          onShowDigitalWallet={this.onShowDigitalWallet}
+        />
+      );
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -392,11 +545,7 @@ export default class HomeScreen extends Component {
           onModalHide={() => setTimeout(() => this.checkStateAndPerform(), 200)}
         >
           <View style={styles.modalContent}>
-            <OrderModal
-              onCloseOrderScreen={this.closeOrderScreen}
-              onShowCardEntry={this.onShowCardEntry}
-              onShowDigitalWallet={this.onShowDigitalWallet}
-            />
+            {this.renderModal()}
           </View>
         </Modal>
       </View>
