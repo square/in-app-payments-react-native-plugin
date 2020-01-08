@@ -48,5 +48,8 @@
     "modulePathIgnorePatterns": [
       "react-native-in-app-payments-quickstart"
     ]
+  },
+  "resolutions": {
+    "**/**/handlebars": "4.5.3"
   }
 }

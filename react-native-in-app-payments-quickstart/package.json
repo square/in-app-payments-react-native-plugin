@@ -30,5 +30,8 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "resolutions": {
+    "**/**/handlebars": "4.5.3"
   }
 }
