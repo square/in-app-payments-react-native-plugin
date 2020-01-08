@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.3.1 January 8, 2020
+
+* Bump Nested HandleBar dependency from 4.20 to 4.5.3.
+
 ### v1.3.0 November 25, 2019
 
 * Bump Square In-App Payments SDK dependency to `1.3.0`.
