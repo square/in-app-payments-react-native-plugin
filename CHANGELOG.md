@@ -2,7 +2,7 @@
 
 ### v1.3.1 January 8, 2020
 
-* Bump Nested HandleBar dependency from 4.20 to 4.5.3.
+* Bump Nested HandleBar dependency from 4.2.0 to 4.5.3.
 
 ### v1.3.0 November 25, 2019
 
