@@ -877,11 +877,24 @@ prepaidType     | [CardPrepaidType](#cardprepaidType) | The prepaid type of the 
 ---
 ### cardEntryConfig 
 
-Represents the Apple Pay configuration.
+Represents the Card Entry configuration.
 
 Field              | Type              | Description
 :----------------- | :---------------- | :-----------------
 collectPostalCode  | Boolean           | Indicates that the customer must enter the postal code associated with their payment card. When false, the postal code field will not be displayed. Defaults to `true`.<br/>**Notes**: A Postal code must be collected for processing payments for Square accounts based in the United States, Canada, and United Kingdom. Disabling postal code collection in those regions will result in all credit card transactions being declined.
+**Optional**:squareLocationId | String | The location that is being verified against. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:buyerAction      | String | Indicates the action (`Charge` or `Store`) that will be performed onto the card after retrieving the verification token. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:amount           | Int    | Payment amount. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:currencyCode     | String | ISO currency code of the payment amount. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:givenName        | String | Given name of the contact. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:familyName       | String | Last name of the contact. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:addressLines     | Array | The street address lines of the contact address. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:city             | String | The city name of the contact address. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:countryCode      | String | A 2-letter string containing the ISO 3166-1 country code of the contact address. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:email            | String | Email address of the contact. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:phone            | String | The telephone number of the contact. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:postalCode       | String | The postal code of the contact address. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
+**Optional**:region           | String | The applicable administrative region (e.g., province, state) of the contact address. Should be specified if calling [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) method.
 
 #### Example JSON
 
