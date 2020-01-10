@@ -877,7 +877,7 @@ prepaidType     | [CardPrepaidType](#cardprepaidType) | The prepaid type of the 
 ---
 ### cardEntryConfig 
 
-Represents the Apple Pay configuration.
+Represents the Card Entry configuration.
 
 Field              | Type              | Description
 :----------------- | :---------------- | :-----------------
