@@ -34,7 +34,7 @@ export function printCurlCommand(nonce, appId, verificationToken) {
   const uuid = uuidv4();
   if (verificationToken === undefined) {
     console.log(`Run this curl command to charge the nonce:
-          curl --request POST ${hostUrl}/v2/locations/SQUARE_LOCATION_ID/transactions \\
+          curl --request POST ${hostUrl}/v2/payments \\
           --header "Content-Type: application/json" \\
           --header "Authorization: Bearer YOUR_ACCESS_TOKEN" \\
           --header "Accept: application/json" \\
@@ -43,7 +43,7 @@ export function printCurlCommand(nonce, appId, verificationToken) {
           "amount_money": {
           "amount": 100,
           "currency": "USD"},
-          "card_nonce": "${nonce}"
+          "source_id": "${nonce}"
           }'`);
   } else {
     console.log(`Run this curl command to charge the nonce:

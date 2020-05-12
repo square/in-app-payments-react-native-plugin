@@ -24,7 +24,7 @@
 @interface SQIPCardDetails : NSObject
 
 /**
- A one-time-use payment token that is used with the Transactions API to [charge the card](https://docs.connect.squareup.com/api/connect/v2#endpoint-charge) or the Customers API to [store the Card on File](https://docs.connect.squareup.com/api/connect/v2#endpoint-createcustomercard).
+ A one-time-use payment token that is used with the Payments API to [charge the card](https://developer.squareup.com/reference/square/payments-api/create-payment) or the Customers API to [store the Card on File](https://developer.squareup.com/reference/square/customers-api/create-customer-card).
  */
 @property (nonatomic, strong, readonly, nonnull) NSString *nonce;
 

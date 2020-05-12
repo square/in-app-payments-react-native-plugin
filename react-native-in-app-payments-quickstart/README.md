@@ -94,7 +94,7 @@ location ID that you copied in **Step 1**.
 1. Replace the access token placeholder with your access token. 
 1. Run the cURL command to take a payment in your Square account.
 
->**Note:** We provide a cURL command in the debug output that you can use to easily test the payment with our [Transactions API](https://developer.squareup.com/docs/transactions-api/what-it-does). Your production app should use a secure backend service to make calls to the Transactions API and should never expose your access token in the client.
+>**Note:** We provide a cURL command in the debug output that you can use to easily test the payment with our [Payments API](https://developer.squareup.com/reference/square/payments-api). Your production app should use a secure backend service to make calls to the Payments API and should never expose your access token in the client.
 
 You can view the [transaction details in Square Dashboard].
 
@@ -105,7 +105,7 @@ In a real app, you'd have a backend service running to process the payment and n
 Square provides a sample backend service for this quickstart that can easily be deployed to Heroku. Follow the steps in the [backend service setup guide] and choose 'Option 2: Use the Square Mobile Backend Quickstart URL'.
 
 [//]: # "Link anchor definitions"
-[In-App Payments SDK Overview]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/what-it-does
+[In-App Payments SDK Overview]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
 [squareup.com/activate]: https://squareup.com/activate
 [React Native Getting Started]: https://facebook.github.io/react-native/docs/getting-started
 [root README]: ../README.md
