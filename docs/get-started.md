@@ -298,22 +298,19 @@ Add a button and start the card entry in button `onPress` event handler.
 
 ---
 **Note:** the `chargeCard` method in this example shows a typical REST request on a backend process
-that uses the **Transactions API** to take a payment with the supplied nonce.
+that uses the **Payments API** to take a payment with the supplied nonce.
 See [BackendQuickStart Sample] to learn about building an app that processes payment nonces on a server.
 
 [//]: # "Link anchor definitions"
-[docs.connect.squareup.com]: https://docs.connect.squareup.com
-[In-App Payments SDK]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/overview
+[In-App Payments SDK]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
 [Square Dashboard]: https://squareup.com/dashboard/
-[Testing Mobile Apps]: https://docs.connect.squareup.com/testing/mobile
+[Testing Mobile Apps]: https://developer.squareup.com/docs/testing/mobile
 [squareup.com/activate]: https://squareup.com/activate
 [Square Application Dashboard]: https://connect.squareup.com/apps/
-[In-App Payments SDK Android Setup Guide]: https://docs.connect.squareup.com/payments/in-app-payments/setup-android
-[In-App Payments SDK iOS Setup Guide]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/setup-ios
 [root README]: ../README.md
 [Getting Started]: https://facebook.github.io/react-native/docs/getting-started
 [BackendQuickStart Sample]: https://github.com/square/in-app-payments-server-quickstart
-[customizing the payment entry form]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/cookbook/customize-payment-form
+[customizing the payment entry form]: https://developer.squareup.com/docs/in-app-payments-sdk/cookbook/customize-payment-form
 [yarn]: https://yarnpkg.com/lang/en/docs/install/
 [Google Pay]: https://developers.google.com/pay/api/
 [enable Apple Pay]: https://help.apple.com/xcode/mac/9.3/#/deva43983eb7?sub=dev44ce8ef13

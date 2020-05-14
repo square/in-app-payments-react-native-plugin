@@ -39,7 +39,7 @@ In addition to this README, the following is available in the [React Native plug
 ## In-App Payments SDK requirements and limitations
 
 * In-App Payments SDK cannot issue refunds. Refunds can be issued programmatically using
-  the Transactions API or manually in the [Square Dashboard].
+  the Refunds API or manually in the [Square Dashboard].
 
 ## Sample applications
 * **[Quick start React Native app]:** You can learn how the In-App-Payments React Native plugin is used by [getting started with the example app], a quick-start React Native app that lets you take a payment after completing 6 setup steps. 
@@ -67,7 +67,7 @@ limitations under the License.
 [//]: # "Link anchor definitions"
 [In-App Payments SDK]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
 [Square Dashboard]: https://squareup.com/dashboard/
-[Testing Mobile Apps]: https://docs.connect.squareup.com/testing/mobile
+[Testing Mobile Apps]: https://developer.squareup.com/docs/testing/mobile
 [`docs`]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/docs
 [`react-native-in-app-payments-quickstart`]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/react-native-in-app-payments-quickstart
 [Getting started guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/get-started.md

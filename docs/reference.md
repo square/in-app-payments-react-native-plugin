@@ -2,7 +2,7 @@
 
 This technical reference documents methods available in the React Native
 plugin for In-App Payments SDK. For detailed documentation on In-App Payments SDK, please see
-[docs.connect.squareup.com].
+[https://developer.squareup.com/docs/].
 
 ---
 
@@ -1169,9 +1169,8 @@ ErrorCode                          | Cause                                      
 
 
 [//]: # "Link anchor definitions"
-[docs.connect.squareup.com]: https://docs.connect.squareup.com
-[In-App Payments SDK]: https://docs.connect.squareup.com/payments/inapppayments/intro
+[https://developer.squareup.com/docs/]: https://developer.squareup.com/docs/
+[In-App Payments SDK]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
 [ISO 4217 format]: https://www.iban.com/currency-codes.html
 [Square Dashboard]: https://squareup.com/dashboard/
-[Transactions API]: https://docs.connect.squareup.com/payments/transactions/overview
 [Square-issued gift card]: https://squareup.com/us/en/software/gift-cards

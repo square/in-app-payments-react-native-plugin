@@ -164,13 +164,13 @@ export default class App extends Component {
 ```
 ---
 **Note:** the `chargeCard` method in this example shows a typical REST request on a backend process
-that uses the **Transactions API** to take a payment with the supplied nonce.
+that uses the **Payments API** to take a payment with the supplied nonce.
 See [BackendQuickStart Sample] to learn about building an app that processes payment nonces on a server.
 
 
 
 [//]: # "Link anchor definitions"
-[In-App Payments SDK]: https://docs.connect.squareup.com/payments/in-app-payments-sdk/overview
+[In-App Payments SDK]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
 [root README]: ../README.md
 [Apple Pay]: https://developer.apple.com/documentation/passkit/apple_pay
 [add an Apple Pay payment processing certificate]: https://help.apple.com/developer-account/#/devb2e62b839?sub=devf31990e3f
