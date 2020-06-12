@@ -15,9 +15,7 @@ set up a React Native project .
 
 * [Step 1: Upload an Apple Pay certificate to the Square Developer Portal](#step-1-upload-an-apple-pay-certificate-to-the-square-developer-portal)
 * [Step 2: Initialize Apple Pay and verify Apple Pay support](#step-2-initialize-apple-pay-and-verify-apple-pay-support)
-* [Step 3: Authorize payment with Apple Pay](#step-3-authorize-payment-with-apple-pay)
-* [Step 4: Get payment authorization result](#step-4-get-payment-authorization-result)
-* [Step 5: Respond to Apple Pay payment authorization complete](#step-5-respond-to-apple-pay-payment-authorization-complete)
+* [Step 3: Authorize payment with Apple Pay and get payment authorization result](#step-3-authorize-payment-with-apple-pay-and-get-payment-authorization-result)
 
 ## Step 1: Upload an Apple Pay certificate to the Square Developer Portal
 
