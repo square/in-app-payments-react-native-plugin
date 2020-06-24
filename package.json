@@ -50,6 +50,8 @@
     ]
   },
   "resolutions": {
-    "**/**/handlebars": "4.5.3"
+    "**/**/handlebars": "4.5.3",
+    "**/**/logkitty": "^0.7.1",
+    "**/**/minimist": "^0.2.1"
   }
 }
