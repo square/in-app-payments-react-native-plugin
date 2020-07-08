@@ -53,6 +53,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: '3%',
     minHeight: 50,
-    width: '40%',
+    width: '30%',
   },
 });
