@@ -298,7 +298,7 @@ export default class HomeScreen extends Component {
 
   onShowGiftCardEntry() {
     this.closeOrderScreen();
-    this.setState({ showingGiftCardEntry: true});
+    this.setState({ showingGiftCardEntry: true });
   }
 
   onShowCustomerCardEntry() {
