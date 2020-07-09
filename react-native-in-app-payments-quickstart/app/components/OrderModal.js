@@ -36,8 +36,10 @@ OrderModal.propTypes = {
 };
 
 export default function OrderModal({
-  onCloseOrderScreen, onPayWithGiftCard,
-  onPayWithCard, onShowDigitalWallet,
+  onCloseOrderScreen,
+  onPayWithGiftCard,
+  onPayWithCard,
+  onShowDigitalWallet,
 }) {
   return (
     <View style={styles.container}>
