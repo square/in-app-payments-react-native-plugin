@@ -43,11 +43,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#24988D',
     borderRadius: 32,
     justifyContent: 'center',
+    marginLeft: '3%',
     minHeight: 50,
-    width: '40%',
+    width: '30%',
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 14,
   },
 });

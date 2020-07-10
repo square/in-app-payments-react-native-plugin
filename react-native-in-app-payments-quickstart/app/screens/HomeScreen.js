@@ -85,6 +85,7 @@ export default class HomeScreen extends Component {
     showingCardsOnFileScreen: false,
     showingPendingScreen: false,
     showingCardEntry: false,
+    showingGiftCardEntry: false,
     showingCustomerCardEntry: false,
     showingDigitalWallet: false,
     canUseDigitalWallet: false,
@@ -96,7 +97,9 @@ export default class HomeScreen extends Component {
   constructor() {
     super();
     this.onStartCardEntry = this.startCardEntry.bind(this);
+    this.onStartGiftCardEntry = this.startGiftCardEntry.bind(this);
     this.onShowCardEntry = this.onShowCardEntry.bind(this);
+    this.onShowGiftCardEntry = this.onShowGiftCardEntry.bind(this);
     this.onShowCustomerCardEntry = this.onShowCustomerCardEntry.bind(this);
     this.onCardNonceRequestSuccess = this.onCardNonceRequestSuccess.bind(this);
     this.onCustomerCardNonceRequestSuccess = this.onCustomerCardNonceRequestSuccess.bind(this);
@@ -110,6 +113,7 @@ export default class HomeScreen extends Component {
     this.onGooglePayCanceled = this.onGooglePayCanceled.bind(this);
     this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
+    this.startGiftCardEntry = this.startGiftCardEntry.bind(this);
     this.showOrderScreen = this.showOrderScreen.bind(this);
     this.showPendingScreen = this.showPendingScreen.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
@@ -292,6 +296,11 @@ export default class HomeScreen extends Component {
     this.setState({ showingCardEntry: true });
   }
 
+  onShowGiftCardEntry() {
+    this.closeOrderScreen();
+    this.setState({ showingGiftCardEntry: true });
+  }
+
   onShowCustomerCardEntry() {
     this.closeOrderScreen();
     this.setState({ showingCustomerCardEntry: true });
@@ -392,6 +401,8 @@ export default class HomeScreen extends Component {
       } else {
         this.startCustomerCardEntry();
       }
+    } else if (this.state.showingGiftCardEntry) {
+      this.startGiftCardEntry();
     } else if (this.state.showingDigitalWallet) {
       this.startDigitalWallet();
       this.setState({ showingDigitalWallet: false });
@@ -412,6 +423,21 @@ export default class HomeScreen extends Component {
     }
     await SQIPCardEntry.startCardEntryFlow(
       cardEntryConfig,
+      this.onCardNonceRequestSuccess,
+      this.onCardEntryCancel,
+    );
+  }
+
+  async startGiftCardEntry() {
+    console.log('STARTING gift card entry');
+    this.setState({ showingGiftCardEntry: false });
+    if (Platform.OS === 'ios') {
+      await SQIPCardEntry.setIOSCardEntryTheme({
+        ...iOSCardEntryTheme,
+        saveButtonTitle: 'Pay 🍪',
+      });
+    }
+    await SQIPCardEntry.startGiftCardEntryFlow(
       this.onCardNonceRequestSuccess,
       this.onCardEntryCancel,
     );
@@ -517,6 +543,7 @@ export default class HomeScreen extends Component {
       return (
         <OrderModal
           onCloseOrderScreen={this.closeOrderScreen}
+          onPayWithGiftCard={this.onShowGiftCardEntry}
           onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
           onShowDigitalWallet={this.onShowDigitalWallet}
         />

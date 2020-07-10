@@ -115,6 +115,12 @@ async function startCardEntryFlowWithBuyerVerification(
   );
 }
 
+async function startGiftCardEntryFlow(onCardNonceRequestSuccess, onCardEntryCancel) {
+  cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
+  cardEntryCancelCallback = onCardEntryCancel;
+  await RNSQIPCardEntry.startGiftCardEntryFlow();
+}
+
 async function completeCardEntry(onCardEntryComplete) {
   cardEntryCompleteCallback = onCardEntryComplete;
   await RNSQIPCardEntry.completeCardEntry();
@@ -132,6 +138,7 @@ async function setIOSCardEntryTheme(theme) {
 
 export default Platform.select({
   ios: {
+    startGiftCardEntryFlow,
     startCardEntryFlow,
     startCardEntryFlowWithBuyerVerification,
     completeCardEntry,
@@ -139,6 +146,7 @@ export default Platform.select({
     setIOSCardEntryTheme,
   },
   android: {
+    startGiftCardEntryFlow,
     startCardEntryFlow,
     startCardEntryFlowWithBuyerVerification,
     completeCardEntry,

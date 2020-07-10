@@ -172,6 +172,17 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void startGiftCardEntryFlow(final Promise promise) {
+    mainLooperHandler.post(new Runnable() {
+      @Override
+      public void run() {
+        CardEntry.startGiftCardEntryActivity(Objects.requireNonNull(getCurrentActivity()));
+        promise.resolve(null);
+      }
+    });
+  }
+
+  @ReactMethod
   public void startCardEntryFlowWithVerification(
     final Boolean collectPostalCode, final String locationId, final String buyerActionString,
     final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {

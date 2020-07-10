@@ -1,12 +1,12 @@
 /*
  Copyright 2019 Square Inc.
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -136,7 +136,7 @@ RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
         if (![contactMap[@"postalCode"] isEqual:[NSNull null]]) {
             contact.postalCode = contactMap[@"postalCode"];
         }
-        
+
         contact.country = [RNSQIPBuyerVerification countryForCountryCode:contactMap[@"countryCode"]];
 
         if (![contactMap[@"phone"] isEqual:[NSNull null]]) {
@@ -148,6 +148,28 @@ RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
         self.contact = contact;
         SQIPCardEntryViewController *cardEntryForm = [self _makeCardEntryForm];
         cardEntryForm.collectPostalCode = collectPostalCode;
+        cardEntryForm.delegate = self;
+        self.cardEntryViewController = cardEntryForm;
+
+        UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+        if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+            [((UINavigationController *)rootViewController) pushViewController:cardEntryForm animated:YES];
+        } else {
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
+            [rootViewController presentViewController:navigationController animated:YES completion:nil];
+        }
+        resolve([NSNull null]);
+    });
+}
+
+RCT_REMAP_METHOD(startGiftCardEntryFlow,
+                 startCardEntryFlowWithResolver
+                 : (RCTPromiseResolveBlock)resolve
+                     rejecter
+                 : (RCTPromiseRejectBlock)reject)
+{
+    dispatch_async([self methodQueue], ^{
+        SQIPCardEntryViewController *cardEntryForm = [self _makeGiftCardEntryForm];
         cardEntryForm.delegate = self;
         self.cardEntryViewController = cardEntryForm;
 
@@ -335,6 +357,15 @@ RCT_REMAP_METHOD(setTheme,
     }
 
     return [[SQIPCardEntryViewController alloc] initWithTheme:self.theme];
+}
+
+- (SQIPCardEntryViewController *)_makeGiftCardEntryForm
+{
+    if (self.theme == nil) {
+        self.theme = [[SQIPTheme alloc] init];
+    }
+
+    return [[SQIPCardEntryViewController alloc] initWithTheme:self.theme isGiftCard:true];
 }
 
 - (UIKeyboardAppearance)_keyboardAppearanceFromString:(NSString *)keyboardTypeName
