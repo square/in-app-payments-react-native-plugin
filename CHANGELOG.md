@@ -1,5 +1,10 @@
 ## Changelog
 
+### v1.4.0 July 10, 2020
+
+* Updated to IAP SDK 1.4.0.
+* Added support for gift card payments. 
+
 ### v1.3.1 January 8, 2020
 
 * Bump Nested HandleBar dependency from 4.2.0 to 4.5.3.
