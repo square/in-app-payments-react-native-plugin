@@ -55,8 +55,12 @@ matrix:
       X" -derivedDataPath build/RNInAppPaymentsQuickstart
 notifications:
   slack:
-    on_failure: change
+    secure: xwbDusxnj1eSu4lLXqX7E6+JoE+V651d3xKa+KJKjcsyNftDnTIInTh480nM2Busev8GKcLol93kBMnJYb3mQuz5hv90lX8DCB54eAnShG8F1MhW3ap1E7guC0nt2G75GR/g0v2jKiFwYLLER3dDvqkTCBkHwGGDHpeMq9x7kh++ZlXzbifK/Ok8IH+kLHBp6cGocjx8CFp2Tg+ZBNFY6sWzzBTt3fdEFgzZzc7VqJxzGR2vjyZd5MtqnB6emaaQ7d20EtBGxAo+ttnmIp46zeiPUHAlwxakaIJz1VGabrMz/k0oLyQw7d3YQ6MoJ6kNcS808d7cyrhR1h0ZZ42Uq21OCiNIBnbDBB8kjPuVOOm16CVTHv3rEkQzrmZ23S+LZRWDbw0/5VlOew9rZvNtcSeekcR37AShBbzS4X1Cs6nfGSfNe2Sx1KHbrEPQQ9utrBS1tjTQcIOlbE464rw7DqkVLJA/DSXEePtvpWnA3j2M0vFLLaZaA3CfuRaUZ4WW6reaG9GHdwJ7GW8X8NpeDH9Du0iNC3phCQ2n6xvf4eozDmwunaD1u3zeXLjoIcsfOFkFTZiwuPEANTBWEKdsxCqUn4q5nXlWPBJ/nvc46+v0ySvlWJ2Tu5cX1G2C/WszMjlGZFR0FbzGHiRDL/0jIzTiJRtVgnlJ5b6I5PPiHus=
     on_success: change
     template:
-    - "@oncall Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} in PR <%{pull_request_url}|#%{pull_request_number}> by %{author} %{result} in %{duration}"
-    secure: GVXwqHXI/uheLL8bujHlw/1n0Q+rVXiy2uW88T3b+1TgI79RM5Ne9sBzN5ChwGnULqqvHahalJBcEjau3gZFcJFzrV7pqmOfK0PJEknH58HUTCTc31YQc+EizfJVkNDIBKy7dFVuSubkERt3Cx/Hn7wkAzAbJdq4Y6yl4mY1XTKYiBlha5JTAfuXR8LyyhGtUH52nzjcRxSymHbnQZpRJ5NOlWixJjTfIfKsfmfN87UN0LEuDXbFE6e73ZR/a09KogioQd4ufzZDbRZ8HFzI8XuZCfHPeJarT42ydKIZoTWB3d/9FxB/JcjH4zCVH1NxWUfklIoXKv7ZsUEoI9clch1+6CkFkoDssQbBAIk54Pj3GiXkQ5ujSS0RjMB+zlYU2YJtv335Hv0moo8fOe/5n48aJcGk6yvPBxAzKckupQg+kWjahxgtYNxQNlLyGv62DxSAGjVq33cyf7Z79MsVWTd+VTXCO/AB4KeyI9ArcBPRsaKpbz3/GxtIPKZo8QRRaGIaWDwAS4Cu3bcC1OLliJlUAOz2nZjFzI1IqOPVUr7leFXIiag9qRd770aVy/NB9KC1pfKIp7YXZAbsx0XdD8X8sM0bmGRl2KYuOEGjcpArjdDp8B2CZO9N/PsdqGUh+n4tLu4l2rirA6E65q3KcnbsNGTsMtsse+mIlSB/Pi4=
+        - "@oncall"
+        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} in PR <%{pull_request_url}|#%{pull_request_number}> by %{author} %{result} in %{duration}"
+  email:
+    recipients:
+      - devs-apex-alerts+travis@squareup.com
+    on_success: change
