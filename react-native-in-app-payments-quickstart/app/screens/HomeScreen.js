@@ -121,7 +121,6 @@ export default class HomeScreen extends Component {
     this.closeCardsOnFileScreen = this.closeCardsOnFileScreen.bind(this);
     this.onSelectCardOnFile = this.onSelectCardOnFile.bind(this);
     this.startCardEntryWithBuyerVerification = this.startCardEntryWithBuyerVerification.bind(this);
-    this.closeOrderScreen = this.closeOrderScreen.bind(this);
     this.onBuyerVerificationSuccess = this.onBuyerVerificationSuccess.bind(this);
     this.onBuyerVerificationFailure = this.onBuyerVerificationFailure.bind(this);
   }
