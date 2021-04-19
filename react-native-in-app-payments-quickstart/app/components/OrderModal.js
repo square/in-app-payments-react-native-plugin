@@ -33,6 +33,7 @@ OrderModal.propTypes = {
   onPayWithGiftCard: PropTypes.func.isRequired,
   onPayWithCard: PropTypes.func.isRequired,
   onShowDigitalWallet: PropTypes.func.isRequired,
+  onBuyerVerification: PropTypes.func.isRequired,
 };
 
 export default function OrderModal({
@@ -40,6 +41,7 @@ export default function OrderModal({
   onPayWithGiftCard,
   onPayWithCard,
   onShowDigitalWallet,
+  onBuyerVerification,
 }) {
   return (
     <View style={styles.container}>
@@ -80,6 +82,12 @@ export default function OrderModal({
         />
         <DigitalWalletButton
           onPress={() => onShowDigitalWallet()}
+        />
+      </View>
+      <View style={styles.buttonRow}>
+      <GreenButton
+          onPress={onBuyerVerification}
+          text="Buyer Verification "
         />
       </View>
     </View>

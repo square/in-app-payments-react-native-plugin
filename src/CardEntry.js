@@ -74,6 +74,39 @@ async function startCardEntryFlow(cardEntryConfig, onCardNonceRequestSuccess, on
   await RNSQIPCardEntry.startCardEntryFlow(cardEntryInternalConfig.collectPostalCode);
 }
 
+async function startBuyerVerificationFlow(paymentSourceId,
+  cardEntryConfig, onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel) {
+  let cardEntryInternalConfig = {};
+  if (cardEntryConfig) {
+    Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
+    cardEntryInternalConfig = cardEntryConfig;
+  }
+  const { squareLocationId } = cardEntryConfig;
+  const { buyerAction } = cardEntryConfig;
+  const money = {
+    amount: cardEntryConfig.amount,
+    currencyCode: cardEntryConfig.currencyCode,
+  };
+  const contact = {
+    givenName: cardEntryConfig.givenName,
+    familyName: cardEntryConfig.familyName,
+    addressLines: cardEntryConfig.addressLines,
+    city: cardEntryConfig.city,
+    countryCode: cardEntryConfig.countryCode,
+    email: cardEntryConfig.email,
+    phone: cardEntryConfig.phone,
+    postalCode: cardEntryConfig.postalCode,
+    region: cardEntryConfig.region,
+  };
+
+  buyerVerificationSuccessCallback = onBuyerVerificationSuccess;
+  buyerVerificationErrorCallback = onBuyerVerificationFailure;
+  cardEntryCancelCallback = onCardEntryCancel;
+  await RNSQIPCardEntry.startBuyerVerificationFlow(paymentSourceId,
+     squareLocationId, buyerAction, money, contact,
+  );
+}
+
 async function startCardEntryFlowWithBuyerVerification(
   cardEntryConfig, onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel,
 ) {
@@ -144,6 +177,7 @@ export default Platform.select({
     completeCardEntry,
     showCardNonceProcessingError,
     setIOSCardEntryTheme,
+    startBuyerVerificationFlow,
   },
   android: {
     startGiftCardEntryFlow,
@@ -151,5 +185,6 @@ export default Platform.select({
     startCardEntryFlowWithBuyerVerification,
     completeCardEntry,
     showCardNonceProcessingError,
+    startBuyerVerificationFlow,
   },
 });
