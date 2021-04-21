@@ -122,7 +122,7 @@ class CardEntryModule extends ReactContextBaseJavaModule {
                 WritableMap mapToReturn = cardDetailsConverter.toMapObject(CardEntryModule.this.cardResult);
                 mapToReturn.putString("token", result.getSuccessValue().getVerificationToken());
                 getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
-              }else{
+              } else {
                 WritableMap mapToReturn = new WritableNativeMap();
                 mapToReturn.putString("nonce", CardEntryModule.this.paymentSourceId);
                 mapToReturn.putString("token", result.getSuccessValue().getVerificationToken());
@@ -245,6 +245,7 @@ class CardEntryModule extends ReactContextBaseJavaModule {
     new VerificationParameters(CardEntryModule.this.paymentSourceId, CardEntryModule.this.buyerAction, CardEntryModule.this.squareIdentifier,
     CardEntryModule.this.contact);
     BuyerVerification.verify(Objects.requireNonNull(getCurrentActivity()), verificationParameters);
+    promise.resolve(null);
   }
   
   @ReactMethod

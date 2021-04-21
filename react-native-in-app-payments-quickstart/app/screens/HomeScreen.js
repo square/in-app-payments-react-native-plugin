@@ -101,7 +101,7 @@ export default class HomeScreen extends Component {
     this.onStartGiftCardEntry = this.startGiftCardEntry.bind(this);
     this.onShowCardEntry = this.onShowCardEntry.bind(this);
     this.onShowGiftCardEntry = this.onShowGiftCardEntry.bind(this);
-    this.onBuyerVerification=this.onBuyerVerification.bind(this);
+    this.onBuyerVerification = this.onBuyerVerification.bind(this);
     this.onShowCustomerCardEntry = this.onShowCustomerCardEntry.bind(this);
     this.onCardNonceRequestSuccess = this.onCardNonceRequestSuccess.bind(this);
     this.onCustomerCardNonceRequestSuccess = this.onCustomerCardNonceRequestSuccess.bind(this);
@@ -306,10 +306,12 @@ export default class HomeScreen extends Component {
     this.closeOrderScreen();
     this.setState({ showingCustomerCardEntry: true });
   }
-  onBuyerVerification(){
+
+  onBuyerVerification() {
     this.closeOrderScreen();
     this.setState({ showingBuyerVerification: true });
   }
+
   async onBuyerVerificationSuccess(buyerVerificationDetails) {
     if (this.chargeServerHostIsSet()) {
       try {
@@ -410,8 +412,7 @@ export default class HomeScreen extends Component {
     } else if (this.state.showingDigitalWallet) {
       this.startDigitalWallet();
       this.setState({ showingDigitalWallet: false });
-    }
-    else if (this.state.showingBuyerVerification) {
+    } else if (this.state.showingBuyerVerification) {
       this.startBuyerVerificationFlow();
     }
   }
@@ -419,7 +420,7 @@ export default class HomeScreen extends Component {
   async startBuyerVerificationFlow() {
     console.log('STARTING Buyer Verification');
     this.setState({ showingBuyerVerification: false });
-    const paymentSourceId  =  'ccof:customer-card-id-requires-verification';
+    const paymentSourceId = 'ccof:customer-card-id-requires-verification';
     const cardEntryConfig = {
       collectPostalCode: true,
       squareLocationId: SQUARE_LOCATION_ID,
