@@ -1,12 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext {
+    ext {        
         buildToolsVersion = "28.0.3"
         minSdkVersion = 21
         compileSdkVersion = 28
         targetSdkVersion = 28
-        sqipVersion="1.4.0"
+        sqipVersion="1.5.1"
     }
     repositories {
         google()
