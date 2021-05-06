@@ -1,7 +1,7 @@
 matrix:
   include:
   - language: node_js
-    node_js: 8
+    node_js: 14
     script:
     - yarn && yarn lint && yarn test
     - cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
