@@ -102,7 +102,7 @@ async function startBuyerVerificationFlow(paymentSourceId,
   );
 }
 
-async function startCardEntryFlowWithBuyerVerification(cardEntryConfig, 
+async function startCardEntryFlowWithBuyerVerification(cardEntryConfig,
   onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel) {
   let cardEntryInternalConfig = {};
   if (cardEntryConfig) {
