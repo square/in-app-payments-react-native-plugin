@@ -50,7 +50,7 @@ matrix:
     - yarn
     - cd ios
     script:
-    - xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -configuration Debug
+    - travis_wait 30 xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -configuration Debug
       -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone
       X" -derivedDataPath build/RNInAppPaymentsQuickstart
 notifications:
