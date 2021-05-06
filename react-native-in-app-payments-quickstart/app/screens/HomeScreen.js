@@ -449,7 +449,7 @@ export default class HomeScreen extends Component {
       this.onCardEntryCancel,
     );
   }
-  
+
   async startCardEntry() {
     console.log('STARTING card entry');
     this.setState({ showingCardEntry: false });
