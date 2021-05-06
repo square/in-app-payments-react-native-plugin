@@ -1,7 +1,7 @@
 matrix:
   include:
   - language: node_js
-    node_js: 14
+    node_js: 8
     script:
     - yarn && yarn lint && yarn test
     - cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
@@ -27,7 +27,7 @@ matrix:
       - android-28
       - extra-google-google_play_services
     install:
-    - nvm install 14
+    - nvm install 8
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$PATH"
     - cd react-native-in-app-payments-quickstart
@@ -38,12 +38,12 @@ matrix:
   - language: objective-c
     os: osx
     osx_image: xcode11.2
-    node_js: 14
+    node_js: 8
     cache:
       directories:
       - "$HOME/.yarn-cache"
     before_install:
-    - nvm install 14
+    - nvm install 8
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$PATH"
     - cd react-native-in-app-payments-quickstart
