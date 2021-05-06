@@ -76,7 +76,6 @@ async function startCardEntryFlow(cardEntryConfig, onCardNonceRequestSuccess, on
 
 async function startBuyerVerificationFlow(paymentSourceId,
   cardEntryConfig, onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel) {
-  
   const { squareLocationId } = cardEntryConfig;
   const { buyerAction } = cardEntryConfig;
   const money = {
@@ -98,13 +97,13 @@ async function startBuyerVerificationFlow(paymentSourceId,
   buyerVerificationSuccessCallback = onBuyerVerificationSuccess;
   buyerVerificationErrorCallback = onBuyerVerificationFailure;
   cardEntryCancelCallback = onCardEntryCancel;
-  await RNSQIPCardEntry.startBuyerVerificationFlow(paymentSourceId,
-     squareLocationId, buyerAction, money, contact);
+  await RNSQIPCardEntry.startBuyerVerificationFlow(
+    paymentSourceId, squareLocationId, buyerAction, money, contact,
+  );
 }
 
-async function startCardEntryFlowWithBuyerVerification(
-  cardEntryConfig, onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel,
-) {
+async function startCardEntryFlowWithBuyerVerification(cardEntryConfig, 
+  onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel) {
   let cardEntryInternalConfig = {};
   if (cardEntryConfig) {
     Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');

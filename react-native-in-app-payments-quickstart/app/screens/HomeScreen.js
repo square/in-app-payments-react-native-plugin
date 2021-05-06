@@ -89,7 +89,7 @@ export default class HomeScreen extends Component {
     showingCustomerCardEntry: false,
     showingDigitalWallet: false,
     canUseDigitalWallet: false,
-    showingBuyerVerification:false,
+    showingBuyerVerification: false,
     applePayState: applePayStatus.none,
     applePayError: null,
     cardsOnFile: [],
@@ -438,7 +438,7 @@ export default class HomeScreen extends Component {
     };
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
-        ...iOSCardEntryTheme
+        ...iOSCardEntryTheme,
       });
     }
     await SQIPCardEntry.startBuyerVerificationFlow(
@@ -449,6 +449,7 @@ export default class HomeScreen extends Component {
       this.onCardEntryCancel,
     );
   }
+  
   async startCardEntry() {
     console.log('STARTING card entry');
     this.setState({ showingCardEntry: false });

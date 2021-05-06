@@ -86,9 +86,9 @@ export default function OrderModal({
       </View>
       <View style={styles.buttonRow}>
       <GreenButton
-          onPress={onBuyerVerification}
-          text="Buyer Verification "
-        />
+        onPress={onBuyerVerification}
+        text="Buyer Verification"
+      />
       </View>
     </View>
   );
