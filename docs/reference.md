@@ -269,8 +269,7 @@ if (Platform.OS === 'ios') {
 ---
 ### startBuyerVerificationFlow
 
-Displays the enabled buyer verification flow. The method takes two configuration object and three call back parameters which correspond
-to the possible results of the request.
+Starts the buyer verification for a given payment source id. The most likely use case will be to pass in a card-on-file (cof). This will display a verification view to the user for some geographies to address Strong Customer Authentication. The method takes two callback parameters which correspond to the possible results of the request.
 
 Parameter                          | Type                                                                          | Description
 :----------------------------------| :---------------------------------------------------------------------------- | :-----------

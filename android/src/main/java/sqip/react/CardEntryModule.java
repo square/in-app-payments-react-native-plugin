@@ -196,45 +196,11 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void startBuyerVerificationFlow( final String paymentSourceId, final String locationId, final String buyerActionString,
                                           final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
-    Money money = new Money(
-            ((Integer)moneyMap.getInt("amount")),
-            sqip.Currency.valueOf((String)moneyMap.getString("currencyCode")));
-
-    BuyerAction buyerAction;
-    if (buyerActionString.equals("Store")) {
-      buyerAction = new BuyerAction.Store();
-    } else {
-      buyerAction = new BuyerAction.Charge(money);
-    }
+    Money money = getMoney(moneyMap);
+    BuyerAction buyerAction = getBuyerAction(buyerActionString, money);
+    Contact contact = getContact(contactMap);                                        
 
     SquareIdentifier squareIdentifier = new SquareIdentifier.LocationToken(locationId);
-
-    // Contact info
-    String givenName = contactMap.hasKey("givenName") ? contactMap.getString("givenName") : "";
-    String familyName = contactMap.hasKey("familyName") ? contactMap.getString("familyName") : "";
-    ArrayList<Object> inputList =
-            contactMap.hasKey("addressLines") ? contactMap.getArray("addressLines").toArrayList() : new ArrayList<Object>();
-    ArrayList<String> addressLines = new ArrayList<>(inputList.size());
-    for (Object object : inputList) {
-      addressLines.add(Objects.toString(object, null));
-    }
-    String city = contactMap.hasKey("city") ? contactMap.getString("city") : "";
-    String countryCode = contactMap.hasKey("countryCode") ? contactMap.getString("countryCode") : "";
-    String email = contactMap.hasKey("email") ? contactMap.getString("email") : "";
-    String phone = contactMap.hasKey("phone") ? contactMap.getString("phone") : "";
-    String postalCode = contactMap.hasKey("postalCode") ? contactMap.getString("postalCode") : "";
-    String region = contactMap.hasKey("region") ? contactMap.getString("region") : "";
-    Country country = Country.valueOf((countryCode != null) ? countryCode : "US");
-    Contact contact = new Contact.Builder()
-            .familyName(familyName)
-            .email(email)
-            .addressLines(addressLines)
-            .city(city)
-            .countryCode(country)
-            .postalCode(postalCode)
-            .phone(phone)
-            .region(region)
-            .build(givenName);
 
     this.paymentSourceId = paymentSourceId;
     this.squareIdentifier = squareIdentifier;
@@ -252,46 +218,13 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   public void startCardEntryFlowWithVerification(
     final Boolean collectPostalCode, final String locationId, final String buyerActionString,
     final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
-    Money money = new Money(
-      ((Integer)moneyMap.getInt("amount")),
-      sqip.Currency.valueOf((String)moneyMap.getString("currencyCode")));
-
-    BuyerAction buyerAction;
-    if (buyerActionString.equals("Store")) {
-      buyerAction = new BuyerAction.Store();
-    } else {
-      buyerAction = new BuyerAction.Charge(money);
-    }
+    Money money = getMoney(moneyMap);
+    BuyerAction buyerAction = getBuyerAction(buyerActionString, money);
+    Contact contact = getContact(contactMap);
 
     SquareIdentifier squareIdentifier = new SquareIdentifier.LocationToken(locationId);
 
-    // Contact info
-    String givenName = contactMap.hasKey("givenName") ? contactMap.getString("givenName") : "";
-    String familyName = contactMap.hasKey("familyName") ? contactMap.getString("familyName") : "";
-    ArrayList<Object> inputList =
-      contactMap.hasKey("addressLines") ? contactMap.getArray("addressLines").toArrayList() : new ArrayList<Object>();
-    ArrayList<String> addressLines = new ArrayList<>(inputList.size());
-    for (Object object : inputList) {
-      addressLines.add(Objects.toString(object, null));
-    }
-    String city = contactMap.hasKey("city") ? contactMap.getString("city") : "";
-    String countryCode = contactMap.hasKey("countryCode") ? contactMap.getString("countryCode") : "";
-    String email = contactMap.hasKey("email") ? contactMap.getString("email") : "";
-    String phone = contactMap.hasKey("phone") ? contactMap.getString("phone") : "";
-    String postalCode = contactMap.hasKey("postalCode") ? contactMap.getString("postalCode") : "";
-    String region = contactMap.hasKey("region") ? contactMap.getString("region") : "";
-    Country country = Country.valueOf((countryCode != null) ? countryCode : "US");
-    Contact contact = new Contact.Builder()
-      .familyName(familyName)
-      .email(email)
-      .addressLines(addressLines)
-      .city(city)
-      .countryCode(country)
-      .postalCode(postalCode)
-      .phone(phone)
-      .region(region)
-      .build(givenName);
-
+    this.paymentSourceId = null;
     this.squareIdentifier = squareIdentifier;
     this.buyerAction = buyerAction;
     this.contact = contact;
@@ -317,6 +250,52 @@ class CardEntryModule extends ReactContextBaseJavaModule {
     reference.set(new CardEntryActivityCommand.ShowError(errorMessage));
     countDownLatch.countDown();
     promise.resolve(null);
+  }
+
+  private Contact getContact(final ReadableMap contactMap) {
+    
+    // Contact info
+    String givenName = contactMap.hasKey("givenName") ? contactMap.getString("givenName") : "";
+    String familyName = contactMap.hasKey("familyName") ? contactMap.getString("familyName") : "";
+    ArrayList<Object> inputList =
+            contactMap.hasKey("addressLines") ? contactMap.getArray("addressLines").toArrayList() : new ArrayList<Object>();
+    ArrayList<String> addressLines = new ArrayList<>(inputList.size());
+    for (Object object : inputList) {
+      addressLines.add(Objects.toString(object, null));
+    }
+    String city = contactMap.hasKey("city") ? contactMap.getString("city") : "";
+    String countryCode = contactMap.hasKey("countryCode") ? contactMap.getString("countryCode") : "";
+    String email = contactMap.hasKey("email") ? contactMap.getString("email") : "";
+    String phone = contactMap.hasKey("phone") ? contactMap.getString("phone") : "";
+    String postalCode = contactMap.hasKey("postalCode") ? contactMap.getString("postalCode") : "";
+    String region = contactMap.hasKey("region") ? contactMap.getString("region") : "";
+    Country country = Country.valueOf((countryCode != null) ? countryCode : "US");
+    return new Contact.Builder()
+            .familyName(familyName)
+            .email(email)
+            .addressLines(addressLines)
+            .city(city)
+            .countryCode(country)
+            .postalCode(postalCode)
+            .phone(phone)
+            .region(region)
+            .build(givenName);
+  }
+
+  private Money getMoney(final ReadableMap moneyMap) {
+    return new Money(
+            ((Integer)moneyMap.getInt("amount")),
+            sqip.Currency.valueOf((String)moneyMap.getString("currencyCode")));
+  }
+
+  private BuyerAction getBuyerAction(final String buyerActionString, final Money money) {
+    BuyerAction buyerAction;
+    if (buyerActionString.equals("Store")) {
+      buyerAction = new BuyerAction.Store();
+    } else {
+      buyerAction = new BuyerAction.Charge(money);
+    }
+    return buyerAction;
   }
 
   private long readCardEntryCloseExitAnimationDurationMs() {
