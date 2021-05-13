@@ -161,7 +161,9 @@ RCT_REMAP_METHOD(startBuyerVerificationFlow,
             [rootViewController dismissViewControllerAnimated:YES completion:nil];
         }
         
-        self.theme = [[SQIPTheme alloc] init];
+        if (self.theme == nil) {
+            self.theme = [[SQIPTheme alloc] init];
+        }
         [SQIPBuyerVerificationSDK.shared verifyWithParameters:params
             theme:self.theme
             viewController:rootViewController
