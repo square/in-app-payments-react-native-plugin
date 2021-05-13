@@ -99,49 +99,9 @@ RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
                  : (RCTPromiseRejectBlock)reject)
 {
     dispatch_async([self methodQueue], ^{
-        SQIPMoney *money = [[SQIPMoney alloc] initWithAmount:[moneyMap[@"amount"] longValue]
-                            currency:[RNSQIPBuyerVerification currencyForCurrencyCode:moneyMap[@"currencyCode"]]];
-
-        SQIPBuyerAction *buyerAction = nil;
-        if ([@"Store" isEqualToString:buyerActionString]) {
-            buyerAction = [SQIPBuyerAction storeAction];
-        } else {
-            buyerAction = [SQIPBuyerAction chargeActionWithMoney:money];
-        }
-
-        SQIPContact *contact = [[SQIPContact alloc] init];
-        contact.givenName = contactMap[@"givenName"];
-
-        if (![contactMap[@"familyName"] isEqual:[NSNull null]]) {
-            contact.familyName = contactMap[@"familyName"];
-        }
-
-        if (![contactMap[@"email"] isEqual:[NSNull null]]) {
-            contact.email = contactMap[@"email"];
-        }
-
-        if (![contactMap[@"addressLines"] isEqual:[NSNull null]]) {
-            contact.addressLines = contactMap[@"addressLines"];
-            NSLog(@"%@", contactMap[@"addressLines"]);
-        }
-
-        if (![contactMap[@"city"] isEqual:[NSNull null]]) {
-            contact.city = contactMap[@"city"];
-        }
-
-        if (![contactMap[@"region"] isEqual:[NSNull null]]) {
-            contact.region = contactMap[@"region"];
-        }
-
-        if (![contactMap[@"postalCode"] isEqual:[NSNull null]]) {
-            contact.postalCode = contactMap[@"postalCode"];
-        }
-
-        contact.country = [RNSQIPBuyerVerification countryForCountryCode:contactMap[@"countryCode"]];
-
-        if (![contactMap[@"phone"] isEqual:[NSNull null]]) {
-            contact.phone = contactMap[@"phone"];
-        }
+        SQIPMoney *money = [self _getMoney:moneyMap];
+        SQIPBuyerAction *buyerAction = [self _getBuyerAction:buyerActionString money:money];
+        SQIPContact *contact = [self _getContact:contactMap];
 
         self.locationId = locationId;
         self.buyerAction = buyerAction;
@@ -158,6 +118,74 @@ RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
             [rootViewController presentViewController:navigationController animated:YES completion:nil];
         }
+        resolve([NSNull null]);
+    });
+}
+
+RCT_REMAP_METHOD(startBuyerVerificationFlow,
+                 paymentSourceId
+                 : (NSString *)paymentSourceId
+                 locationId
+                 : (NSString *)locationId
+                 buyerActionString
+                 : (NSString *)buyerActionString
+                 moneyMap
+                 : (NSDictionary *)moneyMap
+                 contactMap
+                 : (NSDictionary *)contactMap
+                 startCardEntryFlowWithResolver
+                 : (RCTPromiseResolveBlock)resolve
+                     rejecter
+                 : (RCTPromiseRejectBlock)reject)
+{
+    dispatch_async([self methodQueue], ^{
+        SQIPMoney *money = [self _getMoney:moneyMap];
+        SQIPBuyerAction *buyerAction = [self _getBuyerAction:buyerActionString money:money];
+        SQIPContact *contact = [self _getContact:contactMap];
+
+        self.locationId = locationId;
+        self.buyerAction = buyerAction;
+        self.contact = contact;
+
+        UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+
+    
+        SQIPVerificationParameters *params = [[SQIPVerificationParameters alloc] initWithPaymentSourceID:paymentSourceId
+                                                buyerAction:self.buyerAction
+                                                locationID:self.locationId
+                                                contact:self.contact];
+
+        if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+            [rootViewController.navigationController popViewControllerAnimated:YES];
+        } else {
+            [rootViewController dismissViewControllerAnimated:YES completion:nil];
+        }
+        
+        if (self.theme == nil) {
+            self.theme = [[SQIPTheme alloc] init];
+        }
+        [SQIPBuyerVerificationSDK.shared verifyWithParameters:params
+            theme:self.theme
+            viewController:rootViewController
+            success:^(SQIPBuyerVerifiedDetails *_Nonnull verifiedDetails) {
+                NSDictionary *verificationResult =
+                    @{
+                        @"nonce" : paymentSourceId,
+                        @"token" : verifiedDetails.verificationToken
+                    };
+
+                [self sendEventWithName:RNSQIPOnBuyerVerificationSuccessEventName
+                    body:verificationResult];
+            }
+            failure:^(NSError *_Nonnull error) {
+                NSString *debugCode = error.userInfo[SQIPErrorDebugCodeKey];
+                NSString *debugMessage = error.userInfo[SQIPErrorDebugMessageKey];
+                [self sendEventWithName:RNSQIPOnBuyerVerificationErrorEventName
+                    body:[RNSQIPErrorUtilities callbackErrorObject:RNSQIPUsageError
+                                    message:error.localizedDescription
+                                    debugCode:debugCode
+                                    debugMessage:debugMessage]];
+            }];
         resolve([NSNull null]);
     });
 }
@@ -377,6 +405,60 @@ RCT_REMAP_METHOD(setTheme,
     } else {
         return UIKeyboardAppearanceDefault;
     }
+}
+
+- (SQIPMoney *)_getMoney:(NSDictionary *)moneyMap {
+    SQIPMoney *money = [[SQIPMoney alloc] initWithAmount:[moneyMap[@"amount"] longValue]
+                            currency:[RNSQIPBuyerVerification currencyForCurrencyCode:moneyMap[@"currencyCode"]]];
+    return money;
+}
+
+- (SQIPBuyerAction *)_getBuyerAction:(NSString *)buyerActionString money:(SQIPMoney *)money {
+    SQIPBuyerAction *buyerAction = nil;
+    if ([@"Store" isEqualToString:buyerActionString]) {
+        buyerAction = [SQIPBuyerAction storeAction];
+    } else {
+        buyerAction = [SQIPBuyerAction chargeActionWithMoney:money];
+    }
+    return buyerAction;
+}
+
+- (SQIPContact *)_getContact:(NSDictionary *)contactMap {
+    SQIPContact *contact = [[SQIPContact alloc] init];
+    contact.givenName = contactMap[@"givenName"];
+
+    if (![contactMap[@"familyName"] isEqual:[NSNull null]]) {
+        contact.familyName = contactMap[@"familyName"];
+    }
+
+    if (![contactMap[@"email"] isEqual:[NSNull null]]) {
+        contact.email = contactMap[@"email"];
+    }
+
+    if (![contactMap[@"addressLines"] isEqual:[NSNull null]]) {
+        contact.addressLines = contactMap[@"addressLines"];
+        NSLog(@"%@", contactMap[@"addressLines"]);
+    }
+
+    if (![contactMap[@"city"] isEqual:[NSNull null]]) {
+        contact.city = contactMap[@"city"];
+    }
+
+    if (![contactMap[@"region"] isEqual:[NSNull null]]) {
+        contact.region = contactMap[@"region"];
+    }
+
+    if (![contactMap[@"postalCode"] isEqual:[NSNull null]]) {
+        contact.postalCode = contactMap[@"postalCode"];
+    }
+
+    contact.country = [RNSQIPBuyerVerification countryForCountryCode:contactMap[@"countryCode"]];
+
+    if (![contactMap[@"phone"] isEqual:[NSNull null]]) {
+        contact.phone = contactMap[@"phone"];
+    }
+
+    return contact;
 }
 
 @end

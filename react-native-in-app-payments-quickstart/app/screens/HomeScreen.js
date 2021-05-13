@@ -89,6 +89,7 @@ export default class HomeScreen extends Component {
     showingCustomerCardEntry: false,
     showingDigitalWallet: false,
     canUseDigitalWallet: false,
+    showingBuyerVerification: false,
     applePayState: applePayStatus.none,
     applePayError: null,
     cardsOnFile: [],
@@ -100,6 +101,7 @@ export default class HomeScreen extends Component {
     this.onStartGiftCardEntry = this.startGiftCardEntry.bind(this);
     this.onShowCardEntry = this.onShowCardEntry.bind(this);
     this.onShowGiftCardEntry = this.onShowGiftCardEntry.bind(this);
+    this.onBuyerVerification = this.onBuyerVerification.bind(this);
     this.onShowCustomerCardEntry = this.onShowCustomerCardEntry.bind(this);
     this.onCardNonceRequestSuccess = this.onCardNonceRequestSuccess.bind(this);
     this.onCustomerCardNonceRequestSuccess = this.onCustomerCardNonceRequestSuccess.bind(this);
@@ -305,6 +307,11 @@ export default class HomeScreen extends Component {
     this.setState({ showingCustomerCardEntry: true });
   }
 
+  onBuyerVerification() {
+    this.closeOrderScreen();
+    this.setState({ showingBuyerVerification: true });
+  }
+
   async onBuyerVerificationSuccess(buyerVerificationDetails) {
     if (this.chargeServerHostIsSet()) {
       try {
@@ -405,7 +412,37 @@ export default class HomeScreen extends Component {
     } else if (this.state.showingDigitalWallet) {
       this.startDigitalWallet();
       this.setState({ showingDigitalWallet: false });
+    } else if (this.state.showingBuyerVerification) {
+      this.startBuyerVerificationFlow();
     }
+  }
+
+  async startBuyerVerificationFlow() {
+    console.log('STARTING Buyer Verification');
+    this.setState({ showingBuyerVerification: false });
+    const paymentSourceId = 'ccof:customer-card-id-requires-verification';
+    const cardEntryConfig = {
+      collectPostalCode: true,
+      squareLocationId: SQUARE_LOCATION_ID,
+      buyerAction: 'Charge',
+      amount: 100,
+      currencyCode: 'USD',
+      givenName: 'John',
+      familyName: 'Doe',
+      addressLines: ['London Eye', 'Riverside Walk'],
+      city: 'London',
+      countryCode: 'GB',
+      email: 'johndoe@example.com',
+      phone: '8001234567',
+      postalCode: 'SE1 7',
+    };
+    await SQIPCardEntry.startBuyerVerificationFlow(
+      paymentSourceId,
+      cardEntryConfig,
+      this.onBuyerVerificationSuccess,
+      this.onBuyerVerificationFailure,
+      this.onCardEntryCancel,
+    );
   }
 
   async startCardEntry() {
@@ -545,6 +582,7 @@ export default class HomeScreen extends Component {
           onPayWithGiftCard={this.onShowGiftCardEntry}
           onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
           onShowDigitalWallet={this.onShowDigitalWallet}
+          onBuyerVerification={this.onBuyerVerification}
         />
       );
     }

@@ -29,8 +29,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
@@ -69,6 +72,7 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   private BuyerAction buyerAction;
   private Contact contact;
   private CardDetails cardResult;
+  private String paymentSourceId;
 
   public CardEntryModule(final ReactApplicationContext reactContext) {
     super(reactContext);
@@ -114,9 +118,16 @@ class CardEntryModule extends ReactContextBaseJavaModule {
         if (requestCode == BuyerVerification.DEFAULT_BUYER_VERIFICATION_REQUEST_CODE) {
           BuyerVerification.handleActivityResult(data, result -> {
             if (result.isSuccess()) {
-              WritableMap mapToReturn = cardDetailsConverter.toMapObject(CardEntryModule.this.cardResult);
-              mapToReturn.putString("token", result.getSuccessValue().getVerificationToken());
-              getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
+              if(CardEntryModule.this.paymentSourceId == null) {
+                WritableMap mapToReturn = cardDetailsConverter.toMapObject(CardEntryModule.this.cardResult);
+                mapToReturn.putString("token", result.getSuccessValue().getVerificationToken());
+                getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
+              } else {
+                WritableMap mapToReturn = new WritableNativeMap();
+                mapToReturn.putString("nonce", CardEntryModule.this.paymentSourceId);
+                mapToReturn.putString("token", result.getSuccessValue().getVerificationToken());
+                getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
+              }
             } else if (result.isError()) {
               sqip.BuyerVerificationResult.Error error = result.getErrorValue();
               WritableMap errorMap =
@@ -183,49 +194,37 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void startCardEntryFlowWithVerification(
-    final Boolean collectPostalCode, final String locationId, final String buyerActionString,
-    final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
-    Money money = new Money(
-      ((Integer)moneyMap.getInt("amount")),
-      sqip.Currency.valueOf((String)moneyMap.getString("currencyCode")));
-
-    BuyerAction buyerAction;
-    if (buyerActionString.equals("Store")) {
-      buyerAction = new BuyerAction.Store();
-    } else {
-      buyerAction = new BuyerAction.Charge(money);
-    }
+  public void startBuyerVerificationFlow( final String paymentSourceId, final String locationId, final String buyerActionString,
+                                          final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
+    Money money = getMoney(moneyMap);
+    BuyerAction buyerAction = getBuyerAction(buyerActionString, money);
+    Contact contact = getContact(contactMap);                                        
 
     SquareIdentifier squareIdentifier = new SquareIdentifier.LocationToken(locationId);
 
-    // Contact info
-    String givenName = contactMap.hasKey("givenName") ? contactMap.getString("givenName") : "";
-    String familyName = contactMap.hasKey("familyName") ? contactMap.getString("familyName") : "";
-    ArrayList<Object> inputList =
-      contactMap.hasKey("addressLines") ? contactMap.getArray("addressLines").toArrayList() : new ArrayList<Object>();
-    ArrayList<String> addressLines = new ArrayList<>(inputList.size());
-    for (Object object : inputList) {
-      addressLines.add(Objects.toString(object, null));
-    }
-    String city = contactMap.hasKey("city") ? contactMap.getString("city") : "";
-    String countryCode = contactMap.hasKey("countryCode") ? contactMap.getString("countryCode") : "";
-    String email = contactMap.hasKey("email") ? contactMap.getString("email") : "";
-    String phone = contactMap.hasKey("phone") ? contactMap.getString("phone") : "";
-    String postalCode = contactMap.hasKey("postalCode") ? contactMap.getString("postalCode") : "";
-    String region = contactMap.hasKey("region") ? contactMap.getString("region") : "";
-    Country country = Country.valueOf((countryCode != null) ? countryCode : "US");
-    Contact contact = new Contact.Builder()
-      .familyName(familyName)
-      .email(email)
-      .addressLines(addressLines)
-      .city(city)
-      .countryCode(country)
-      .postalCode(postalCode)
-      .phone(phone)
-      .region(region)
-      .build(givenName);
+    this.paymentSourceId = paymentSourceId;
+    this.squareIdentifier = squareIdentifier;
+    this.buyerAction = buyerAction;
+    this.contact = contact;
 
+    VerificationParameters verificationParameters =
+    new VerificationParameters(CardEntryModule.this.paymentSourceId, CardEntryModule.this.buyerAction, CardEntryModule.this.squareIdentifier,
+    CardEntryModule.this.contact);
+    BuyerVerification.verify(Objects.requireNonNull(getCurrentActivity()), verificationParameters);
+    promise.resolve(null);
+  }
+  
+  @ReactMethod
+  public void startCardEntryFlowWithVerification(
+    final Boolean collectPostalCode, final String locationId, final String buyerActionString,
+    final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
+    Money money = getMoney(moneyMap);
+    BuyerAction buyerAction = getBuyerAction(buyerActionString, money);
+    Contact contact = getContact(contactMap);
+
+    SquareIdentifier squareIdentifier = new SquareIdentifier.LocationToken(locationId);
+
+    this.paymentSourceId = null;
     this.squareIdentifier = squareIdentifier;
     this.buyerAction = buyerAction;
     this.contact = contact;
@@ -251,6 +250,52 @@ class CardEntryModule extends ReactContextBaseJavaModule {
     reference.set(new CardEntryActivityCommand.ShowError(errorMessage));
     countDownLatch.countDown();
     promise.resolve(null);
+  }
+
+  private Contact getContact(final ReadableMap contactMap) {
+    
+    // Contact info
+    String givenName = contactMap.hasKey("givenName") ? contactMap.getString("givenName") : "";
+    String familyName = contactMap.hasKey("familyName") ? contactMap.getString("familyName") : "";
+    ArrayList<Object> inputList =
+            contactMap.hasKey("addressLines") ? contactMap.getArray("addressLines").toArrayList() : new ArrayList<Object>();
+    ArrayList<String> addressLines = new ArrayList<>(inputList.size());
+    for (Object object : inputList) {
+      addressLines.add(Objects.toString(object, null));
+    }
+    String city = contactMap.hasKey("city") ? contactMap.getString("city") : "";
+    String countryCode = contactMap.hasKey("countryCode") ? contactMap.getString("countryCode") : "";
+    String email = contactMap.hasKey("email") ? contactMap.getString("email") : "";
+    String phone = contactMap.hasKey("phone") ? contactMap.getString("phone") : "";
+    String postalCode = contactMap.hasKey("postalCode") ? contactMap.getString("postalCode") : "";
+    String region = contactMap.hasKey("region") ? contactMap.getString("region") : "";
+    Country country = Country.valueOf((countryCode != null) ? countryCode : "US");
+    return new Contact.Builder()
+            .familyName(familyName)
+            .email(email)
+            .addressLines(addressLines)
+            .city(city)
+            .countryCode(country)
+            .postalCode(postalCode)
+            .phone(phone)
+            .region(region)
+            .build(givenName);
+  }
+
+  private Money getMoney(final ReadableMap moneyMap) {
+    return new Money(
+            ((Integer)moneyMap.getInt("amount")),
+            sqip.Currency.valueOf((String)moneyMap.getString("currencyCode")));
+  }
+
+  private BuyerAction getBuyerAction(final String buyerActionString, final Money money) {
+    BuyerAction buyerAction;
+    if (buyerActionString.equals("Store")) {
+      buyerAction = new BuyerAction.Store();
+    } else {
+      buyerAction = new BuyerAction.Charge(money);
+    }
+    return buyerAction;
   }
 
   private long readCardEntryCloseExitAnimationDurationMs() {

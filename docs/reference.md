@@ -28,6 +28,7 @@ Method                                                       | Return Object    
 [completeCardEntry](#completecardentry)                      | void                      | Closes the card entry form on success.
 [showCardNonceProcessingError](#showcardnonceprocessingerror)| void                      | Shows an error in the card entry form without closing the form.
 [setIOSCardEntryTheme](#setioscardentrytheme)                | void                      | Sets the customization theme for the card entry view controller in the native layer.
+[startBuyerVerificationFlow](#startBuyerVerificationFlow)    | void                      | Displays the enabled buyer verification flow.
 
 ### Apple Pay methods
 Method                                                          | Return Object             | Description
@@ -262,6 +263,53 @@ if (Platform.OS === 'ios') {
     },
   });
 }
+```
+
+
+---
+### startBuyerVerificationFlow
+
+Starts the buyer verification for a given payment source id. The most likely use case will be to pass in a card-on-file (cof). This will display a verification view to the user for some geographies to address Strong Customer Authentication. The method takes two callback parameters which correspond to the possible results of the request.
+
+Parameter                          | Type                                                                          | Description
+:----------------------------------| :---------------------------------------------------------------------------- | :-----------
+paymentSourceId                    | [paymentSourceId](#paymentSourceId)                                           | Configuration object for card entry behavior, pass `ccof:customer-card-id-requires-verification` for default configuration
+cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Configuration object for card entry behavior, pass `null` for default configuration
+onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when card entry with buyer verification is completed successfully.
+onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when card entry with buyer verification encounters errors.
+onCardEntryCancel                  | [cardEntryCancelCallback](#cardentrycancelcallback)                           | Invoked when card entry is canceled.
+
+#### Example usage
+
+```javascript
+import {
+  SQIPCardEntry
+} from 'react-native-square-in-app-payments';
+
+const paymentSourceId  =  'ccof:customer-card-id-requires-verification';
+const cardEntryConfig = {
+  collectPostalCode: true,
+  squareLocationId: SQUARE_LOCATION_ID,
+  buyerAction: 'Charge',
+  amount: 100,
+  currencyCode: 'USD',
+  givenName: 'John',
+  familyName: 'Doe',
+  addressLines: ['London Eye', 'Riverside Walk'],
+  city: 'London',
+  countryCode: 'GB',
+  email: 'johndoe@example.com',
+  phone: '8001234567',
+  postalCode: 'SE1 7'
+};
+
+await SQIPCardEntry.startBuyerVerificationFlow(
+  paymentSourceId,
+  cardEntryConfig,
+  (buyerVerificationDetails) => { ... }, // onBuyerVerificationSuccess
+  (errorInfo) => { ... }, // onBuyerVerificationFailure
+  () => { ... }, // onCardEntryCancel
+);
 ```
 --- 
 
