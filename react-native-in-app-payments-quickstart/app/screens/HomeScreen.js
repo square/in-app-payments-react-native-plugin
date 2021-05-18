@@ -436,11 +436,6 @@ export default class HomeScreen extends Component {
       phone: '8001234567',
       postalCode: 'SE1 7',
     };
-    if (Platform.OS === 'ios') {
-      await SQIPCardEntry.setIOSCardEntryTheme({
-        ...iOSCardEntryTheme,
-      });
-    }
     await SQIPCardEntry.startBuyerVerificationFlow(
       paymentSourceId,
       cardEntryConfig,
