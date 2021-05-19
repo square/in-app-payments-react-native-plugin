@@ -53,5 +53,8 @@
     "**/**/handlebars": "4.5.3",
     "**/**/logkitty": "^0.7.1",
     "**/**/minimist": "^0.2.1"
+  },
+  "dependencies": {
+    "babel-plugin-jest-hoist": "^26.6.2"
   }
 }

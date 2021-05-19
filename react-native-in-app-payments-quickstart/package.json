@@ -13,7 +13,7 @@
     "fbjs": "^3.0.0",
     "react": "^17.0.2",
     "react-native": "0.64.1",
-    "react-native-gesture-handler": "^1.5.2",
+    "react-native-gesture-handler": "^1.10.3",
     "react-native-modal": "^11.5.3",
     "react-native-square-in-app-payments": "file:../",
     "react-navigation": "^4.0.10"
