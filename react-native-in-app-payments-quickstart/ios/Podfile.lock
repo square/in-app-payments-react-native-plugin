@@ -219,12 +219,12 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - RNGestureHandler (1.5.2):
     - React
-  - RNSquareInAppPayments (1.5.0):
+  - RNSquareInAppPayments (1.3.0):
     - React
-    - SquareBuyerVerificationSDK (= 1.5.1)
-    - SquareInAppPaymentsSDK (= 1.5.1)
-  - SquareBuyerVerificationSDK (1.5.1)
-  - SquareInAppPaymentsSDK (1.5.1)
+    - SquareBuyerVerificationSDK (= 1.3.0)
+    - SquareInAppPaymentsSDK (= 1.4.0)
+  - SquareBuyerVerificationSDK (1.3.0)
+  - SquareInAppPaymentsSDK (1.4.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:

@@ -6,7 +6,7 @@ buildscript {
         minSdkVersion = 21
         compileSdkVersion = 28
         targetSdkVersion = 28
-        sqipVersion="1.5.1"
+        sqipVersion="1.4.0"
     }
     repositories {
         google()
