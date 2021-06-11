@@ -23,7 +23,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "babel-eslint": "^10.0.0",
-    "babel-jest": "24.9.0",
+    "babel-jest": "27.0.1",
     "eslint": "^6.5.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
@@ -31,10 +31,10 @@
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-react-native": "^3.2.1",
-    "jest": "^24.9.0",
+    "jest": "^27.0.1",
     "metro-react-native-babel-preset": "0.56.0",
-    "react": "16.9.0",
-    "react-native": "0.61.5",
+    "react": "^17.0.2",
+    "react-native": "0.64.1",
     "react-test-renderer": "16.9.0"
   },
   "peerDependencies": {
@@ -53,8 +53,5 @@
     "**/**/handlebars": "4.5.3",
     "**/**/logkitty": "^0.7.1",
     "**/**/minimist": "^0.2.1"
-  },
-  "dependencies": {
-    "babel-plugin-jest-hoist": "^26.6.2"
   }
 }
