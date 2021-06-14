@@ -28,7 +28,7 @@ jest.mock('react-native', () => {
   };
   const mockReactNative = {
     Platform: {
-      select: jest.fn(map => map.ios),
+      select: jest.fn((map) => map.ios),
     },
     MockEventEmitter: emitter,
     NativeEventEmitter: jest.fn(() => emitter),
