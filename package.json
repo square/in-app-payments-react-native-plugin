@@ -29,7 +29,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.24.1",
+    "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-native": "^3.11.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "0.56.0",
