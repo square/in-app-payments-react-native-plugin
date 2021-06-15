@@ -48,7 +48,7 @@ export default function CardsOnFileModal({
               {'No cards on file found.'
               + 'Please tap the button to add a card that you can use for future transactions.'}
             </Text>
-          ) : cardsOnFile.map(cardOnFile => (
+          ) : cardsOnFile.map((cardOnFile) => (
             <React.Fragment key={cardOnFile.id}>
               <View style={styles.row}>
                 <CardsOnFileCardView
@@ -59,8 +59,7 @@ export default function CardsOnFileModal({
               </View>
               <View style={styles.horizontalLine} />
             </React.Fragment>
-          ))
-        }
+          ))}
       </View>
       <View style={styles.buttonRow}>
         <GreenButton

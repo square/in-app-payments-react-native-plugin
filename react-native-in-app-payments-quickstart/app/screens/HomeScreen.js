@@ -80,23 +80,22 @@ const iOSCardEntryTheme = {
 };
 
 export default class HomeScreen extends Component {
-  state = {
-    showingBottomSheet: false,
-    showingCardsOnFileScreen: false,
-    showingPendingScreen: false,
-    showingCardEntry: false,
-    showingGiftCardEntry: false,
-    showingCustomerCardEntry: false,
-    showingDigitalWallet: false,
-    canUseDigitalWallet: false,
-    showingBuyerVerification: false,
-    applePayState: applePayStatus.none,
-    applePayError: null,
-    cardsOnFile: [],
-  }
-
   constructor() {
     super();
+    this.state = {
+      showingBottomSheet: false,
+      showingCardsOnFileScreen: false,
+      showingPendingScreen: false,
+      showingCardEntry: false,
+      showingGiftCardEntry: false,
+      showingCustomerCardEntry: false,
+      showingDigitalWallet: false,
+      canUseDigitalWallet: false,
+      showingBuyerVerification: false,
+      applePayState: applePayStatus.none,
+      applePayError: null,
+      cardsOnFile: [],
+    };
     this.onStartCardEntry = this.startCardEntry.bind(this);
     this.onStartGiftCardEntry = this.startGiftCardEntry.bind(this);
     this.onShowCardEntry = this.onShowCardEntry.bind(this);
