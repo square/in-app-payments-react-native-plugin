@@ -14,21 +14,23 @@
  limitations under the License.
 */
 import { Platform, NativeModules, NativeEventEmitter } from 'react-native'; // eslint-disable-line import/no-unresolved
+import { CardDetails } from './models/CardDetails';
+import { ErrorDetails } from './models/ErrorDetails';
 import Utilities from './Utilities';
 
 const { RNSQIPGooglePay } = NativeModules;
 
-let googlePayNonceRequestSuccessCallback;
-const onNativeGooglePayNonceRequestSuccess = (cardDetails) => {
+let googlePayNonceRequestSuccessCallback: {(cardDetails:CardDetails) : void;};
+const onNativeGooglePayNonceRequestSuccess = (cardDetails:CardDetails) => {
   if (googlePayNonceRequestSuccessCallback) googlePayNonceRequestSuccessCallback(cardDetails);
 };
 
-let googlePayNonceRequestFailureCallback;
-const onNativeGooglePayNonceRequestFailure = (error) => {
+let googlePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void;};
+const onNativeGooglePayNonceRequestFailure = (error:ErrorDetails) => {
   if (googlePayNonceRequestFailureCallback) googlePayNonceRequestFailureCallback(error);
 };
 
-let googlePayCancelCallback;
+let googlePayCancelCallback: () => void;
 const onNativeGooglePayCanceled = () => {
   if (googlePayCancelCallback) googlePayCancelCallback();
 };
@@ -40,7 +42,7 @@ if (Platform.OS === 'android') {
   googlePayEmitter.addListener('onGooglePayCanceled', onNativeGooglePayCanceled);
 }
 
-async function initializeGooglePay(squareLocationId, environment) {
+async function initializeGooglePay(squareLocationId:string, environment:any) {
   Utilities.verifyStringType(squareLocationId, 'squareLocationId should be a valid string');
   Utilities.verifyIntegerType(environment, 'environment should be a valid integer');
 
@@ -56,10 +58,10 @@ async function canUseGooglePay() {
 }
 
 async function requestGooglePayNonce(
-  googlePayConfig,
-  onGooglePayNonceRequestSuccess,
-  onGooglePayNonceRequestFailure,
-  onGooglePayCanceled,
+  googlePayConfig:any,
+  onGooglePayNonceRequestSuccess:any,
+  onGooglePayNonceRequestFailure:any,
+  onGooglePayCanceled:any,
 ) {
   Utilities.verifyObjectType(googlePayConfig, 'googlePayConfig should be a valid object');
   Utilities.verifyStringType(googlePayConfig.price, 'googlePayConfig.price should be a valid string');

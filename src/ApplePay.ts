@@ -14,21 +14,23 @@
  limitations under the License.
 */
 import { NativeModules, NativeEventEmitter } from 'react-native'; // eslint-disable-line import/no-unresolved
+import { CardDetails } from './models/CardDetails';
+import { ErrorDetails } from './models/ErrorDetails';
 import Utilities from './Utilities';
 
 const { RNSQIPApplePay } = NativeModules;
 
-let applePayNonceRequestSuccessCallback;
-const onNativeApplePayNonceRequestSuccess = (cardDetails) => {
+let applePayNonceRequestSuccessCallback: {(cardDetails:CardDetails) : void;};
+const onNativeApplePayNonceRequestSuccess = (cardDetails:CardDetails) => {
   if (applePayNonceRequestSuccessCallback) applePayNonceRequestSuccessCallback(cardDetails);
 };
 
-let applePayNonceRequestFailureCallback;
-const onNativeApplePayNonceRequestFailure = (error) => {
+let applePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void;};
+const onNativeApplePayNonceRequestFailure = (error:ErrorDetails) => {
   if (applePayNonceRequestFailureCallback) applePayNonceRequestFailureCallback(error);
 };
 
-let applePayCompleteCallback;
+let applePayCompleteCallback: () => void;
 const onNativeApplePayComplete = () => {
   if (applePayCompleteCallback) applePayCompleteCallback();
 };
@@ -38,7 +40,7 @@ applePayEmitter.addListener('onApplePayNonceRequestSuccess', onNativeApplePayNon
 applePayEmitter.addListener('onApplePayNonceRequestFailure', onNativeApplePayNonceRequestFailure);
 applePayEmitter.addListener('onApplePayComplete', onNativeApplePayComplete);
 
-async function initializeApplePay(applePayMerchantId) {
+async function initializeApplePay(applePayMerchantId:any) {
   Utilities.verifyStringType(applePayMerchantId, 'applePayMerchantId should be a string');
   await RNSQIPApplePay.initializeApplePay(applePayMerchantId);
 }
@@ -48,10 +50,10 @@ async function canUseApplePay() {
 }
 
 async function requestApplePayNonce(
-  applePayConfig,
-  onApplePayNonceRequestSuccess,
-  onApplePayNonceRequestFailure,
-  onApplePayComplete,
+  applePayConfig:any,
+  onApplePayNonceRequestSuccess:any,
+  onApplePayNonceRequestFailure:any,
+  onApplePayComplete:any,
 ) {
   Utilities.verifyObjectType(applePayConfig, 'applePayConfig should be a valid object');
   Utilities.verifyStringType(applePayConfig.price, 'applePayConfig.price should be a valid string');
@@ -83,7 +85,7 @@ async function requestApplePayNonce(
   }
 }
 
-async function completeApplePayAuthorization(isSuccess, errorMessage = '') {
+async function completeApplePayAuthorization(isSuccess:any, errorMessage = '') {
   Utilities.verifyBooleanType(isSuccess, 'isSuccess should be a valid boolean');
   Utilities.verifyStringType(errorMessage, 'errorMessage should be a valid string');
 
