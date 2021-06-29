@@ -14,10 +14,10 @@
  limitations under the License.
 */
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native'; // eslint-disable-line import/no-unresolved
-import { CardDetails } from './models/CardDetails';
-import { CardEntryConfig } from './models/CardEntryDetails';
-import { ErrorDetails } from './models/ErrorDetails';
-import { VerificationResult } from './models/VerificationResult';
+import CardDetails from './models/CardDetails';
+import CardEntryConfig from './models/CardEntryDetails';
+import ErrorDetails from './models/ErrorDetails';
+import VerificationResult from './models/VerificationResult';
 import Utilities from './Utilities';
 
 const { RNSQIPCardEntry } = NativeModules;
@@ -60,7 +60,8 @@ cardEntryEmitter.addListener('cardEntryComplete', onNativeCardEntryComplete);
 cardEntryEmitter.addListener('onBuyerVerificationSuccess', onNativeBuyerVerificationSuccess);
 cardEntryEmitter.addListener('onBuyerVerificationError', onNativeBuyerVerificationError);
 
-async function startCardEntryFlow(cardEntryConfig:CardEntryConfig, onCardNonceRequestSuccess:any, onCardEntryCancel:any) {
+async function startCardEntryFlow(cardEntryConfig:CardEntryConfig, onCardNonceRequestSuccess:any,
+  onCardEntryCancel:any) {
   let cardEntryInternalConfig = new CardEntryConfig();
   if (cardEntryConfig) {
     Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
@@ -79,7 +80,8 @@ async function startCardEntryFlow(cardEntryConfig:CardEntryConfig, onCardNonceRe
 }
 
 async function startBuyerVerificationFlow(paymentSourceId:string,
-  cardEntryConfig:CardEntryConfig, onBuyerVerificationSuccess:any, onBuyerVerificationFailure:any, onCardEntryCancel:any) {
+  cardEntryConfig:CardEntryConfig, onBuyerVerificationSuccess:any, onBuyerVerificationFailure:any,
+  onCardEntryCancel:any) {
   const money = {
     amount: cardEntryConfig.amount,
     currencyCode: cardEntryConfig.currencyCode,

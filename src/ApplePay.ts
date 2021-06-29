@@ -14,8 +14,8 @@
  limitations under the License.
 */
 import { NativeModules, NativeEventEmitter } from 'react-native'; // eslint-disable-line import/no-unresolved
-import { CardDetails } from './models/CardDetails';
-import { ErrorDetails } from './models/ErrorDetails';
+import CardDetails from './models/CardDetails';
+import ErrorDetails from './models/ErrorDetails';
 import Utilities from './Utilities';
 
 const { RNSQIPApplePay } = NativeModules;

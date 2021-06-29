@@ -15,7 +15,17 @@
 */
 import ErrorCodes from './ErrorCodes';
 
-function createInAppPayementsError(ex) {
+class ErrorData {
+  code: string | undefined;
+
+  message: string | undefined;
+
+  debugCode: string | undefined;
+
+  debugMessage: string | undefined;
+}
+
+function createInAppPayementsError(ex:any) {
   try {
     const errorDetails = JSON.parse(ex.message);
     ex.message = errorDetails.message; // eslint-disable-line no-param-reassign
@@ -28,11 +38,11 @@ function createInAppPayementsError(ex) {
   return ex;
 }
 
-function createJSError(debugErrorMessage) {
+function createJSError(debugErrorMessage:any) {
   // Create the javascript layer error with same data structure
   // as error processed by createInAppPayementsError
   const errorCode = 'rn_invalid_type';
-  const ex = new Error();
+  const ex = new ErrorData();
   ex.code = ErrorCodes.UsageError;
   ex.message = `Something went wrong. Please contact the developer of this application and provide them with this error code: ${errorCode}`;
   ex.debugCode = errorCode;
@@ -40,40 +50,40 @@ function createJSError(debugErrorMessage) {
   return ex;
 }
 
-function isNullOrUndefined(value) {
+function isNullOrUndefined(value:any) {
   // This is same as (value === null || typeof value === 'undefined')
   return value == null;
 }
 
-function verifyObjectType(value, debugErrorMessage) {
+function verifyObjectType(value:any, debugErrorMessage:any) {
   if (isNullOrUndefined(value) || typeof value !== 'object' || value.constructor !== Object) {
     throw createJSError(debugErrorMessage);
   }
 }
 
-function verifyStringType(value, debugErrorMessage) {
+function verifyStringType(value:any, debugErrorMessage:any) {
   if (isNullOrUndefined(value) || (typeof value !== 'string' && !(value instanceof String))) {
     throw createJSError(debugErrorMessage);
   }
 }
 
-function verifyIntegerType(value, debugErrorMessage) {
+function verifyIntegerType(value:any, debugErrorMessage:any) {
   if (isNullOrUndefined(value) || typeof value !== 'number' || !Number.isFinite(value) || !Number.isInteger(value)) {
     throw createJSError(debugErrorMessage);
   }
 }
 
-function verifyBooleanType(value, debugErrorMessage) {
+function verifyBooleanType(value:any, debugErrorMessage:any) {
   if (isNullOrUndefined(value) || typeof value !== 'boolean') throw createJSError(debugErrorMessage);
 }
 
-function verifyNubmerType(value, debugErrorMessage) {
+function verifyNubmerType(value:any, debugErrorMessage:any) {
   if (isNullOrUndefined(value) || typeof value !== 'number' || !Number.isFinite(value)) {
     throw createJSError(debugErrorMessage);
   }
 }
 
-function verifyFontType(value) {
+function verifyFontType(value:any) {
   exportFunctions.verifyObjectType(value, 'font should be an object type.');
   exportFunctions.verifyNubmerType(value.size, 'font.size should be a number.');
   if (value.name) {
@@ -81,7 +91,7 @@ function verifyFontType(value) {
   }
 }
 
-function verifyColorType(value) {
+function verifyColorType(value:any) {
   exportFunctions.verifyObjectType(value, 'color should be an object type.');
   exportFunctions.verifyNubmerType(value.r, 'value.r should be a number type.');
   exportFunctions.verifyNubmerType(value.g, 'value.g should be a number type.');
@@ -91,7 +101,7 @@ function verifyColorType(value) {
   }
 }
 
-function verifyThemeType(value) {
+function verifyThemeType(value:any) {
   if (isNullOrUndefined(value) || typeof value !== 'object' || value.constructor !== Object) {
     throw createJSError('theme is not an object type.');
   }

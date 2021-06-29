@@ -1,17 +1,30 @@
-export class CardEntryConfig  {
-    collectPostalCode?: boolean;
-    squareLocationId?: string;
-    buyerAction?: string;
-    amount?: number;
-    currencyCode?: string;
-    givenName?: string;
-    familyName?: string;
-    addressLines?: string;
-    city?: string;
-    countryCode?: string;
-    email?: string;
-    phone?: string;
-    postalCode?: string;
-    region?:string;
-  };
-  
+class CardEntryConfig {
+    collectPostalCode: boolean | undefined;
+
+    squareLocationId: string | undefined;
+
+    buyerAction: string | undefined;
+
+    amount: number | undefined;
+
+    currencyCode: string | undefined;
+
+    givenName: string | undefined;
+
+    familyName: string | undefined;
+
+    addressLines: string | undefined;
+
+    city: string | undefined;
+
+    countryCode: string | undefined;
+
+    email: string | undefined;
+
+    phone: string | undefined;
+
+    postalCode: string | undefined;
+
+    region:string | undefined;
+}
+export default CardEntryConfig;
