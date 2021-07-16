@@ -14,14 +14,13 @@
  limitations under the License.
 */
 import {
-  NativeModules
+  NativeModules,
 } from 'react-native';
 import { EventEmitter } from 'events';
 import SQIPCardEntry from '../CardEntry';
 import CardEntryConfig from '../models/CardEntryConfig';
 import Utilities from '../Utilities';
 import CardDetails from '../models/CardDetails';
-
 
 jest.mock('react-native', () => {
   const emitter = {
@@ -47,6 +46,7 @@ jest.mock('react-native', () => {
   };
   return mockReactNative;
 });
+
 const nativeEventEmitter = new EventEmitter();
 
 describe('Test CardEntry', () => {
@@ -57,10 +57,9 @@ describe('Test CardEntry', () => {
   it('startCardEntryFlow works with cardEntryDidObtainCardDetails callback', async () => {
     expect.assertions(3);
     try {
-      const mockCardDetails:CardDetails = { nonce: 'fake_nonce',card:{} };
+      const mockCardDetails:CardDetails = { nonce: 'fake_nonce', card: {} };
       const onCardNonceRequestSuccess = jest.fn();
       nativeEventEmitter.addListener('cardEntryDidObtainCardDetails', (cardDetails:CardDetails) => {
-         console.log(cardDetails, '- mockCardDetails');
         onCardNonceRequestSuccess(cardDetails);
       });
       if (SQIPCardEntry === undefined) { return; }
@@ -79,7 +78,6 @@ describe('Test CardEntry', () => {
     try {
       const canceledCallback = jest.fn();
       nativeEventEmitter.addListener('cardEntryCancel', () => {
-        console.log('cardEntryCancel');
         canceledCallback();
       });
       if (SQIPCardEntry === undefined) { return; }
@@ -124,7 +122,7 @@ describe('Test CardEntry', () => {
   it('startCardEntryFlow works with collectPostalCode false config', async () => {
     expect.assertions(3);
     const spyVerifyBooleanType = jest.spyOn(Utilities, 'verifyBooleanType').mockImplementation();
-    const cardEntryConfig : CardEntryConfig = {collectPostalCode:false};
+    const cardEntryConfig : CardEntryConfig = { collectPostalCode: false };
     try {
       if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
@@ -139,7 +137,7 @@ describe('Test CardEntry', () => {
   it('startCardEntryFlow works with collectPostalCode null config', async () => {
     expect.assertions(3);
     const spyVerifyBooleanType = jest.spyOn(Utilities, 'verifyBooleanType').mockImplementation();
-    const cardEntryConfig : CardEntryConfig = {collectPostalCode:null};
+    const cardEntryConfig : CardEntryConfig = { collectPostalCode: null };
     try {
       if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
@@ -156,7 +154,6 @@ describe('Test CardEntry', () => {
     try {
       const cardEntryCompleteCallback = jest.fn();
       nativeEventEmitter.addListener('cardEntryComplete', () => {
-        console.log('cardEntryComplete');
         cardEntryCompleteCallback();
       });
       if (SQIPCardEntry === undefined) { return; }
