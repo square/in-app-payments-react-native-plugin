@@ -14,10 +14,14 @@
  limitations under the License.
 */
 import {
-  NativeModules, MockEventEmitter,
+  NativeModules
 } from 'react-native';
+import { EventEmitter } from 'events';
 import SQIPCardEntry from '../CardEntry';
+import CardEntryConfig from '../models/CardEntryConfig';
 import Utilities from '../Utilities';
+import CardDetails from '../models/CardDetails';
+
 
 jest.mock('react-native', () => {
   const emitter = {
@@ -30,8 +34,8 @@ jest.mock('react-native', () => {
     Platform: {
       select: jest.fn((map) => map.ios),
     },
-    MockEventEmitter: emitter,
     NativeEventEmitter: jest.fn(() => emitter),
+    MockEventEmitter: emitter,
     NativeModules: {
       RNSQIPCardEntry: {
         startCardEntryFlow: jest.fn(),
@@ -43,147 +47,156 @@ jest.mock('react-native', () => {
   };
   return mockReactNative;
 });
+const nativeEventEmitter = new EventEmitter();
 
 describe('Test CardEntry', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('startCardEntryFlow works with cardEntryDidObtainCardDetails callback', async (done) => {
+  it('startCardEntryFlow works with cardEntryDidObtainCardDetails callback', async () => {
     expect.assertions(3);
     try {
-      const mockCardDetails = { nonce: 'fake_nonce' };
+      const mockCardDetails:CardDetails = { nonce: 'fake_nonce',card:{} };
       const onCardNonceRequestSuccess = jest.fn();
+      nativeEventEmitter.addListener('cardEntryDidObtainCardDetails', (cardDetails:CardDetails) => {
+         console.log(cardDetails, '- mockCardDetails');
+        onCardNonceRequestSuccess(cardDetails);
+      });
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(null, onCardNonceRequestSuccess, null);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
-      MockEventEmitter.listeners.cardEntryDidObtainCardDetails(mockCardDetails);
+      nativeEventEmitter.emit('cardEntryDidObtainCardDetails', mockCardDetails);
       expect(onCardNonceRequestSuccess).toHaveBeenCalledTimes(1);
       expect(onCardNonceRequestSuccess).toHaveBeenCalledWith(mockCardDetails);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('startCardEntryFlow works with cardEntryCancel callback', async (done) => {
+  it('startCardEntryFlow works with cardEntryCancel callback', async () => {
     expect.assertions(2);
     try {
       const canceledCallback = jest.fn();
+      nativeEventEmitter.addListener('cardEntryCancel', () => {
+        console.log('cardEntryCancel');
+        canceledCallback();
+      });
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(null, null, canceledCallback);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
-      MockEventEmitter.listeners.cardEntryCancel();
+      nativeEventEmitter.emit('cardEntryCancel');
       expect(canceledCallback).toHaveBeenCalledTimes(1);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('startCardEntryFlow works with null config', async (done) => {
+  it('startCardEntryFlow works with null config', async () => {
     expect.assertions(3);
     const spyVerifyObjectType = jest.spyOn(Utilities, 'verifyObjectType').mockImplementation();
     try {
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(null, null, null);
       expect(spyVerifyObjectType).not.toHaveBeenCalled();
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(true);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('startCardEntryFlow works with empty config', async (done) => {
+  it('startCardEntryFlow works with empty config', async () => {
     expect.assertions(3);
     const spyVerifyObjectType = jest.spyOn(Utilities, 'verifyObjectType').mockImplementation();
-    const cardEntryConfig = {};
+    const cardEntryConfig : CardEntryConfig = {};
     try {
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
       expect(spyVerifyObjectType).toHaveBeenCalled();
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(true);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('startCardEntryFlow works with collectPostalCode false config', async (done) => {
+  it('startCardEntryFlow works with collectPostalCode false config', async () => {
     expect.assertions(3);
     const spyVerifyBooleanType = jest.spyOn(Utilities, 'verifyBooleanType').mockImplementation();
-    const cardEntryConfig = {
-      collectPostalCode: false,
-    };
+    const cardEntryConfig : CardEntryConfig = {collectPostalCode:false};
     try {
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
       expect(spyVerifyBooleanType).toHaveBeenCalled();
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(false);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('startCardEntryFlow works with collectPostalCode null config', async (done) => {
+  it('startCardEntryFlow works with collectPostalCode null config', async () => {
     expect.assertions(3);
     const spyVerifyBooleanType = jest.spyOn(Utilities, 'verifyBooleanType').mockImplementation();
-    const cardEntryConfig = {
-      collectPostalCode: null,
-    };
+    const cardEntryConfig : CardEntryConfig = {collectPostalCode:null};
     try {
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
       expect(spyVerifyBooleanType).not.toHaveBeenCalled();
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPCardEntry.startCardEntryFlow).toHaveBeenCalledWith(true);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('completeCardEntry works with onCardEntryComplete callback', async (done) => {
+  it('completeCardEntry works with onCardEntryComplete callback', async () => {
     expect.assertions(2);
     try {
       const cardEntryCompleteCallback = jest.fn();
+      nativeEventEmitter.addListener('cardEntryComplete', () => {
+        console.log('cardEntryComplete');
+        cardEntryCompleteCallback();
+      });
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.completeCardEntry(cardEntryCompleteCallback);
       expect(NativeModules.RNSQIPCardEntry.completeCardEntry).toHaveBeenCalledTimes(1);
-      MockEventEmitter.listeners.cardEntryComplete();
+      nativeEventEmitter.emit('cardEntryComplete');
       expect(cardEntryCompleteCallback).toHaveBeenCalledTimes(1);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('showCardNonceProcessingError works as expected', async (done) => {
+  it('showCardNonceProcessingError works as expected', async () => {
     expect.assertions(3);
     try {
       const spyVerifyStringType = jest.spyOn(Utilities, 'verifyStringType').mockImplementation();
       const mockErrorMessage = 'fake_error_message';
+      if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.showCardNonceProcessingError(mockErrorMessage);
       expect(spyVerifyStringType).toHaveBeenCalled();
       expect(NativeModules.RNSQIPCardEntry.showCardNonceProcessingError).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPCardEntry.showCardNonceProcessingError)
         .toHaveBeenCalledWith(mockErrorMessage);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('setIOSCardEntryTheme works with theme object validation', async (done) => {
+  it('setIOSCardEntryTheme works with theme object validation', async () => {
     expect.assertions(3);
     try {
       const spyVerifyThemeType = jest.spyOn(Utilities, 'verifyThemeType').mockImplementation();
       const mockTheme = {
         fakeFont: 'fake_font',
       };
-      await SQIPCardEntry.setIOSCardEntryTheme(mockTheme);
+      if (SQIPCardEntry === undefined) { return; }
+      if (SQIPCardEntry.setIOSCardEntryTheme) await SQIPCardEntry.setIOSCardEntryTheme(mockTheme);
       expect(spyVerifyThemeType).toHaveBeenCalledWith(mockTheme);
       expect(NativeModules.RNSQIPCardEntry.setTheme).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPCardEntry.setTheme).toHaveBeenCalledWith(mockTheme);
-      done();
     } catch (ex) {
       console.error(ex);
     }

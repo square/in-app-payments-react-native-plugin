@@ -1,10 +1,10 @@
-class ErrorDetails {
-    code: string | undefined;
+interface ErrorDetails {
+    code?: string;
 
-    debugCode: string | undefined;
+    debugCode?: string;
 
-    debugMessage: string | undefined;
+    debugMessage?: string;
 
-    message: string | undefined;
+    message?: string;
 }
 export default ErrorDetails;

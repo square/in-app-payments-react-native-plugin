@@ -1,7 +1,7 @@
-class VerificationResult {
-    nonce: string | undefined;
+interface VerificationResult {
+    nonce?: string;
 
-    token: string | undefined;
+    token?: string;
 }
 
 export default VerificationResult;

@@ -1,8 +1,8 @@
 import Card from './Card';
 
-export class CardDetails {
-    nonce:string | undefined;
+export interface CardDetails {
+    nonce?:string;
 
-    card:Card | undefined;
+    card?:Card;
 }
 export default CardDetails;

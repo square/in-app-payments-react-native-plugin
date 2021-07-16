@@ -40,21 +40,19 @@ applePayEmitter.addListener('onApplePayNonceRequestSuccess', onNativeApplePayNon
 applePayEmitter.addListener('onApplePayNonceRequestFailure', onNativeApplePayNonceRequestFailure);
 applePayEmitter.addListener('onApplePayComplete', onNativeApplePayComplete);
 
-async function initializeApplePay(applePayMerchantId:any) {
+const initializeApplePay = async (applePayMerchantId:string) => {
   Utilities.verifyStringType(applePayMerchantId, 'applePayMerchantId should be a string');
   await RNSQIPApplePay.initializeApplePay(applePayMerchantId);
-}
+};
 
-async function canUseApplePay() {
-  return RNSQIPApplePay.canUseApplePay();
-}
+const canUseApplePay = () => RNSQIPApplePay.canUseApplePay();
 
-async function requestApplePayNonce(
+const requestApplePayNonce = async (
   applePayConfig:any,
   onApplePayNonceRequestSuccess:any,
   onApplePayNonceRequestFailure:any,
   onApplePayComplete:any,
-) {
+) => {
   Utilities.verifyObjectType(applePayConfig, 'applePayConfig should be a valid object');
   Utilities.verifyStringType(applePayConfig.price, 'applePayConfig.price should be a valid string');
   Utilities.verifyStringType(applePayConfig.summaryLabel, 'applePayConfig.summaryLabel should be a valid string');
@@ -83,14 +81,14 @@ async function requestApplePayNonce(
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
   }
-}
+};
 
-async function completeApplePayAuthorization(isSuccess:any, errorMessage = '') {
+const completeApplePayAuthorization = async (isSuccess:any, errorMessage = '') => {
   Utilities.verifyBooleanType(isSuccess, 'isSuccess should be a valid boolean');
   Utilities.verifyStringType(errorMessage, 'errorMessage should be a valid string');
 
   await RNSQIPApplePay.completeApplePayAuthorization(isSuccess, errorMessage);
-}
+};
 
 const PaymentTypePending = 1;
 const PaymentTypeFinal = 2;

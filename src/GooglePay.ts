@@ -42,27 +42,27 @@ if (Platform.OS === 'android') {
   googlePayEmitter.addListener('onGooglePayCanceled', onNativeGooglePayCanceled);
 }
 
-async function initializeGooglePay(squareLocationId:string, environment:any) {
+const initializeGooglePay = async (squareLocationId:string, environment:any) => {
   Utilities.verifyStringType(squareLocationId, 'squareLocationId should be a valid string');
   Utilities.verifyIntegerType(environment, 'environment should be a valid integer');
 
   await RNSQIPGooglePay.initializeGooglePay(squareLocationId, environment);
-}
+};
 
-async function canUseGooglePay() {
+const canUseGooglePay = async () => {
   try {
     return await RNSQIPGooglePay.canUseGooglePay();
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
   }
-}
+};
 
-async function requestGooglePayNonce(
+const requestGooglePayNonce = async (
   googlePayConfig:any,
   onGooglePayNonceRequestSuccess:any,
   onGooglePayNonceRequestFailure:any,
   onGooglePayCanceled:any,
-) {
+) => {
   Utilities.verifyObjectType(googlePayConfig, 'googlePayConfig should be a valid object');
   Utilities.verifyStringType(googlePayConfig.price, 'googlePayConfig.price should be a valid string');
   Utilities.verifyStringType(googlePayConfig.currencyCode, 'googlePayConfig.currencyCode should be a valid string');
@@ -81,7 +81,7 @@ async function requestGooglePayNonce(
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
   }
-}
+};
 
 const TotalPriceStatusNotCurrentlyKnown = 1;
 const TotalPriceStatusEstimated = 2;

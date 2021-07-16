@@ -1,16 +1,16 @@
-class Card {
-    brand: string | undefined;
+interface Card {
+    brand?: string;
 
-    expirationMonth: number | undefined;
+    expirationMonth?: number;
 
-    expirationYear: number | undefined;
+    expirationYear?: number;
 
-    lastFourDigits: string | undefined;
+    lastFourDigits?: string;
 
-    postalCode: string | undefined;
+    postalCode?: string;
 
-    prepaidType: string | undefined;
+    prepaidType?: string;
 
-    type: string | undefined;
+    type?: string;
 }
 export default Card;

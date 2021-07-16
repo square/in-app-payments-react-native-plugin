@@ -15,7 +15,7 @@
 */
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native'; // eslint-disable-line import/no-unresolved
 import CardDetails from './models/CardDetails';
-import CardEntryConfig from './models/CardEntryDetails';
+import CardEntryConfig from './models/CardEntryConfig';
 import ErrorDetails from './models/ErrorDetails';
 import VerificationResult from './models/VerificationResult';
 import Utilities from './Utilities';
@@ -60,9 +60,9 @@ cardEntryEmitter.addListener('cardEntryComplete', onNativeCardEntryComplete);
 cardEntryEmitter.addListener('onBuyerVerificationSuccess', onNativeBuyerVerificationSuccess);
 cardEntryEmitter.addListener('onBuyerVerificationError', onNativeBuyerVerificationError);
 
-async function startCardEntryFlow(cardEntryConfig:CardEntryConfig, onCardNonceRequestSuccess:any,
-  onCardEntryCancel:any) {
-  let cardEntryInternalConfig = new CardEntryConfig();
+const startCardEntryFlow = async (cardEntryConfig:CardEntryConfig, onCardNonceRequestSuccess:any,
+  onCardEntryCancel:any) => {
+  let cardEntryInternalConfig : CardEntryConfig = {};
   if (cardEntryConfig) {
     Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
     cardEntryInternalConfig = cardEntryConfig;
@@ -77,11 +77,11 @@ async function startCardEntryFlow(cardEntryConfig:CardEntryConfig, onCardNonceRe
   cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   cardEntryCancelCallback = onCardEntryCancel;
   await RNSQIPCardEntry.startCardEntryFlow(cardEntryInternalConfig.collectPostalCode);
-}
+};
 
-async function startBuyerVerificationFlow(paymentSourceId:string,
+const startBuyerVerificationFlow = async (paymentSourceId:string,
   cardEntryConfig:CardEntryConfig, onBuyerVerificationSuccess:any, onBuyerVerificationFailure:any,
-  onCardEntryCancel:any) {
+  onCardEntryCancel:any) => {
   const money = {
     amount: cardEntryConfig.amount,
     currencyCode: cardEntryConfig.currencyCode,
@@ -104,11 +104,11 @@ async function startBuyerVerificationFlow(paymentSourceId:string,
   await RNSQIPCardEntry.startBuyerVerificationFlow(
     paymentSourceId, cardEntryConfig.squareLocationId, cardEntryConfig.buyerAction, money, contact,
   );
-}
+};
 
-async function startCardEntryFlowWithBuyerVerification(cardEntryConfig:CardEntryConfig,
-  onBuyerVerificationSuccess:any, onBuyerVerificationFailure:any, onCardEntryCancel:any) {
-  let cardEntryInternalConfig = new CardEntryConfig();
+const startCardEntryFlowWithBuyerVerification = async (cardEntryConfig:CardEntryConfig,
+  onBuyerVerificationSuccess:any, onBuyerVerificationFailure:any, onCardEntryCancel:any) => {
+  let cardEntryInternalConfig : CardEntryConfig = {};
   if (cardEntryConfig) {
     Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
     cardEntryInternalConfig = cardEntryConfig;
@@ -144,28 +144,28 @@ async function startCardEntryFlowWithBuyerVerification(cardEntryConfig:CardEntry
   await RNSQIPCardEntry.startCardEntryFlowWithVerification(
     cardEntryInternalConfig.collectPostalCode, squareLocationId, buyerAction, money, contact,
   );
-}
+};
 
-async function startGiftCardEntryFlow(onCardNonceRequestSuccess:any, onCardEntryCancel:any) {
+const startGiftCardEntryFlow = async (onCardNonceRequestSuccess:any, onCardEntryCancel:any) => {
   cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   cardEntryCancelCallback = onCardEntryCancel;
   await RNSQIPCardEntry.startGiftCardEntryFlow();
-}
+};
 
-async function completeCardEntry(onCardEntryComplete:any) {
+const completeCardEntry = async (onCardEntryComplete:any) => {
   cardEntryCompleteCallback = onCardEntryComplete;
   await RNSQIPCardEntry.completeCardEntry();
-}
+};
 
-async function showCardNonceProcessingError(errorMessage:any) {
+const showCardNonceProcessingError = async (errorMessage:any) => {
   Utilities.verifyStringType(errorMessage, 'errorMessage should be a string');
   await RNSQIPCardEntry.showCardNonceProcessingError(errorMessage);
-}
+};
 
-async function setIOSCardEntryTheme(theme:any) {
+const setIOSCardEntryTheme = async (theme:any) => {
   Utilities.verifyThemeType(theme);
   await RNSQIPCardEntry.setTheme(theme);
-}
+};
 
 export default Platform.select({
   ios: {
