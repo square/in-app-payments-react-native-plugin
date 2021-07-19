@@ -1,6 +1,6 @@
 {
   "name": "react-native-square-in-app-payments",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "An open source React Native plugin for calling Square’s native In-App Payments SDK to take in-app payments on iOS and Android.",
   "homepage": "https://github.com/square/in-app-payments-react-native-plugin",
   "repository": {
