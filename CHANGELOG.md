@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.6.0 July 19, 2021
+
+* Downgrading IAP SDK to 1.4.9 to solve compatability issue with newer versions of the IAP SDK
+
 ### v1.5.0 May 14, 2021
 
 * Added a new flow called [startBuyerVerificationFlow](docs/reference.md#startbuyerverificationflow) to support Strong Customer Authentication with a card-on-file card ID
@@ -9,7 +13,7 @@
 ### v1.4.0 July 10, 2020
 
 * Updated to IAP SDK `1.4.0`.
-* Added support for gift card payments. 
+* Added support for gift card payments.
 
 ### v1.3.1 January 8, 2020
 
