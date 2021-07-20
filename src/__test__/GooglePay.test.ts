@@ -83,7 +83,6 @@ describe('Test Google Pay', () => {
 
   it('canUseGooglePay throws InAppPaymentsError', async () => {
     expect.assertions(3);
-    // const code = 'TEST_ERROR';
     const message = 'test message';
     const debugCode = 'rn_test_debug_code';
     const debugMessage = 'test debug message';
@@ -91,13 +90,11 @@ describe('Test Google Pay', () => {
     NativeModules.RNSQIPGooglePay.canUseGooglePay = jest.fn(() => {
       const err = new Error();
       err.message = `{ "message": "${message}", "debugCode": "${debugCode}", "debugMessage": "${debugMessage}" }`;
-      // err.code = code;
       throw err;
     });
     try {
       await SQIPGooglePay.canUseGooglePay();
     } catch (ex) {
-      // expect(ex.code).toBe(code);
       expect(ex.message).toBe(message);
       expect(ex.debugCode).toBe(debugCode);
       expect(ex.debugMessage).toBe(debugMessage);

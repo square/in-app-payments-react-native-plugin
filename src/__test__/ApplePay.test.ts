@@ -78,7 +78,7 @@ describe('Test Apple Pay', () => {
   it('requestApplePayNonce works with onApplePayNonceRequestSuccess callback', async () => {
     expect.assertions(11);
     try {
-      const testApplePayConfig = {
+      const testApplePayConfig:any = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
@@ -251,7 +251,6 @@ describe('Test Apple Pay', () => {
       expect(NativeModules.RNSQIPApplePay.completeApplePayAuthorization).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPApplePay.completeApplePayAuthorization)
         .toHaveBeenCalledWith(true, '');
-
       const mockErrorMessage = 'fake_message';
       await SQIPApplePay.completeApplePayAuthorization(false, mockErrorMessage);
       expect(NativeModules.RNSQIPApplePay.completeApplePayAuthorization)

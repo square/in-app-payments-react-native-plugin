@@ -18,15 +18,12 @@ import ErrorCodes from '../ErrorCodes';
 
 describe('Test Utilities', () => {
   it('createInAppPayementsError ensure correct data structure', () => {
-    // const code = 'TEST_ERROR';
     const message = 'test message';
     const debugCode = 'rn_test_debug_code';
     const debugMessage = 'test debug message';
     const err = new Error();
     err.message = `{ "message": "${message}", "debugCode": "${debugCode}", "debugMessage": "${debugMessage}" }`;
-    // err.code = code;
     const inAppPaymentsError = Utilities.createInAppPayementsError(err);
-    // expect(inAppPaymentsError.code).toBe(code);
     expect(inAppPaymentsError.message).toBe(message);
     expect(inAppPaymentsError.debugCode).toBe(debugCode);
     expect(inAppPaymentsError.debugMessage).toBe(debugMessage);
