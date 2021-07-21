@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.resource_bundle = { "RNSquareInAppPayments-Resources" => ["ios/RNSquareInAppPayments-Resources/*.lproj/*.strings"] }
 
   s.dependency "React"
-  s.dependency "SquareInAppPaymentsSDK", '1.5.1'
-  s.dependency 'SquareBuyerVerificationSDK', '1.5.1'
+  s.dependency "SquareInAppPaymentsSDK", '1.4.0'
+  s.dependency 'SquareBuyerVerificationSDK', '1.3.0'
 
 end
