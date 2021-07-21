@@ -14,10 +14,13 @@
  limitations under the License.
 */
 import {
-  NativeModules, MockEventEmitter,
+  NativeModules,
 } from 'react-native';
+import { EventEmitter } from 'events';
 import SQIPApplePay from '../ApplePay';
 import Utilities from '../Utilities';
+import CardDetails from '../models/CardDetails';
+import ErrorDetails from '../models/ErrorDetails';
 
 jest.mock('react-native', () => {
   const emitter = {
@@ -41,12 +44,14 @@ jest.mock('react-native', () => {
   return mockReactNative;
 });
 
+const nativeEventEmitter = new EventEmitter();
+
 describe('Test Apple Pay', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('initializeApplePay works as expected', async (done) => {
+  it('initializeApplePay works as expected', async () => {
     expect.assertions(2);
     try {
       const spyVerifyStringType = jest.spyOn(Utilities, 'verifyStringType');
@@ -54,42 +59,43 @@ describe('Test Apple Pay', () => {
       await SQIPApplePay.initializeApplePay(testApplePayMerchantId);
       expect(spyVerifyStringType).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPApplePay.initializeApplePay).toHaveBeenCalledTimes(1);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('canUseApplePay works as expected', async (done) => {
+  it('canUseApplePay works as expected', async () => {
     expect.assertions(2);
     try {
       const result = await SQIPApplePay.canUseApplePay();
       expect(NativeModules.RNSQIPApplePay.canUseApplePay).toHaveBeenCalledTimes(1);
       expect(result).toBe(true);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('requestApplePayNonce works with onApplePayNonceRequestSuccess callback', async (done) => {
+  it('requestApplePayNonce works with onApplePayNonceRequestSuccess callback', async () => {
     expect.assertions(11);
     try {
-      const testApplePayConfig = {
+      const testApplePayConfig:any = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
         paymentType: SQIPApplePay.PaymentTypePending,
       };
-      const mockCardDetails = { nonce: 'fake_nonce' };
-      const onApplePayNonceRequestSuccess = jest.fn();
+      const mockCardDetails:CardDetails = { nonce: 'fake_nonce' };
+      const onApplePayNonceRequestSuccessCallback = jest.fn();
       const spyVerifyObjectType = jest.spyOn(Utilities, 'verifyObjectType');
       const spyVerifyStringType = jest.spyOn(Utilities, 'verifyStringType');
       const spyVerifyIntegerType = jest.spyOn(Utilities, 'verifyIntegerType');
+      nativeEventEmitter.addListener('onApplePayNonceRequestSuccess', (cardDetails:CardDetails) => {
+        onApplePayNonceRequestSuccessCallback(cardDetails);
+      });
       await SQIPApplePay.requestApplePayNonce(
         testApplePayConfig,
-        onApplePayNonceRequestSuccess,
+        onApplePayNonceRequestSuccessCallback,
         null,
         null,
       );
@@ -108,17 +114,15 @@ describe('Test Apple Pay', () => {
       expect(spyVerifyStringType).toHaveBeenCalledWith(testApplePayConfig.countryCode, 'applePayConfig.countryCode should be a valid string');
       expect(spyVerifyStringType).toHaveBeenCalledWith(testApplePayConfig.currencyCode, 'applePayConfig.currencyCode should be a valid string');
       expect(spyVerifyIntegerType).toHaveBeenCalledWith(testApplePayConfig.paymentType, 'applePayConfig.paymentType should be a valid integer');
-
-      MockEventEmitter.listeners.onApplePayNonceRequestSuccess(mockCardDetails);
-      expect(onApplePayNonceRequestSuccess).toHaveBeenCalledTimes(1);
-      expect(onApplePayNonceRequestSuccess).toHaveBeenCalledWith(mockCardDetails);
-      done();
+      nativeEventEmitter.emit('onApplePayNonceRequestSuccess', mockCardDetails);
+      expect(onApplePayNonceRequestSuccessCallback).toHaveBeenCalledTimes(1);
+      expect(onApplePayNonceRequestSuccessCallback).toHaveBeenCalledWith(mockCardDetails);
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('requestApplePayNonce works with default paymentType when paymentType is undefined', async (done) => {
+  it('requestApplePayNonce works with default paymentType when paymentType is undefined', async () => {
     expect.assertions(2);
     try {
       const testApplePayConfig = {
@@ -142,13 +146,12 @@ describe('Test Apple Pay', () => {
         testApplePayConfig.currencyCode,
         SQIPApplePay.PaymentTypeFinal,
       );
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('requestApplePayNonce works with default paymentType when paymentType is null', async (done) => {
+  it('requestApplePayNonce works with default paymentType when paymentType is null', async () => {
     expect.assertions(2);
     try {
       const testApplePayConfig = {
@@ -173,24 +176,26 @@ describe('Test Apple Pay', () => {
         testApplePayConfig.currencyCode,
         SQIPApplePay.PaymentTypeFinal,
       );
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('requestApplePayNonce works with onApplePayNonceRequestFailure callback', async (done) => {
+  it('requestApplePayNonce works with onApplePayNonceRequestFailure callback', async () => {
     expect.assertions(3);
     try {
-      const testApplePayConfig = {
+      const testApplePayConfig:any = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
         paymentType: SQIPApplePay.PaymentTypePending,
       };
-      const mockErrorInfo = { message: 'fake_message' };
+      const mockErrorInfo:ErrorDetails = { message: 'fake_message' };
       const onApplePayNonceRequestFailureCallback = jest.fn();
+      nativeEventEmitter.addListener('onApplePayNonceRequestFailure', (errorInfo:ErrorDetails) => {
+        onApplePayNonceRequestFailureCallback(errorInfo);
+      });
       await SQIPApplePay.requestApplePayNonce(
         testApplePayConfig,
         null,
@@ -198,19 +203,18 @@ describe('Test Apple Pay', () => {
         null,
       );
       expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledTimes(1);
-      MockEventEmitter.listeners.onApplePayNonceRequestFailure(mockErrorInfo);
+      nativeEventEmitter.emit('onApplePayNonceRequestFailure', mockErrorInfo);
       expect(onApplePayNonceRequestFailureCallback).toHaveBeenCalledTimes(1);
       expect(onApplePayNonceRequestFailureCallback).toHaveBeenCalledWith(mockErrorInfo);
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('requestApplePayNonce works with onApplePayComplete callback', async (done) => {
+  it('requestApplePayNonce works with onApplePayComplete callback', async () => {
     expect.assertions(3);
     try {
-      const testApplePayConfig = {
+      const testApplePayConfig:any = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
@@ -218,6 +222,9 @@ describe('Test Apple Pay', () => {
         paymentType: SQIPApplePay.PaymentTypeFinal,
       };
       const onApplePayCompleteCallback = jest.fn();
+      nativeEventEmitter.addListener('onApplePayComplete', () => {
+        onApplePayCompleteCallback();
+      });
       await SQIPApplePay.requestApplePayNonce(
         testApplePayConfig,
         null,
@@ -225,16 +232,15 @@ describe('Test Apple Pay', () => {
         onApplePayCompleteCallback,
       );
       expect(NativeModules.RNSQIPApplePay.requestApplePayNonce).toHaveBeenCalledTimes(1);
-      MockEventEmitter.listeners.onApplePayComplete();
+      nativeEventEmitter.emit('onApplePayComplete');
       expect(onApplePayCompleteCallback).toHaveBeenCalledTimes(1);
       expect(onApplePayCompleteCallback).toHaveBeenCalledWith();
-      done();
     } catch (ex) {
       console.error(ex);
     }
   });
 
-  it('completeApplePayAuthorization works as expected', async (done) => {
+  it('completeApplePayAuthorization works as expected', async () => {
     expect.assertions(5);
     try {
       const spyVerifyBooleanType = jest.spyOn(Utilities, 'verifyBooleanType');
@@ -245,12 +251,10 @@ describe('Test Apple Pay', () => {
       expect(NativeModules.RNSQIPApplePay.completeApplePayAuthorization).toHaveBeenCalledTimes(1);
       expect(NativeModules.RNSQIPApplePay.completeApplePayAuthorization)
         .toHaveBeenCalledWith(true, '');
-
       const mockErrorMessage = 'fake_message';
       await SQIPApplePay.completeApplePayAuthorization(false, mockErrorMessage);
       expect(NativeModules.RNSQIPApplePay.completeApplePayAuthorization)
         .toHaveBeenCalledWith(false, mockErrorMessage);
-      done();
     } catch (ex) {
       console.error(ex);
     }

@@ -3,7 +3,7 @@ matrix:
   - language: node_js
     node_js: 14
     script:
-    - yarn && yarn lint && yarn test
+    - travis_wait 30 yarn && yarn lint && yarn test
     - cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
   - language: android
     sudo: false
@@ -23,8 +23,8 @@ matrix:
       - tools
       - platform-tools
       - tools
-      - build-tools-28.0.3
-      - android-28
+      - build-tools-29.0.2
+      - android-29
       - extra-google-google_play_services
     install:
     - nvm install 14
@@ -43,6 +43,7 @@ matrix:
       directories:
       - "$HOME/.yarn-cache"
     before_install:
+    - gem install cocoapods
     - nvm install 14
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$PATH"

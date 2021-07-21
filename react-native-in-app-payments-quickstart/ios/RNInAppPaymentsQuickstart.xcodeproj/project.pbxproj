@@ -235,8 +235,8 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-frameworks.sh",
-				"${PODS_ROOT}/SquareBuyerVerificationSDK/SquareInAppPaymentsSDKs.framework/SquareBuyerVerificationSDK.framework",
-				"${PODS_ROOT}/SquareInAppPaymentsSDK/SquareInAppPaymentsSDKs.framework/SquareInAppPaymentsSDK.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/SquareBuyerVerificationSDK/SquareBuyerVerificationSDK.framework/SquareBuyerVerificationSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/SquareInAppPaymentsSDK/SquareInAppPaymentsSDK.framework/SquareInAppPaymentsSDK",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -278,10 +278,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNSquareInAppPayments/RNSquareInAppPayments-Resources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSquareInAppPayments-Resources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -417,6 +419,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -471,6 +474,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
