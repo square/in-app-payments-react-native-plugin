@@ -73,7 +73,7 @@ to make it an available resource for the React Native plugin.
 put the **SquareInAppPaymentsSDK.framework** in folder `<YOUR_PROJECT_DIRECTORY>/ios`, otherwise
 the project won't compile.
     > Check the supported SDK version in the top of [root README].
-1. Set the `iOS Deployment Target` to 11.0 or above
+1. Set the `iOS Deployment Target` to 12.0 or above
 1. Add an In-App Payments SDK build phase:
     1. Open the **Xcode** project for your application.
     1. In the **Build Phases** tab for your application target, click the **+**
@@ -95,10 +95,10 @@ to download In-App Payments SDK automatically by following the steps below.
 
 1. Run `pod --version`, Make sure you have cocoapods version greater than `1.7.0`
 1. Open file `ios/Podfile`
-    * make sure you set the **platform** to `11.0` or above
+    * make sure you set the **platform** to `12.0` or above
     * verify if `RNSquareInAppPayments` pod dependency is added
     ```pod
-    platform :ios, '11.0' # set the platform version to 11.0
+    platform :ios, '12.0' # set the platform version to 12.0
 
     target 'myRNInAppPaymentsSample' do
       use_frameworks! # enalbe use_frameworks!
