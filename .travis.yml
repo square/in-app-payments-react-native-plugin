@@ -3,7 +3,7 @@ matrix:
   - language: node_js
     node_js: 14
     script:
-    - yarn && yarn lint && yarn test
+    - travis_wait 30 yarn && yarn lint && yarn test
     - cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
   - language: android
     sudo: false
