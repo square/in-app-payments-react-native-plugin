@@ -10,7 +10,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint ./ --ext .js,.ts",
-    "test": "jest --watchAll",
+    "test": "jest",
     "test-coverage": "jest --collectCoverage"
   },
   "keywords": [
