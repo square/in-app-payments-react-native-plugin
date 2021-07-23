@@ -79,6 +79,8 @@ const iOSCardEntryTheme = {
   },
 };
 
+const errorInfo=null;
+
 export default class HomeScreen extends Component {
   constructor() {
     super();
@@ -170,8 +172,8 @@ export default class HomeScreen extends Component {
   }
 
   async onApplePayRequestNonceFailure(errorInfo) {
+    this.errorInfo=errorInfo.message;
     await SQIPApplePay.completeApplePayAuthorization(false, errorInfo.message);
-    showAlert('Error processing Apple Pay payment', errorInfo.message);
   }
 
   async onApplePayComplete() {
@@ -187,6 +189,10 @@ export default class HomeScreen extends Component {
       showAlert('Error processing Apple Pay payment', this.state.applePayError);
     } else { // the state is none, so they canceled
       this.showOrderScreen();
+      if(this.errorInfo!==null){
+        showAlert('Error processing Apple Pay payment',this.errorInfo);
+        this.errorInfo=null;
+      }
     }
   }
 
