@@ -172,7 +172,7 @@ export default class HomeScreen extends Component {
   }
 
   async onApplePayRequestNonceFailure(errorInfo) {
-    this.errorMsg = errorInfo.message;
+    errorMsg = errorInfo.message;
     await SQIPApplePay.completeApplePayAuthorization(false, errorInfo.message);
   }
 
@@ -189,9 +189,9 @@ export default class HomeScreen extends Component {
       showAlert('Error processing Apple Pay payment', this.state.applePayError);
     } else { // the state is none, so they canceled
       this.showOrderScreen();
-      if (this.errorMsg != null) {
-        showAlert('Error processing Apple Pay payment', this.errorMsg);
-        this.errorMsg = null;
+      if (errorMsg != null) {
+        showAlert('Error processing Apple Pay payment', errorMsg);
+        errorMsg = null;
       }
     }
   }
