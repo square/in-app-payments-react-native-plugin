@@ -79,7 +79,7 @@ const iOSCardEntryTheme = {
   },
 };
 
-const errorMsg = null;
+let errorMsg = null;
 
 export default class HomeScreen extends Component {
   constructor() {
