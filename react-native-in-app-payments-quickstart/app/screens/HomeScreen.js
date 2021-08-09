@@ -94,6 +94,7 @@ export default class HomeScreen extends Component {
       showingDigitalWallet: false,
       canUseDigitalWallet: false,
       showingBuyerVerification: false,
+      showingSRCClickToPay:false,
       applePayState: applePayStatus.none,
       applePayError: null,
       cardsOnFile: [],
@@ -106,6 +107,8 @@ export default class HomeScreen extends Component {
     this.onShowCustomerCardEntry = this.onShowCustomerCardEntry.bind(this);
     this.onCardNonceRequestSuccess = this.onCardNonceRequestSuccess.bind(this);
     this.onCustomerCardNonceRequestSuccess = this.onCustomerCardNonceRequestSuccess.bind(this);
+    this.onMaterCardNonceRequestSuccess = this.onMaterCardNonceRequestSuccess.bind(this);
+    this.onMasterCardNonceRequestFailure = this.onMasterCardNonceRequestFailure.bind(this);
     this.onCardEntryCancel = this.onCardEntryCancel.bind(this);
     this.onCustomerCardEntryCancel = this.onCustomerCardEntryCancel.bind(this);
     this.onApplePayRequestNonceSuccess = this.onApplePayRequestNonceSuccess.bind(this);
@@ -115,6 +118,7 @@ export default class HomeScreen extends Component {
     this.onGooglePayRequestNonceFailure = this.onGooglePayRequestNonceFailure.bind(this);
     this.onGooglePayCanceled = this.onGooglePayCanceled.bind(this);
     this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
+    this.onSRCClickToPay = this.onSRCClickToPay.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
     this.startGiftCardEntry = this.startGiftCardEntry.bind(this);
     this.showOrderScreen = this.showOrderScreen.bind(this);
@@ -244,6 +248,14 @@ export default class HomeScreen extends Component {
     }
   }
 
+  async onMaterCardNonceRequestSuccess(cardDetails) {
+   
+  }
+
+  async onMasterCardNonceRequestFailure(errorInfo) {
+    showAlert('Error processing payment', errorInfo.message);
+  }
+
   async onSelectCardOnFile(cardOnFile) {
     try {
       this.showPendingScreen();
@@ -317,6 +329,10 @@ export default class HomeScreen extends Component {
     this.setState({ showingBuyerVerification: true });
   }
 
+  onSRCClickToPay() {
+    this.closeOrderScreen();
+    this.setState({ showingSRCClickToPay: true });
+  }
   async onBuyerVerificationSuccess(buyerVerificationDetails) {
     if (this.chargeServerHostIsSet()) {
       try {
@@ -419,7 +435,15 @@ export default class HomeScreen extends Component {
       this.setState({ showingDigitalWallet: false });
     } else if (this.state.showingBuyerVerification) {
       this.startBuyerVerificationFlow();
+    } else if (this.state.showingSRCClickToPay){
+      this.startSRCClickToPayFlow();
     }
+  }
+
+  async startSRCClickToPayFlow() {
+    await SQIPCardEntry.startSecureRemoteCommerce(4,
+    this.onMaterCardNonceRequestSuccess,
+    this.onMasterCardNonceRequestFailure);
   }
 
   async startBuyerVerificationFlow() {
@@ -588,6 +612,7 @@ export default class HomeScreen extends Component {
           onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
           onShowDigitalWallet={this.onShowDigitalWallet}
           onBuyerVerification={this.onBuyerVerification}
+          onSRCClickToPay={this.onSRCClickToPay}
         />
       );
     }

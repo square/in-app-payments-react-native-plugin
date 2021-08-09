@@ -6,8 +6,8 @@
 The In-App Payments plugin for Square [In-App Payments SDK] is a wrapper for the native Android and iOS SDKs and 
 supports the following native In-App Payments SDK versions:
 
-  * iOS: `1.4.0`
-  * Android: `1.4.0`
+  * iOS: `1.5.2`
+  * Android: `1.5.2`
 
 ## Additional documentation
 
@@ -26,8 +26,8 @@ In addition to this README, the following is available in the [React Native plug
 
 ### Android
 
-* Android minSdkVersion is API 21 (Lollipop, 5.0) or higher. 
-* Android Target SDK version: API 28 (Android 9).
+* Android minSdkVersion is API 24 (Nougat, 7.0) or higher. 
+* Android Target SDK version: API 29 (Android 10).
 * Android Gradle Plugin: 3.0.0 or greater.
 
 ### iOS

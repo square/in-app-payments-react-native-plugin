@@ -29,7 +29,8 @@ public class SquareInAppPaymentsPackage implements ReactPackage {
       return Arrays.<NativeModule>asList(
           new SquareInAppPaymentsModule(reactContext),
           new CardEntryModule(reactContext),
-          new GooglePayModule(reactContext)
+          new GooglePayModule(reactContext),
+          new SecureRemoteCommerceModule(reactContext)
       );
     }
 

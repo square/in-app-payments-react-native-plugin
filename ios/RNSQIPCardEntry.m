@@ -42,6 +42,8 @@ static NSString *const RNSQIPCardEntryCompleteEventName = @"cardEntryComplete";
 static NSString *const RNSQIPCardEntryDidObtainCardDetailsEventName = @"cardEntryDidObtainCardDetails";
 static NSString *const RNSQIPOnBuyerVerificationSuccessEventName = @"onBuyerVerificationSuccess";
 static NSString *const RNSQIPOnBuyerVerificationErrorEventName = @"onBuyerVerificationError";
+static NSString *const RNSQIPOnMasterCardNonceRequestSuccessEventName = @"onMaterCardNonceRequestSuccess";
+static NSString *const RNSQIPOnMasterCardNonceRequestFailureEventName = @"onMasterCardNonceRequestFailure";
 
 @implementation RNSQIPCardEntry
 
@@ -188,6 +190,17 @@ RCT_REMAP_METHOD(startBuyerVerificationFlow,
             }];
         resolve([NSNull null]);
     });
+}
+
+RCT_REMAP_METHOD(startSecureRemoteCommerce,
+                 amount 
+                 : (NSString *)amount 
+                 startCardEntryFlowWithResolver
+                 : (RCTPromiseResolveBlock)resolve
+                     rejecter
+                 : (RCTPromiseRejectBlock)reject)
+{
+    
 }
 
 RCT_REMAP_METHOD(startGiftCardEntryFlow,

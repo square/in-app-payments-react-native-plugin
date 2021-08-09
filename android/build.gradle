@@ -12,13 +12,13 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
-def MIN_IAP_SDK_VERSION = '1.4.0'
+def MIN_IAP_SDK_VERSION = '1.5.2'
 
 android {
     compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -47,5 +47,6 @@ dependencies {
     implementation "com.squareup.sdk.in-app-payments:card-entry:$sqipVersion"
     implementation "com.squareup.sdk.in-app-payments:google-pay:$sqipVersion"
     implementation "com.squareup.sdk.in-app-payments:buyer-verification:$sqipVersion"
+    implementation "com.squareup.sdk.in-app-payments:secure-remote-commerce:$sqipVersion"
     implementation 'com.google.android.gms:play-services-wallet:16.0.1'
 }

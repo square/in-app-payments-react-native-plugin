@@ -20,7 +20,7 @@ import ErrorDetails from './models/ErrorDetails';
 import VerificationResult from './models/VerificationResult';
 import Utilities from './Utilities';
 
-const { RNSQIPCardEntry } = NativeModules;
+const { RNSQIPCardEntry, RNSQIPSecureRemoteCommerce } = NativeModules;
 
 let cardEntryCancelCallback: () => void;
 const onNativeCardEntryCanceled = () => {
@@ -53,12 +53,29 @@ const onNativeBuyerVerificationError = (error:ErrorDetails) => {
   }
 };
 
+let onMasterCardNonceRequestSuccessCallback:{ (verificationResult:VerificationResult) : void;};
+const onNativeMasterCardNonceRequestSuccess = (verificationResult:VerificationResult) => {
+  if (onMasterCardNonceRequestSuccessCallback) {
+    onMasterCardNonceRequestSuccessCallback(verificationResult);
+  }
+};
+
+let onMasterCardNonceRequestFailureCallback:{ (error:ErrorDetails) : void;};
+const onNativeMasterCardNonceRequestFailure = (error:ErrorDetails) => {
+  if (onMasterCardNonceRequestFailureCallback) {
+    onMasterCardNonceRequestFailureCallback(error);
+  }
+};
+
 const cardEntryEmitter = new NativeEventEmitter(RNSQIPCardEntry);
 cardEntryEmitter.addListener('cardEntryCancel', onNativeCardEntryCanceled);
 cardEntryEmitter.addListener('cardEntryDidObtainCardDetails', onNativeCardEntryDidObtainCardDetails);
 cardEntryEmitter.addListener('cardEntryComplete', onNativeCardEntryComplete);
 cardEntryEmitter.addListener('onBuyerVerificationSuccess', onNativeBuyerVerificationSuccess);
 cardEntryEmitter.addListener('onBuyerVerificationError', onNativeBuyerVerificationError);
+cardEntryEmitter.addListener('onMasterCardNonceRequestSuccess', onNativeMasterCardNonceRequestSuccess);
+cardEntryEmitter.addListener('onMasterCardNonceRequestFailure', onNativeMasterCardNonceRequestFailure);
+
 
 const startCardEntryFlow = async (cardEntryConfig:CardEntryConfig, onCardNonceRequestSuccess:any,
   onCardEntryCancel:any) => {
@@ -146,6 +163,13 @@ const startCardEntryFlowWithBuyerVerification = async (cardEntryConfig:CardEntry
   );
 };
 
+const startSecureRemoteCommerce = async (amount:number,
+  onMasterCardNonceRequestSuccess:any, onMasterCardNonceRequestFailure:any) => {
+  onMasterCardNonceRequestSuccessCallback = onMasterCardNonceRequestSuccess;
+  onMasterCardNonceRequestFailureCallback = onMasterCardNonceRequestFailure;
+  await RNSQIPSecureRemoteCommerce.startSecureRemoteCommerce(amount);
+};
+
 const startGiftCardEntryFlow = async (onCardNonceRequestSuccess:any, onCardEntryCancel:any) => {
   cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   cardEntryCancelCallback = onCardEntryCancel;
@@ -176,6 +200,7 @@ export default Platform.select({
     showCardNonceProcessingError,
     setIOSCardEntryTheme,
     startBuyerVerificationFlow,
+    startSecureRemoteCommerce,
   },
   android: {
     startGiftCardEntryFlow,
@@ -184,5 +209,6 @@ export default Platform.select({
     completeCardEntry,
     showCardNonceProcessingError,
     startBuyerVerificationFlow,
+    startSecureRemoteCommerce
   },
 });

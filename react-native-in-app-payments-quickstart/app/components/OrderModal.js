@@ -27,6 +27,7 @@ import OrderInformationDescriptionView from './OrderInformationDescriptionView';
 import AddressView from './AddressView';
 import GreenButton from './GreenButton';
 import DigitalWalletButton from './DigitalWalletButton';
+import SRCButton from './SRCButton';
 
 OrderModal.propTypes = {
   onCloseOrderScreen: PropTypes.func.isRequired,
@@ -34,6 +35,7 @@ OrderModal.propTypes = {
   onPayWithCard: PropTypes.func.isRequired,
   onShowDigitalWallet: PropTypes.func.isRequired,
   onBuyerVerification: PropTypes.func.isRequired,
+  onSRCClickToPay: PropTypes.func.isRequired,
 };
 
 export default function OrderModal({
@@ -42,6 +44,7 @@ export default function OrderModal({
   onPayWithCard,
   onShowDigitalWallet,
   onBuyerVerification,
+  onSRCClickToPay,
 }) {
   return (
     <View style={styles.container}>
@@ -88,6 +91,9 @@ export default function OrderModal({
         <GreenButton
           onPress={onBuyerVerification}
           text="Buyer Verification"
+        />
+        <SRCButton
+          onPress={() => onSRCClickToPay()}
         />
       </View>
     </View>
