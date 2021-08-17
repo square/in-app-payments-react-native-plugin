@@ -18,14 +18,16 @@ import CardDetails from './models/CardDetails';
 import ErrorDetails from './models/ErrorDetails';
 import Utilities from './Utilities';
 
+const PaymentTypePending = 1;
+const PaymentTypeFinal = 2;
 const { RNSQIPApplePay } = NativeModules;
 
-let applePayNonceRequestSuccessCallback: {(cardDetails:CardDetails) : void;};
+let applePayNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
 const onNativeApplePayNonceRequestSuccess = (cardDetails:CardDetails) => {
   if (applePayNonceRequestSuccessCallback) applePayNonceRequestSuccessCallback(cardDetails);
 };
 
-let applePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void;};
+let applePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void; };
 const onNativeApplePayNonceRequestFailure = (error:ErrorDetails) => {
   if (applePayNonceRequestFailureCallback) applePayNonceRequestFailureCallback(error);
 };
@@ -89,9 +91,6 @@ const completeApplePayAuthorization = async (isSuccess:any, errorMessage = '') =
 
   await RNSQIPApplePay.completeApplePayAuthorization(isSuccess, errorMessage);
 };
-
-const PaymentTypePending = 1;
-const PaymentTypeFinal = 2;
 
 export default {
   initializeApplePay,

@@ -20,12 +20,12 @@ import Utilities from './Utilities';
 
 const { RNSQIPGooglePay } = NativeModules;
 
-let googlePayNonceRequestSuccessCallback: {(cardDetails:CardDetails) : void;};
+let googlePayNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
 const onNativeGooglePayNonceRequestSuccess = (cardDetails:CardDetails) => {
   if (googlePayNonceRequestSuccessCallback) googlePayNonceRequestSuccessCallback(cardDetails);
 };
 
-let googlePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void;};
+let googlePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void; };
 const onNativeGooglePayNonceRequestFailure = (error:ErrorDetails) => {
   if (googlePayNonceRequestFailureCallback) googlePayNonceRequestFailureCallback(error);
 };
@@ -51,7 +51,8 @@ const initializeGooglePay = async (squareLocationId:string, environment:any) => 
 
 const canUseGooglePay = async () => {
   try {
-    return await RNSQIPGooglePay.canUseGooglePay();
+    const value = await RNSQIPGooglePay.canUseGooglePay();
+    return value;
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
   }

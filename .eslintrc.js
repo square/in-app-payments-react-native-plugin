@@ -1,7 +1,11 @@
 module.exports = {
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    createDefaultProgram: true,
+  },
   extends: [
-    'airbnb',
+    'airbnb-typescript',
     'plugin:react-native/all',
   ],
   settings: {
@@ -30,15 +34,5 @@ module.exports = {
     'no-console': 0,
     'react/forbid-prop-types': 0,
     'class-methods-use-this': 0,
-    'import/extensions': [
-      'error',
-      'ignorePackages',
-      {
-        js: 'never',
-        jsx: 'never',
-        ts: 'never',
-        tsx: 'never',
-      },
-    ],
   },
 };

@@ -1,7 +1,7 @@
 interface VerificationResult {
-    nonce?: string;
+  nonce?: string;
 
-    token?: string;
+  token?: string;
 }
 
 export default VerificationResult;

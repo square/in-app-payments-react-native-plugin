@@ -1,16 +1,16 @@
 interface Card {
-    brand?: string;
+  brand?: string;
 
-    expirationMonth?: number;
+  expirationMonth?: number;
 
-    expirationYear?: number;
+  expirationYear?: number;
 
-    lastFourDigits?: string;
+  lastFourDigits?: string;
 
-    postalCode?: string;
+  postalCode?: string;
 
-    prepaidType?: string;
+  prepaidType?: string;
 
-    type?: string;
+  type?: string;
 }
 export default Card;

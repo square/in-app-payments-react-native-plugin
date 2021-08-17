@@ -1,10 +1,10 @@
 interface ErrorDetails {
-    code?: string;
+  debugMessage: string;
 
-    debugCode?: string;
+  message: string;
 
-    debugMessage?: string;
+  code?: string;
 
-    message?: string;
+  debugCode?: string;
 }
 export default ErrorDetails;

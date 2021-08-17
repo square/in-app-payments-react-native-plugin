@@ -1,8 +1,8 @@
 import Card from './Card';
 
-export interface CardDetails {
-    nonce?:string;
+interface CardDetails {
+  nonce?:string;
 
-    card?:Card;
+  card?:Card;
 }
 export default CardDetails;

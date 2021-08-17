@@ -27,7 +27,7 @@ const onNativeCardEntryCanceled = () => {
   if (cardEntryCancelCallback) cardEntryCancelCallback();
 };
 
-let cardEntryCardNonceRequestSuccessCallback: {(cardDetails:CardDetails) : void;};
+let cardEntryCardNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
 const onNativeCardEntryDidObtainCardDetails = (cardDetails:CardDetails) => {
   if (cardEntryCardNonceRequestSuccessCallback) {
     cardEntryCardNonceRequestSuccessCallback(cardDetails);
@@ -39,14 +39,14 @@ const onNativeCardEntryComplete = () => {
   if (cardEntryCompleteCallback) cardEntryCompleteCallback();
 };
 
-let buyerVerificationSuccessCallback:{ (verificationResult:VerificationResult) : void;};
+let buyerVerificationSuccessCallback:{ (verificationResult:VerificationResult) : void; };
 const onNativeBuyerVerificationSuccess = (verificationResult:VerificationResult) => {
   if (buyerVerificationSuccessCallback) {
     buyerVerificationSuccessCallback(verificationResult);
   }
 };
 
-let buyerVerificationErrorCallback:{ (error:ErrorDetails) : void;};
+let buyerVerificationErrorCallback:{ (error:ErrorDetails) : void; };
 const onNativeBuyerVerificationError = (error:ErrorDetails) => {
   if (buyerVerificationErrorCallback) {
     buyerVerificationErrorCallback(error);

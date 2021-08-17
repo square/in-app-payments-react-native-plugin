@@ -1,30 +1,30 @@
 interface CardEntryConfig {
-    collectPostalCode?: boolean;
+  collectPostalCode?: boolean;
 
-    squareLocationId?: string;
+  squareLocationId?: string;
 
-    buyerAction?: string;
+  buyerAction?: string;
 
-    amount?: number;
+  amount?: number;
 
-    currencyCode?: string;
+  currencyCode?: string;
 
-    givenName?: string;
+  givenName?: string;
 
-    familyName?: string;
+  familyName?: string;
 
-    addressLines?: string;
+  addressLines?: string;
 
-    city?: string;
+  city?: string;
 
-    countryCode?: string;
+  countryCode?: string;
 
-    email?: string;
+  email?: string;
 
-    phone?: string;
+  phone?: string;
 
-    postalCode?: string;
+  postalCode?: string;
 
-    region?:string;
+  region?:string;
 }
 export default CardEntryConfig;
