@@ -249,7 +249,21 @@ export default class HomeScreen extends Component {
   }
 
   async onMaterCardNonceRequestSuccess(cardDetails) {
-   
+    if (this.chargeServerHostIsSet()) {
+      try {
+        await chargeCardNonce(cardDetails.nonce);
+        showAlert('Your order was successful',
+          'Go to your Square dashbord to see this order reflected in the sales tab.');
+      } catch (error) {
+        showAlert('Error processing Mastercard payment', error.message);
+      }
+    } else {
+      printCurlCommand(cardDetails.nonce, SQUARE_APP_ID);
+      showAlert(
+        'Nonce generated but not charged',
+        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+      );
+    }
   }
 
   async onMasterCardNonceRequestFailure(errorInfo) {

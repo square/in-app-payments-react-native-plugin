@@ -409,9 +409,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: ff951a0c241bfaefc4940a3f1f1a229e7cb32fa6
   ReactCommon: bedc99ed4dae329c4fcf128d0c31b9115e5365ca
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNSquareInAppPayments: b47e92b2a75880c29e5329a1bc2e2418b1f38b50
-  SquareBuyerVerificationSDK: 6a73cc3b073d8e613cb1fe8643600ff9ac4d6373
-  SquareInAppPaymentsSDK: 6c3293e5600c121bbdc5499ffa3b3976e2cf0054
+  RNSquareInAppPayments: 8df606b69d8f31a93bea989a9f6141892fff685d
+  SquareBuyerVerificationSDK: 8727a5235bb450bd57e797a6f30c4032b21ef465
+  SquareInAppPaymentsSDK: 9411967f436f66fb47beba737a14507eeaee6da3
   Yoga: a7de31c64fe738607e7a3803e3f591a4b1df7393
 
 PODFILE CHECKSUM: 00b63121124cb895067d4a2e675d861eca38b720

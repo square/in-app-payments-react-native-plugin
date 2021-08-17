@@ -73,9 +73,10 @@ cardEntryEmitter.addListener('cardEntryDidObtainCardDetails', onNativeCardEntryD
 cardEntryEmitter.addListener('cardEntryComplete', onNativeCardEntryComplete);
 cardEntryEmitter.addListener('onBuyerVerificationSuccess', onNativeBuyerVerificationSuccess);
 cardEntryEmitter.addListener('onBuyerVerificationError', onNativeBuyerVerificationError);
-cardEntryEmitter.addListener('onMasterCardNonceRequestSuccess', onNativeMasterCardNonceRequestSuccess);
-cardEntryEmitter.addListener('onMasterCardNonceRequestFailure', onNativeMasterCardNonceRequestFailure);
 
+const secureRemoteCommerceEmitter = new NativeEventEmitter(RNSQIPSecureRemoteCommerce);
+secureRemoteCommerceEmitter.addListener('onMasterCardNonceRequestSuccess', onNativeMasterCardNonceRequestSuccess);
+secureRemoteCommerceEmitter.addListener('onMasterCardNonceRequestFailure', onNativeMasterCardNonceRequestFailure);
 
 const startCardEntryFlow = async (cardEntryConfig:CardEntryConfig, onCardNonceRequestSuccess:any,
   onCardEntryCancel:any) => {
