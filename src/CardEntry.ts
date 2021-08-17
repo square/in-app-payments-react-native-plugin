@@ -210,6 +210,6 @@ export default Platform.select({
     completeCardEntry,
     showCardNonceProcessingError,
     startBuyerVerificationFlow,
-    startSecureRemoteCommerce
+    startSecureRemoteCommerce,
   },
 });

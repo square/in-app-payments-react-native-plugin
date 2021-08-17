@@ -54,7 +54,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[ RNSQIPCardEntryCancelEventName, RNSQIPCardEntryCompleteEventName, RNSQIPCardEntryDidObtainCardDetailsEventName, RNSQIPOnBuyerVerificationSuccessEventName, RNSQIPOnBuyerVerificationErrorEventName];
+    return @[ RNSQIPCardEntryCancelEventName, RNSQIPCardEntryCompleteEventName, RNSQIPCardEntryDidObtainCardDetailsEventName, RNSQIPOnBuyerVerificationSuccessEventName, RNSQIPOnBuyerVerificationErrorEventName ];
 }
 
 RCT_REMAP_METHOD(startCardEntryFlow,

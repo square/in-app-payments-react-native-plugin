@@ -94,7 +94,7 @@ export default class HomeScreen extends Component {
       showingDigitalWallet: false,
       canUseDigitalWallet: false,
       showingBuyerVerification: false,
-      showingSRCClickToPay:false,
+      showingSRCClickToPay: false,
       applePayState: applePayStatus.none,
       applePayError: null,
       cardsOnFile: [],
@@ -347,6 +347,7 @@ export default class HomeScreen extends Component {
     this.closeOrderScreen();
     this.setState({ showingSRCClickToPay: true });
   }
+
   async onBuyerVerificationSuccess(buyerVerificationDetails) {
     if (this.chargeServerHostIsSet()) {
       try {
@@ -449,15 +450,15 @@ export default class HomeScreen extends Component {
       this.setState({ showingDigitalWallet: false });
     } else if (this.state.showingBuyerVerification) {
       this.startBuyerVerificationFlow();
-    } else if (this.state.showingSRCClickToPay){
+    } else if (this.state.showingSRCClickToPay) {
       this.startSRCClickToPayFlow();
     }
   }
 
   async startSRCClickToPayFlow() {
     await SQIPCardEntry.startSecureRemoteCommerce(4,
-    this.onMaterCardNonceRequestSuccess,
-    this.onMasterCardNonceRequestFailure);
+      this.onMaterCardNonceRequestSuccess,
+      this.onMasterCardNonceRequestFailure);
   }
 
   async startBuyerVerificationFlow() {

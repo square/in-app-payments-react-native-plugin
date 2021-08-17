@@ -45,7 +45,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[ RNSQIPOnMasterCardNonceRequestSuccessEventName, RNSQIPOnMasterCardNonceRequestFailureEventName];
+    return @[ RNSQIPOnMasterCardNonceRequestSuccessEventName, RNSQIPOnMasterCardNonceRequestFailureEventName ];
 }
 
 RCT_REMAP_METHOD(startSecureRemoteCommerce,
