@@ -14,12 +14,17 @@
  limitations under the License.
 */
 import { NativeModules, NativeEventEmitter } from 'react-native'; // eslint-disable-line import/no-unresolved
+import ApplePayConfig from './models/ApplePayConfig';
+import CancelAndCompleteCallback from './models/CancelAndCompleteCallback';
 import CardDetails from './models/CardDetails';
 import ErrorDetails from './models/ErrorDetails';
+import FailureCallback from './models/FailureCallback';
+import NonceSuccessCallback from './models/NonceSuccessCallback';
+import PaymentType from './models/PaymentType';
 import Utilities from './Utilities';
 
-const PaymentTypePending = 1;
-const PaymentTypeFinal = 2;
+// const PaymentTypePending = 1;
+// const PaymentTypeFinal = 2;
 const { RNSQIPApplePay } = NativeModules;
 
 let applePayNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
@@ -50,10 +55,10 @@ const initializeApplePay = async (applePayMerchantId:string) => {
 const canUseApplePay = () => RNSQIPApplePay.canUseApplePay();
 
 const requestApplePayNonce = async (
-  applePayConfig:any,
-  onApplePayNonceRequestSuccess:any,
-  onApplePayNonceRequestFailure:any,
-  onApplePayComplete:any,
+  applePayConfig:ApplePayConfig,
+  onApplePayNonceRequestSuccess:NonceSuccessCallback,
+  onApplePayNonceRequestFailure:FailureCallback,
+  onApplePayComplete:CancelAndCompleteCallback,
 ) => {
   Utilities.verifyObjectType(applePayConfig, 'applePayConfig should be a valid object');
   Utilities.verifyStringType(applePayConfig.price, 'applePayConfig.price should be a valid string');
@@ -67,7 +72,7 @@ const requestApplePayNonce = async (
 
   let { paymentType } = applePayConfig;
   if (!applePayConfig.paymentType) {
-    paymentType = PaymentTypeFinal;
+    paymentType = PaymentType.PaymentTypeFinal;
   } else {
     Utilities.verifyIntegerType(applePayConfig.paymentType, 'applePayConfig.paymentType should be a valid integer');
   }
@@ -97,6 +102,4 @@ export default {
   canUseApplePay,
   requestApplePayNonce,
   completeApplePayAuthorization,
-  PaymentTypePending,
-  PaymentTypeFinal,
 };

@@ -21,6 +21,8 @@ import SQIPGooglePay from '../GooglePay';
 import Utilities from '../Utilities';
 import CardDetails from '../models/CardDetails';
 import ErrorDetails from '../models/ErrorDetails';
+import GooglePayConfig from '../models/GooglePayConfig';
+import GooglePayPriceStatus from '../models/GooglePayPriceStatus';
 
 jest.mock('react-native', () => {
   const emitter = {
@@ -106,12 +108,12 @@ describe('Test Google Pay', () => {
   it('requestGooglePayNonce works with onGooglePayNonceRequestSuccess callback', async () => {
     expect.assertions(9);
     try {
-      const testGooglePayConfig = {
+      const testGooglePayConfig:GooglePayConfig = {
         price: '1.00',
         currencyCode: 'test-USD',
-        priceStatus: SQIPGooglePay.TotalPriceStatusEstimated,
+        priceStatus: GooglePayPriceStatus.TotalPriceStatusEstimated,
       };
-      const mockCardDetails = { nonce: 'fake_nonce' };
+      const mockCardDetails:CardDetails = { nonce: 'fake_nonce' };
       const onGooglePayNonceRequestSuccessCallback = jest.fn();
       nativeEventEmitter.addListener('onGooglePayNonceRequestSuccess', (cardDetails:CardDetails) => {
         onGooglePayNonceRequestSuccessCallback(cardDetails);
@@ -143,12 +145,12 @@ describe('Test Google Pay', () => {
   it('requestGooglePayNonce works with onGooglePayNonceRequestFailure callback', async () => {
     expect.assertions(3);
     try {
-      const testGooglePayConfig = {
+      const testGooglePayConfig:GooglePayConfig = {
         price: '1.00',
         currencyCode: 'test-USD',
-        priceStatus: SQIPGooglePay.TotalPriceStatusEstimated,
+        priceStatus: GooglePayPriceStatus.TotalPriceStatusEstimated,
       };
-      const mockErrorInfo = { message: 'fake_message' };
+      const mockErrorInfo:ErrorDetails = { message: 'fake_message', debugMessage: 'fake_message' };
       const onGooglePayNonceRequestFailureCallback = jest.fn();
       nativeEventEmitter.addListener('onGooglePayNonceRequestFailure', (errorInfo:ErrorDetails) => {
         onGooglePayNonceRequestFailureCallback(errorInfo);
@@ -172,10 +174,10 @@ describe('Test Google Pay', () => {
   it('requestGooglePayNonce works with onGooglePayCanceled callback', async () => {
     expect.assertions(2);
     try {
-      const testGooglePayConfig = {
+      const testGooglePayConfig:GooglePayConfig = {
         price: '1.00',
         currencyCode: 'test-USD',
-        priceStatus: SQIPGooglePay.TotalPriceStatusEstimated,
+        priceStatus: GooglePayPriceStatus.TotalPriceStatusEstimated,
       };
       const onGooglePayCanceledCallback = jest.fn();
       nativeEventEmitter.addListener('onGooglePayCanceled', () => {

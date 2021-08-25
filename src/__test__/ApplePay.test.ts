@@ -21,6 +21,8 @@ import SQIPApplePay from '../ApplePay';
 import Utilities from '../Utilities';
 import CardDetails from '../models/CardDetails';
 import ErrorDetails from '../models/ErrorDetails';
+import ApplePayConfig from '../models/ApplePayConfig';
+import PaymentType from '../models/PaymentType';
 
 jest.mock('react-native', () => {
   const emitter = {
@@ -78,12 +80,12 @@ describe('Test Apple Pay', () => {
   it('requestApplePayNonce works with onApplePayNonceRequestSuccess callback', async () => {
     expect.assertions(11);
     try {
-      const testApplePayConfig:any = {
+      const testApplePayConfig:ApplePayConfig = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
-        paymentType: SQIPApplePay.PaymentTypePending,
+        paymentType: PaymentType.PaymentTypePending,
       };
       const mockCardDetails:CardDetails = { nonce: 'fake_nonce' };
       const onApplePayNonceRequestSuccessCallback = jest.fn();
@@ -125,11 +127,12 @@ describe('Test Apple Pay', () => {
   it('requestApplePayNonce works with default paymentType when paymentType is undefined', async () => {
     expect.assertions(2);
     try {
-      const testApplePayConfig = {
+      const testApplePayConfig:ApplePayConfig = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
+        paymentType: PaymentType.PaymentTypeFinal,
       };
       const onApplePayNonceRequestSuccess = jest.fn();
       await SQIPApplePay.requestApplePayNonce(
@@ -144,7 +147,7 @@ describe('Test Apple Pay', () => {
         testApplePayConfig.summaryLabel,
         testApplePayConfig.countryCode,
         testApplePayConfig.currencyCode,
-        SQIPApplePay.PaymentTypeFinal,
+        PaymentType.PaymentTypeFinal,
       );
     } catch (ex) {
       console.error(ex);
@@ -174,7 +177,7 @@ describe('Test Apple Pay', () => {
         testApplePayConfig.summaryLabel,
         testApplePayConfig.countryCode,
         testApplePayConfig.currencyCode,
-        SQIPApplePay.PaymentTypeFinal,
+        PaymentType.PaymentTypeFinal,
       );
     } catch (ex) {
       console.error(ex);
@@ -184,14 +187,14 @@ describe('Test Apple Pay', () => {
   it('requestApplePayNonce works with onApplePayNonceRequestFailure callback', async () => {
     expect.assertions(3);
     try {
-      const testApplePayConfig:any = {
+      const testApplePayConfig:ApplePayConfig = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
-        paymentType: SQIPApplePay.PaymentTypePending,
+        paymentType: PaymentType.PaymentTypePending,
       };
-      const mockErrorInfo:ErrorDetails = { message: 'fake_message' };
+      const mockErrorInfo:ErrorDetails = { message: 'fake_message', debugMessage: 'fake_message' };
       const onApplePayNonceRequestFailureCallback = jest.fn();
       nativeEventEmitter.addListener('onApplePayNonceRequestFailure', (errorInfo:ErrorDetails) => {
         onApplePayNonceRequestFailureCallback(errorInfo);
@@ -214,12 +217,12 @@ describe('Test Apple Pay', () => {
   it('requestApplePayNonce works with onApplePayComplete callback', async () => {
     expect.assertions(3);
     try {
-      const testApplePayConfig:any = {
+      const testApplePayConfig:ApplePayConfig = {
         price: '1.00',
         summaryLabel: 'test label',
         countryCode: 'test-US',
         currencyCode: 'test-USD',
-        paymentType: SQIPApplePay.PaymentTypeFinal,
+        paymentType: PaymentType.PaymentTypeFinal,
       };
       const onApplePayCompleteCallback = jest.fn();
       nativeEventEmitter.addListener('onApplePayComplete', () => {

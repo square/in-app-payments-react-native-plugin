@@ -21,6 +21,7 @@ import SQIPCardEntry from '../CardEntry';
 import CardEntryConfig from '../models/CardEntryConfig';
 import Utilities from '../Utilities';
 import CardDetails from '../models/CardDetails';
+import ThemeType from '../models/ThemeType';
 
 jest.mock('react-native', () => {
   const emitter = {
@@ -107,7 +108,7 @@ describe('Test CardEntry', () => {
   it('startCardEntryFlow works with empty config', async () => {
     expect.assertions(3);
     const spyVerifyObjectType = jest.spyOn(Utilities, 'verifyObjectType').mockImplementation();
-    const cardEntryConfig : CardEntryConfig = {};
+    const cardEntryConfig : CardEntryConfig = { collectPostalCode: true };
     try {
       if (SQIPCardEntry === undefined) { return; }
       await SQIPCardEntry.startCardEntryFlow(cardEntryConfig, null, null);
@@ -186,9 +187,7 @@ describe('Test CardEntry', () => {
     expect.assertions(3);
     try {
       const spyVerifyThemeType = jest.spyOn(Utilities, 'verifyThemeType').mockImplementation();
-      const mockTheme = {
-        fakeFont: 'fake_font',
-      };
+      const mockTheme:ThemeType = { };
       if (SQIPCardEntry === undefined) { return; }
       if (SQIPCardEntry.setIOSCardEntryTheme) await SQIPCardEntry.setIOSCardEntryTheme(mockTheme);
       expect(spyVerifyThemeType).toHaveBeenCalledWith(mockTheme);

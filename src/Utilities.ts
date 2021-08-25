@@ -14,7 +14,10 @@
  limitations under the License.
 */
 import ErrorCodes from './ErrorCodes';
+import ColorType from './models/ColorType';
 import ErrorDetails from './models/ErrorDetails';
+import FontType from './models/FontType';
+import ThemeType from './models/ThemeType';
 
 function createInAppPayementsError(ex:any) {
   try {
@@ -25,7 +28,6 @@ function createInAppPayementsError(ex:any) {
   } catch (parseEx) {
     ex.parseEx = parseEx; // eslint-disable-line no-param-reassign
   }
-
   return ex;
 }
 
@@ -39,7 +41,7 @@ function createJSError(debugErrorMessage:string) {
   };
   ex.code = ErrorCodes.UsageError;
   ex.debugCode = errorCode;
-  return ex;
+  throw new Error(JSON.stringify(ex));
 }
 
 function isNullOrUndefined(value:any) {
@@ -49,33 +51,33 @@ function isNullOrUndefined(value:any) {
 
 function verifyObjectType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || typeof value !== 'object' || value.constructor !== Object) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
 function verifyStringType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || (typeof value !== 'string' && !(value instanceof String))) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
 function verifyIntegerType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || typeof value !== 'number' || !Number.isFinite(value) || !Number.isInteger(value)) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
 function verifyBooleanType(value:any, debugErrorMessage:string) {
-  if (isNullOrUndefined(value) || typeof value !== 'boolean') throw createJSError(debugErrorMessage);
+  if (isNullOrUndefined(value) || typeof value !== 'boolean') { createJSError(debugErrorMessage); }
 }
 
 function verifyNubmerType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || typeof value !== 'number' || !Number.isFinite(value)) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
-function verifyFontType(value:any) {
+function verifyFontType(value:FontType) {
   verifyObjectType(value, 'font should be an object type.');
   verifyNubmerType(value.size, 'font.size should be a number.');
   if (value.name) {
@@ -83,7 +85,7 @@ function verifyFontType(value:any) {
   }
 }
 
-function verifyColorType(value:any) {
+function verifyColorType(value:ColorType) {
   verifyObjectType(value, 'color should be an object type.');
   verifyNubmerType(value.r, 'value.r should be a number type.');
   verifyNubmerType(value.g, 'value.g should be a number type.');
@@ -93,9 +95,9 @@ function verifyColorType(value:any) {
   }
 }
 
-function verifyThemeType(value:any) {
+function verifyThemeType(value:ThemeType) {
   if (isNullOrUndefined(value) || typeof value !== 'object' || value.constructor !== Object) {
-    throw createJSError('theme is not an object type.');
+    createJSError('theme is not an object type.');
   }
 
   if (value.font) {

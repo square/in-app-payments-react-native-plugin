@@ -1,5 +1,5 @@
 interface CardEntryConfig {
-  collectPostalCode?: boolean;
+  collectPostalCode: boolean;
 
   squareLocationId?: string;
 

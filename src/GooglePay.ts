@@ -14,8 +14,12 @@
  limitations under the License.
 */
 import { Platform, NativeModules, NativeEventEmitter } from 'react-native'; // eslint-disable-line import/no-unresolved
+import CancelAndCompleteCallback from './models/CancelAndCompleteCallback';
 import CardDetails from './models/CardDetails';
 import ErrorDetails from './models/ErrorDetails';
+import FailureCallback from './models/FailureCallback';
+import GooglePayConfig from './models/GooglePayConfig';
+import NonceSuccessCallback from './models/NonceSuccessCallback';
 import Utilities from './Utilities';
 
 const { RNSQIPGooglePay } = NativeModules;
@@ -59,10 +63,10 @@ const canUseGooglePay = async () => {
 };
 
 const requestGooglePayNonce = async (
-  googlePayConfig:any,
-  onGooglePayNonceRequestSuccess:any,
-  onGooglePayNonceRequestFailure:any,
-  onGooglePayCanceled:any,
+  googlePayConfig:GooglePayConfig,
+  onGooglePayNonceRequestSuccess:NonceSuccessCallback,
+  onGooglePayNonceRequestFailure:FailureCallback,
+  onGooglePayCanceled:CancelAndCompleteCallback,
 ) => {
   Utilities.verifyObjectType(googlePayConfig, 'googlePayConfig should be a valid object');
   Utilities.verifyStringType(googlePayConfig.price, 'googlePayConfig.price should be a valid string');

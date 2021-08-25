@@ -1,16 +1,20 @@
+import Brand from './Brand';
+import PrepaidType from './PrepaidType';
+import Type from './Type';
+
 interface Card {
-  brand?: string;
+  brand?: Brand;
+
+  lastFourDigits?: string;
 
   expirationMonth?: number;
 
   expirationYear?: number;
 
-  lastFourDigits?: string;
-
   postalCode?: string;
 
-  prepaidType?: string;
+  type?: Type;
 
-  type?: string;
+  prepaidType?: PrepaidType;
 }
 export default Card;
