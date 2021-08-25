@@ -24,7 +24,7 @@ matrix:
       - platform-tools
       - tools
       - build-tools-30.0.2
-      - android-30
+      - android-29
       - extra-google-google_play_services
     install:
     - nvm install 14
