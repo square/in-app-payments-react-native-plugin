@@ -23,8 +23,9 @@ matrix:
       - tools
       - platform-tools
       - tools
-      - build-tools-30.0.2
-      - android-29
+      # - build-tools-30.0.2
+      # - android-29
+      - yes | sdkmanager --licenses
       - extra-google-google_play_services
     install:
     - nvm install 14
