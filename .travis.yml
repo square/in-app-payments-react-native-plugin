@@ -26,6 +26,9 @@ matrix:
       - build-tools-30.0.2
       - android-30
       - extra-google-google_play_services
+    before_install:
+    - yes | sdkmanager "platforms;android-30"
+    - yes | sdkmanager "build-tools;30.0.2"
     install:
     - nvm install 14
     - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -45,8 +48,6 @@ matrix:
     before_install:
     - gem install cocoapods
     - nvm install 14
-    - yes | sdkmanager "platforms;android-30"
-    - yes | sdkmanager "build-tools;30.0.2"
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$PATH"
     - cd react-native-in-app-payments-quickstart
