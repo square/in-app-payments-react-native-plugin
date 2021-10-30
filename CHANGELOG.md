@@ -1,8 +1,14 @@
 ## Changelog
 
+
+### v1.7.0 Oct 29, 2021
+
+* Upgrade IAP SDK to `1.5.4`. 
+* Support IAP SDK version override with `$sqipVersion` for iOS or `ext.sqipVersion` for Android.
+
 ### v1.6.0 July 19, 2021
 
-* Downgrading IAP SDK to 1.4.9 to solve compatability issue with newer versions of the IAP SDK
+* Downgrading IAP SDK to `1.4.9` to solve compatability issue with newer versions of the IAP SDK.
 
 ### v1.5.0 May 14, 2021
 
