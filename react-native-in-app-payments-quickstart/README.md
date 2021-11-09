@@ -111,3 +111,6 @@ Square provides a sample backend service for this quickstart that can easily be 
 [root README]: ../README.md
 [transaction details in Square Dashboard]: https://squareup.com/dashboard/sales/transactions
 [backend service setup guide]: take_a_payment.md
+
+## Feedback
+Leave a feedback for this sample app [here](https://delighted.com/t/DT6msOcY)!
