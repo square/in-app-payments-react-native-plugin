@@ -78,3 +78,6 @@ limitations under the License.
 [React Native plugin GitHub repo]: https://github.com/square/in-app-payments-react-native-plugin/tree/master
 [Getting started with the example app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/react-native-in-app-payments-quickstart/README.md
 [Quick start React Native app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/react-native-in-app-payments-quickstart
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!
