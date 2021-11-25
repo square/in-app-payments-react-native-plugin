@@ -40,7 +40,7 @@ matrix:
     - "./gradlew clean build"
   - language: objective-c
     os: osx
-    osx_image: xcode11.2
+    osx_image: xcode13
     node_js: 14
     cache:
       directories:
