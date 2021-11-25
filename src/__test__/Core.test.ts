@@ -32,13 +32,4 @@ describe('Test Core', () => {
       console.error(ex);
     }
   });
-
-  // it('setSquareApplication failed with invalid applicaiton id type', async () => {
-  //   expect.assertions(1);
-  //   try {
-  //     await SQIPCore.setSquareApplicationId(123);
-  //   } catch (ex) {
-  //     expect(ex.message).toContain('rn_invalid_type');
-  //   }
-  // });
 });

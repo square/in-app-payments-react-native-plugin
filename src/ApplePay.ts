@@ -90,7 +90,7 @@ const requestApplePayNonce = async (
   }
 };
 
-const completeApplePayAuthorization = async (isSuccess:any, errorMessage = '') => {
+const completeApplePayAuthorization = async (isSuccess:boolean, errorMessage = '') => {
   Utilities.verifyBooleanType(isSuccess, 'isSuccess should be a valid boolean');
   Utilities.verifyStringType(errorMessage, 'errorMessage should be a valid string');
 

@@ -46,7 +46,7 @@ if (Platform.OS === 'android') {
   googlePayEmitter.addListener('onGooglePayCanceled', onNativeGooglePayCanceled);
 }
 
-const initializeGooglePay = async (squareLocationId:string, environment:any) => {
+const initializeGooglePay = async (squareLocationId:string, environment:number) => {
   Utilities.verifyStringType(squareLocationId, 'squareLocationId should be a valid string');
   Utilities.verifyIntegerType(environment, 'environment should be a valid integer');
 
