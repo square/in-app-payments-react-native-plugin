@@ -23,23 +23,13 @@ jest.mock('react-native', () => ({
 }));
 
 describe('Test Core', () => {
-  it('setSquareApplication success', async (done) => {
+  it('setSquareApplication success', async () => {
     expect.assertions(1);
     try {
       await SQIPCore.setSquareApplicationId('test_application_id ');
       expect(NativeModules.RNSquareInAppPayments.setApplicationId.mock.calls.length).toBe(1);
-      done();
     } catch (ex) {
       console.error(ex);
-    }
-  });
-
-  it('setSquareApplication failed with invalid applicaiton id type', async () => {
-    expect.assertions(1);
-    try {
-      await SQIPCore.setSquareApplicationId(123);
-    } catch (ex) {
-      expect(ex.message).toContain('rn_invalid_type');
     }
   });
 });

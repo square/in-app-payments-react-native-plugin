@@ -14,36 +14,45 @@
  limitations under the License.
 */
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native'; // eslint-disable-line import/no-unresolved
+import FailureCallback from './models/FailureCallback';
+import BuyerVerificationSuccessCallback from './models/BuyerVerificationSuccessCallback';
+import CancelAndCompleteCallback from './models/CancelAndCompleteCallback';
+import CardDetails from './models/CardDetails';
+import CardEntryConfig from './models/CardEntryConfig';
+import NonceSuccessCallback from './models/NonceSuccessCallback';
+import ErrorDetails from './models/ErrorDetails';
+import VerificationResult from './models/VerificationResult';
 import Utilities from './Utilities';
+import ThemeType from './models/ThemeType';
 
 const { RNSQIPCardEntry } = NativeModules;
 
-let cardEntryCancelCallback;
+let cardEntryCancelCallback: () => void;
 const onNativeCardEntryCanceled = () => {
   if (cardEntryCancelCallback) cardEntryCancelCallback();
 };
 
-let cardEntryCardNonceRequestSuccessCallback;
-const onNativeCardEntryDidObtainCardDetails = (cardDetails) => {
+let cardEntryCardNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
+const onNativeCardEntryDidObtainCardDetails = (cardDetails:CardDetails) => {
   if (cardEntryCardNonceRequestSuccessCallback) {
     cardEntryCardNonceRequestSuccessCallback(cardDetails);
   }
 };
 
-let cardEntryCompleteCallback;
+let cardEntryCompleteCallback: () => void;
 const onNativeCardEntryComplete = () => {
   if (cardEntryCompleteCallback) cardEntryCompleteCallback();
 };
 
-let buyerVerificationSuccessCallback;
-const onNativeBuyerVerificationSuccess = (verificationResult) => {
+let buyerVerificationSuccessCallback:{ (verificationResult:VerificationResult) : void; };
+const onNativeBuyerVerificationSuccess = (verificationResult:VerificationResult) => {
   if (buyerVerificationSuccessCallback) {
     buyerVerificationSuccessCallback(verificationResult);
   }
 };
 
-let buyerVerificationErrorCallback;
-const onNativeBuyerVerificationError = (error) => {
+let buyerVerificationErrorCallback:{ (error:ErrorDetails) : void; };
+const onNativeBuyerVerificationError = (error:ErrorDetails) => {
   if (buyerVerificationErrorCallback) {
     buyerVerificationErrorCallback(error);
   }
@@ -56,8 +65,10 @@ cardEntryEmitter.addListener('cardEntryComplete', onNativeCardEntryComplete);
 cardEntryEmitter.addListener('onBuyerVerificationSuccess', onNativeBuyerVerificationSuccess);
 cardEntryEmitter.addListener('onBuyerVerificationError', onNativeBuyerVerificationError);
 
-async function startCardEntryFlow(cardEntryConfig, onCardNonceRequestSuccess, onCardEntryCancel) {
-  let cardEntryInternalConfig = {};
+const startCardEntryFlow = async (cardEntryConfig:CardEntryConfig,
+  onCardNonceRequestSuccess:NonceSuccessCallback,
+  onCardEntryCancel:CancelAndCompleteCallback) => {
+  let cardEntryInternalConfig : CardEntryConfig = { collectPostalCode: true };
   if (cardEntryConfig) {
     Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
     cardEntryInternalConfig = cardEntryConfig;
@@ -72,12 +83,13 @@ async function startCardEntryFlow(cardEntryConfig, onCardNonceRequestSuccess, on
   cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   cardEntryCancelCallback = onCardEntryCancel;
   await RNSQIPCardEntry.startCardEntryFlow(cardEntryInternalConfig.collectPostalCode);
-}
+};
 
-async function startBuyerVerificationFlow(paymentSourceId,
-  cardEntryConfig, onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel) {
-  const { squareLocationId } = cardEntryConfig;
-  const { buyerAction } = cardEntryConfig;
+const startBuyerVerificationFlow = async (paymentSourceId:string,
+  cardEntryConfig:CardEntryConfig,
+  onBuyerVerificationSuccess:BuyerVerificationSuccessCallback,
+  onBuyerVerificationFailure:FailureCallback,
+  onCardEntryCancel:CancelAndCompleteCallback) => {
   const money = {
     amount: cardEntryConfig.amount,
     currencyCode: cardEntryConfig.currencyCode,
@@ -98,13 +110,15 @@ async function startBuyerVerificationFlow(paymentSourceId,
   buyerVerificationErrorCallback = onBuyerVerificationFailure;
   cardEntryCancelCallback = onCardEntryCancel;
   await RNSQIPCardEntry.startBuyerVerificationFlow(
-    paymentSourceId, squareLocationId, buyerAction, money, contact,
+    paymentSourceId, cardEntryConfig.squareLocationId, cardEntryConfig.buyerAction, money, contact,
   );
-}
+};
 
-async function startCardEntryFlowWithBuyerVerification(cardEntryConfig,
-  onBuyerVerificationSuccess, onBuyerVerificationFailure, onCardEntryCancel) {
-  let cardEntryInternalConfig = {};
+const startCardEntryFlowWithBuyerVerification = async (cardEntryConfig:CardEntryConfig,
+  onBuyerVerificationSuccess:BuyerVerificationSuccessCallback,
+  onBuyerVerificationFailure:FailureCallback,
+  onCardEntryCancel:CancelAndCompleteCallback) => {
+  let cardEntryInternalConfig : CardEntryConfig = { collectPostalCode: true };
   if (cardEntryConfig) {
     Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
     cardEntryInternalConfig = cardEntryConfig;
@@ -140,28 +154,29 @@ async function startCardEntryFlowWithBuyerVerification(cardEntryConfig,
   await RNSQIPCardEntry.startCardEntryFlowWithVerification(
     cardEntryInternalConfig.collectPostalCode, squareLocationId, buyerAction, money, contact,
   );
-}
+};
 
-async function startGiftCardEntryFlow(onCardNonceRequestSuccess, onCardEntryCancel) {
+const startGiftCardEntryFlow = async (onCardNonceRequestSuccess:NonceSuccessCallback,
+  onCardEntryCancel:CancelAndCompleteCallback) => {
   cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   cardEntryCancelCallback = onCardEntryCancel;
   await RNSQIPCardEntry.startGiftCardEntryFlow();
-}
+};
 
-async function completeCardEntry(onCardEntryComplete) {
+const completeCardEntry = async (onCardEntryComplete:CancelAndCompleteCallback) => {
   cardEntryCompleteCallback = onCardEntryComplete;
   await RNSQIPCardEntry.completeCardEntry();
-}
+};
 
-async function showCardNonceProcessingError(errorMessage) {
+const showCardNonceProcessingError = async (errorMessage:string) => {
   Utilities.verifyStringType(errorMessage, 'errorMessage should be a string');
   await RNSQIPCardEntry.showCardNonceProcessingError(errorMessage);
-}
+};
 
-async function setIOSCardEntryTheme(theme) {
+const setIOSCardEntryTheme = async (theme:ThemeType) => {
   Utilities.verifyThemeType(theme);
   await RNSQIPCardEntry.setTheme(theme);
-}
+};
 
 export default Platform.select({
   ios: {

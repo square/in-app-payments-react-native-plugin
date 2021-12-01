@@ -14,21 +14,27 @@
  limitations under the License.
 */
 import { Platform, NativeModules, NativeEventEmitter } from 'react-native'; // eslint-disable-line import/no-unresolved
+import CancelAndCompleteCallback from './models/CancelAndCompleteCallback';
+import CardDetails from './models/CardDetails';
+import ErrorDetails from './models/ErrorDetails';
+import FailureCallback from './models/FailureCallback';
+import GooglePayConfig from './models/GooglePayConfig';
+import NonceSuccessCallback from './models/NonceSuccessCallback';
 import Utilities from './Utilities';
 
 const { RNSQIPGooglePay } = NativeModules;
 
-let googlePayNonceRequestSuccessCallback;
-const onNativeGooglePayNonceRequestSuccess = (cardDetails) => {
+let googlePayNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
+const onNativeGooglePayNonceRequestSuccess = (cardDetails:CardDetails) => {
   if (googlePayNonceRequestSuccessCallback) googlePayNonceRequestSuccessCallback(cardDetails);
 };
 
-let googlePayNonceRequestFailureCallback;
-const onNativeGooglePayNonceRequestFailure = (error) => {
+let googlePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void; };
+const onNativeGooglePayNonceRequestFailure = (error:ErrorDetails) => {
   if (googlePayNonceRequestFailureCallback) googlePayNonceRequestFailureCallback(error);
 };
 
-let googlePayCancelCallback;
+let googlePayCancelCallback: () => void;
 const onNativeGooglePayCanceled = () => {
   if (googlePayCancelCallback) googlePayCancelCallback();
 };
@@ -40,27 +46,28 @@ if (Platform.OS === 'android') {
   googlePayEmitter.addListener('onGooglePayCanceled', onNativeGooglePayCanceled);
 }
 
-async function initializeGooglePay(squareLocationId, environment) {
+const initializeGooglePay = async (squareLocationId:string, environment:number) => {
   Utilities.verifyStringType(squareLocationId, 'squareLocationId should be a valid string');
   Utilities.verifyIntegerType(environment, 'environment should be a valid integer');
 
   await RNSQIPGooglePay.initializeGooglePay(squareLocationId, environment);
-}
+};
 
-async function canUseGooglePay() {
+const canUseGooglePay = async () => {
   try {
-    return await RNSQIPGooglePay.canUseGooglePay();
+    const value = await RNSQIPGooglePay.canUseGooglePay();
+    return value;
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
   }
-}
+};
 
-async function requestGooglePayNonce(
-  googlePayConfig,
-  onGooglePayNonceRequestSuccess,
-  onGooglePayNonceRequestFailure,
-  onGooglePayCanceled,
-) {
+const requestGooglePayNonce = async (
+  googlePayConfig:GooglePayConfig,
+  onGooglePayNonceRequestSuccess:NonceSuccessCallback,
+  onGooglePayNonceRequestFailure:FailureCallback,
+  onGooglePayCanceled:CancelAndCompleteCallback,
+) => {
   Utilities.verifyObjectType(googlePayConfig, 'googlePayConfig should be a valid object');
   Utilities.verifyStringType(googlePayConfig.price, 'googlePayConfig.price should be a valid string');
   Utilities.verifyStringType(googlePayConfig.currencyCode, 'googlePayConfig.currencyCode should be a valid string');
@@ -79,7 +86,7 @@ async function requestGooglePayNonce(
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
   }
-}
+};
 
 const TotalPriceStatusNotCurrentlyKnown = 1;
 const TotalPriceStatusEstimated = 2;

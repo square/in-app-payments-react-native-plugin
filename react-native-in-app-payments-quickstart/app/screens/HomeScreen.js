@@ -79,24 +79,25 @@ const iOSCardEntryTheme = {
   },
 };
 
-export default class HomeScreen extends Component {
-  state = {
-    showingBottomSheet: false,
-    showingCardsOnFileScreen: false,
-    showingPendingScreen: false,
-    showingCardEntry: false,
-    showingGiftCardEntry: false,
-    showingCustomerCardEntry: false,
-    showingDigitalWallet: false,
-    canUseDigitalWallet: false,
-    showingBuyerVerification: false,
-    applePayState: applePayStatus.none,
-    applePayError: null,
-    cardsOnFile: [],
-  }
+let errorMsg = null;
 
+export default class HomeScreen extends Component {
   constructor() {
     super();
+    this.state = {
+      showingBottomSheet: false,
+      showingCardsOnFileScreen: false,
+      showingPendingScreen: false,
+      showingCardEntry: false,
+      showingGiftCardEntry: false,
+      showingCustomerCardEntry: false,
+      showingDigitalWallet: false,
+      canUseDigitalWallet: false,
+      showingBuyerVerification: false,
+      applePayState: applePayStatus.none,
+      applePayError: null,
+      cardsOnFile: [],
+    };
     this.onStartCardEntry = this.startCardEntry.bind(this);
     this.onStartGiftCardEntry = this.startGiftCardEntry.bind(this);
     this.onShowCardEntry = this.onShowCardEntry.bind(this);
@@ -171,8 +172,9 @@ export default class HomeScreen extends Component {
   }
 
   async onApplePayRequestNonceFailure(errorInfo) {
+    errorMsg = errorInfo.message;
     await SQIPApplePay.completeApplePayAuthorization(false, errorInfo.message);
-    showAlert('Error processing Apple Pay payment', errorInfo.message);
+    showAlert('Error processing Apple Pay payment', errorMsg);
   }
 
   async onApplePayComplete() {

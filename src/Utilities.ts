@@ -14,8 +14,12 @@
  limitations under the License.
 */
 import ErrorCodes from './ErrorCodes';
+import ColorType from './models/ColorType';
+import ErrorDetails from './models/ErrorDetails';
+import FontType from './models/FontType';
+import ThemeType from './models/ThemeType';
 
-function createInAppPayementsError(ex) {
+function createInAppPayementsError(ex:any) {
   try {
     const errorDetails = JSON.parse(ex.message);
     ex.message = errorDetails.message; // eslint-disable-line no-param-reassign
@@ -24,110 +28,110 @@ function createInAppPayementsError(ex) {
   } catch (parseEx) {
     ex.parseEx = parseEx; // eslint-disable-line no-param-reassign
   }
-
   return ex;
 }
 
-function createJSError(debugErrorMessage) {
+function createJSError(debugErrorMessage:string) {
   // Create the javascript layer error with same data structure
   // as error processed by createInAppPayementsError
   const errorCode = 'rn_invalid_type';
-  const ex = new Error();
+  const ex:ErrorDetails = {
+    debugMessage: debugErrorMessage,
+    message: `Something went wrong. Please contact the developer of this application and provide them with this error code: ${errorCode}`,
+  };
   ex.code = ErrorCodes.UsageError;
-  ex.message = `Something went wrong. Please contact the developer of this application and provide them with this error code: ${errorCode}`;
   ex.debugCode = errorCode;
-  ex.debugMessage = debugErrorMessage;
-  return ex;
+  throw new Error(JSON.stringify(ex));
 }
 
-function isNullOrUndefined(value) {
+function isNullOrUndefined(value:any) {
   // This is same as (value === null || typeof value === 'undefined')
   return value == null;
 }
 
-function verifyObjectType(value, debugErrorMessage) {
+function verifyObjectType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || typeof value !== 'object' || value.constructor !== Object) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
-function verifyStringType(value, debugErrorMessage) {
+function verifyStringType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || (typeof value !== 'string' && !(value instanceof String))) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
-function verifyIntegerType(value, debugErrorMessage) {
+function verifyIntegerType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || typeof value !== 'number' || !Number.isFinite(value) || !Number.isInteger(value)) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
-function verifyBooleanType(value, debugErrorMessage) {
-  if (isNullOrUndefined(value) || typeof value !== 'boolean') throw createJSError(debugErrorMessage);
+function verifyBooleanType(value:any, debugErrorMessage:string) {
+  if (isNullOrUndefined(value) || typeof value !== 'boolean') { createJSError(debugErrorMessage); }
 }
 
-function verifyNubmerType(value, debugErrorMessage) {
+function verifyNubmerType(value:any, debugErrorMessage:string) {
   if (isNullOrUndefined(value) || typeof value !== 'number' || !Number.isFinite(value)) {
-    throw createJSError(debugErrorMessage);
+    createJSError(debugErrorMessage);
   }
 }
 
-function verifyFontType(value) {
-  exportFunctions.verifyObjectType(value, 'font should be an object type.');
-  exportFunctions.verifyNubmerType(value.size, 'font.size should be a number.');
+function verifyFontType(value:FontType) {
+  verifyObjectType(value, 'font should be an object type.');
+  verifyNubmerType(value.size, 'font.size should be a number.');
   if (value.name) {
     verifyStringType(value.name, 'font.name should be a string type.');
   }
 }
 
-function verifyColorType(value) {
-  exportFunctions.verifyObjectType(value, 'color should be an object type.');
-  exportFunctions.verifyNubmerType(value.r, 'value.r should be a number type.');
-  exportFunctions.verifyNubmerType(value.g, 'value.g should be a number type.');
-  exportFunctions.verifyNubmerType(value.b, 'value.b should be a number type.');
+function verifyColorType(value:ColorType) {
+  verifyObjectType(value, 'color should be an object type.');
+  verifyNubmerType(value.r, 'value.r should be a number type.');
+  verifyNubmerType(value.g, 'value.g should be a number type.');
+  verifyNubmerType(value.b, 'value.b should be a number type.');
   if (value.a) {
-    exportFunctions.verifyNubmerType(value.a, 'value.a should be a number type.');
+    verifyNubmerType(value.a, 'value.a should be a number type.');
   }
 }
 
-function verifyThemeType(value) {
+function verifyThemeType(value:ThemeType) {
   if (isNullOrUndefined(value) || typeof value !== 'object' || value.constructor !== Object) {
-    throw createJSError('theme is not an object type.');
+    createJSError('theme is not an object type.');
   }
 
   if (value.font) {
-    exportFunctions.verifyFontType(value.font);
+    verifyFontType(value.font);
   }
   if (value.saveButtonFont) {
-    exportFunctions.verifyFontType(value.saveButtonFont);
+    verifyFontType(value.saveButtonFont);
   }
   if (value.backgroundColor) {
-    exportFunctions.verifyColorType(value.backgroundColor);
+    verifyColorType(value.backgroundColor);
   }
   if (value.textColor) {
-    exportFunctions.verifyColorType(value.textColor);
+    verifyColorType(value.textColor);
   }
   if (value.placeholderTextColor) {
-    exportFunctions.verifyColorType(value.placeholderTextColor);
+    verifyColorType(value.placeholderTextColor);
   }
   if (value.tintColor) {
-    exportFunctions.verifyColorType(value.tintColor);
+    verifyColorType(value.tintColor);
   }
   if (value.messageColor) {
-    exportFunctions.verifyColorType(value.messageColor);
+    verifyColorType(value.messageColor);
   }
   if (value.errorColor) {
-    exportFunctions.verifyColorType(value.errorColor);
+    verifyColorType(value.errorColor);
   }
   if (value.saveButtonTitle) {
-    exportFunctions.verifyStringType(value.saveButtonTitle, 'value.saveButtonTitle should be a valid string type.');
+    verifyStringType(value.saveButtonTitle, 'value.saveButtonTitle should be a valid string type.');
   }
   if (value.saveButtonTextColor) {
-    exportFunctions.verifyColorType(value.saveButtonTextColor);
+    verifyColorType(value.saveButtonTextColor);
   }
   if (value.keyboardAppearance) {
-    exportFunctions.verifyStringType(value.keyboardAppearance, 'value.keyboardAppearance should be a valid string type.');
+    verifyStringType(value.keyboardAppearance, 'value.keyboardAppearance should be a valid string type.');
   }
 }
 

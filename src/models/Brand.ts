@@ -1,0 +1,12 @@
+enum Brand{
+  OTHER_BRAND,
+  VISA,
+  MASTERCARD,
+  AMERICAN_EXPRESS,
+  DISCOVER,
+  DISCOVER_DINERS,
+  JCB,
+  CHINA_UNION_PAY,
+  SQUARE_GIFT_CARD,
+}
+export default Brand;
