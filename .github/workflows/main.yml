@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-        run: |
+      - run: |
           yarn && yarn lint && yarn test
           cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd ..
   build-android:
