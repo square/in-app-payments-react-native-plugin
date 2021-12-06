@@ -3,6 +3,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '12.0'
 
+install! 'cocoapods', :disable_input_output_paths => true
+
 target 'RNInAppPaymentsQuickstart' do
   # Pods for RNInAppPaymentsQuickstart
   config = use_native_modules!
