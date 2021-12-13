@@ -14,13 +14,6 @@ jobs:
   build-android:
     needs: install-and-test
     runs-on: ubuntu-latest
-    components:
-      - tools
-      - platform-tools
-      - tools
-      - build-tools-28.0.3
-      - android-28
-      - extra-google-google_play_services
     steps:      
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
