@@ -14,21 +14,30 @@
  limitations under the License.
 */
 import { NativeModules, NativeEventEmitter } from 'react-native'; // eslint-disable-line import/no-unresolved
+import ApplePayConfig from './models/ApplePayConfig';
+import CancelAndCompleteCallback from './models/CancelAndCompleteCallback';
+import CardDetails from './models/CardDetails';
+import ErrorDetails from './models/ErrorDetails';
+import FailureCallback from './models/FailureCallback';
+import NonceSuccessCallback from './models/NonceSuccessCallback';
+import PaymentType from './models/PaymentType';
 import Utilities from './Utilities';
 
+// const PaymentTypePending = 1;
+// const PaymentTypeFinal = 2;
 const { RNSQIPApplePay } = NativeModules;
 
-let applePayNonceRequestSuccessCallback;
-const onNativeApplePayNonceRequestSuccess = (cardDetails) => {
+let applePayNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
+const onNativeApplePayNonceRequestSuccess = (cardDetails:CardDetails) => {
   if (applePayNonceRequestSuccessCallback) applePayNonceRequestSuccessCallback(cardDetails);
 };
 
-let applePayNonceRequestFailureCallback;
-const onNativeApplePayNonceRequestFailure = (error) => {
+let applePayNonceRequestFailureCallback:{ (error:ErrorDetails) : void; };
+const onNativeApplePayNonceRequestFailure = (error:ErrorDetails) => {
   if (applePayNonceRequestFailureCallback) applePayNonceRequestFailureCallback(error);
 };
 
-let applePayCompleteCallback;
+let applePayCompleteCallback: () => void;
 const onNativeApplePayComplete = () => {
   if (applePayCompleteCallback) applePayCompleteCallback();
 };
@@ -38,21 +47,19 @@ applePayEmitter.addListener('onApplePayNonceRequestSuccess', onNativeApplePayNon
 applePayEmitter.addListener('onApplePayNonceRequestFailure', onNativeApplePayNonceRequestFailure);
 applePayEmitter.addListener('onApplePayComplete', onNativeApplePayComplete);
 
-async function initializeApplePay(applePayMerchantId) {
+const initializeApplePay = async (applePayMerchantId:string) => {
   Utilities.verifyStringType(applePayMerchantId, 'applePayMerchantId should be a string');
   await RNSQIPApplePay.initializeApplePay(applePayMerchantId);
-}
+};
 
-async function canUseApplePay() {
-  return RNSQIPApplePay.canUseApplePay();
-}
+const canUseApplePay = () => RNSQIPApplePay.canUseApplePay();
 
-async function requestApplePayNonce(
-  applePayConfig,
-  onApplePayNonceRequestSuccess,
-  onApplePayNonceRequestFailure,
-  onApplePayComplete,
-) {
+const requestApplePayNonce = async (
+  applePayConfig:ApplePayConfig,
+  onApplePayNonceRequestSuccess:NonceSuccessCallback,
+  onApplePayNonceRequestFailure:FailureCallback,
+  onApplePayComplete:CancelAndCompleteCallback,
+) => {
   Utilities.verifyObjectType(applePayConfig, 'applePayConfig should be a valid object');
   Utilities.verifyStringType(applePayConfig.price, 'applePayConfig.price should be a valid string');
   Utilities.verifyStringType(applePayConfig.summaryLabel, 'applePayConfig.summaryLabel should be a valid string');
@@ -65,7 +72,7 @@ async function requestApplePayNonce(
 
   let { paymentType } = applePayConfig;
   if (!applePayConfig.paymentType) {
-    paymentType = PaymentTypeFinal;
+    paymentType = PaymentType.PaymentTypeFinal;
   } else {
     Utilities.verifyIntegerType(applePayConfig.paymentType, 'applePayConfig.paymentType should be a valid integer');
   }
@@ -81,23 +88,18 @@ async function requestApplePayNonce(
   } catch (ex) {
     throw Utilities.createInAppPayementsError(ex);
   }
-}
+};
 
-async function completeApplePayAuthorization(isSuccess, errorMessage = '') {
+const completeApplePayAuthorization = async (isSuccess:boolean, errorMessage = '') => {
   Utilities.verifyBooleanType(isSuccess, 'isSuccess should be a valid boolean');
   Utilities.verifyStringType(errorMessage, 'errorMessage should be a valid string');
 
   await RNSQIPApplePay.completeApplePayAuthorization(isSuccess, errorMessage);
-}
-
-const PaymentTypePending = 1;
-const PaymentTypeFinal = 2;
+};
 
 export default {
   initializeApplePay,
   canUseApplePay,
   requestApplePayNonce,
   completeApplePayAuthorization,
-  PaymentTypePending,
-  PaymentTypeFinal,
 };

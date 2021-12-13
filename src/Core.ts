@@ -18,7 +18,7 @@ import Utilities from './Utilities';
 
 const { RNSquareInAppPayments } = NativeModules;
 
-async function setSquareApplicationId(applicationId) {
+async function setSquareApplicationId(applicationId:string) {
   Utilities.verifyStringType(applicationId, 'applicationId should be a valid string');
 
   await RNSquareInAppPayments.setApplicationId(applicationId);

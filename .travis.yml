@@ -23,9 +23,12 @@ matrix:
       - tools
       - platform-tools
       - tools
-      - build-tools-28.0.3
-      - android-28
+      - build-tools-30.0.2
+      - android-30
       - extra-google-google_play_services
+    before_install:
+    - yes | sdkmanager "platforms;android-30"
+    - yes | sdkmanager "build-tools;30.0.2"
     install:
     - nvm install 14
     - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -43,6 +46,7 @@ matrix:
       directories:
       - "$HOME/.yarn-cache"
     before_install:
+    - gem install cocoapods
     - nvm install 14
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$PATH"
