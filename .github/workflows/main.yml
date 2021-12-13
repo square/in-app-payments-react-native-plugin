@@ -33,6 +33,7 @@ jobs:
           cd react-native-in-app-payments-quickstart
           yarn
       - name: Build Android Release
+        uses: actions/checkout@v2  
         run: |
           cd android && ./gradlew clean build
  
