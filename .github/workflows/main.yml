@@ -15,18 +15,18 @@ jobs:
     needs: install-and-test
     runs-on: ubuntu-latest
     steps:      
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-                
+      # - name: Cache Gradle Wrapper
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.gradle/wrapper
+      #     key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      # - name: Cache Gradle Dependencies
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.gradle/caches
+      #     key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gradle-caches-                
       - name: Install npm dependencies  
         run: |
           cd react-native-in-app-payments-quickstart && yarn
