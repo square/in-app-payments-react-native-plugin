@@ -50,6 +50,7 @@ jobs:
           cd ios && pod install
       - name: Build iOS (debug)
         run: |
+          cd react-native-in-app-payments-quickstart/ios
           xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -scheme RNInAppPaymentsQuickstart archive -archivePath RNInAppPaymentsQuickstart.xcarchive -allowProvisioningUpdates
           xcodebuild -exportArchive -archivePath ./RNInAppPaymentsQuickstart.xcarchive -exportPath . -exportOptionsPlist RNInAppPaymentsQuickstart/Info.plist
           mv RNInAppPaymentsQuickstart.ipa ../RNInAppPaymentsQuickstart.ipa
