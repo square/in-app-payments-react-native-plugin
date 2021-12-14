@@ -50,6 +50,6 @@ jobs:
           cd ios && pod install
       - name: Build iOS (debug)
         run: |
-          xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -configuration Debug
-          -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone
+          xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -scheme RNInAppPaymentsQuickstart -configuration Debug
+           -destination "platform=iOS Simulator,OS=12.2,name=iPhone
           X" -derivedDataPath build/RNInAppPaymentsQuickstart   
