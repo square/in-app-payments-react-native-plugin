@@ -51,5 +51,6 @@ jobs:
       - name: Build iOS (debug)
         run: |
           cd react-native-in-app-payments-quickstart/ios
-          xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -scheme RNInAppPaymentsQuickstart -destination "platform=iOS Simulator,OS=12.2,name=iPhone
-          X" -derivedDataPath build/RNInAppPaymentsQuickstart
+          xcodebuild -workspace RNInAppPaymentsQuickstart.xcworkspace -scheme RNInAppPaymentsQuickstart 
+          -destination "platform:iOS Simulator, id:E4F61969-7EA1-4DC4-9E58-3EFBCA427DA3, OS:15.0, name:iPhone 12" 
+          -derivedDataPath build/RNInAppPaymentsQuickstart
