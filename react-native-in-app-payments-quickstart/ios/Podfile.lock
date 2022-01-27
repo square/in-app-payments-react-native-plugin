@@ -269,12 +269,12 @@ PODS:
     - React-perflogger (= 0.64.1)
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNSquareInAppPayments (1.5.4):
+  - RNSquareInAppPayments (1.5.5):
     - React
-    - SquareBuyerVerificationSDK (= 1.5.4)
-    - SquareInAppPaymentsSDK (= 1.5.4)
-  - SquareBuyerVerificationSDK (1.5.4)
-  - SquareInAppPaymentsSDK (1.5.4)
+    - SquareBuyerVerificationSDK (= 1.5.5)
+    - SquareInAppPaymentsSDK (= 1.5.5)
+  - SquareBuyerVerificationSDK (1.5.5)
+  - SquareInAppPaymentsSDK (1.5.5)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -383,7 +383,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 7b423f9e248eae65987838148c36eec1dbfe0b53
-  FBReactNativeSpec: 0f238fb4481977d42fa3f4aac6da428942adf8fc
+  FBReactNativeSpec: 397badf255d9e64ac3c2e1b231ccfbd55b9ce68a
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: ec2ebc96b7bfba3ca5c32740f5a0c6a014a274d2
@@ -409,9 +409,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: ff951a0c241bfaefc4940a3f1f1a229e7cb32fa6
   ReactCommon: bedc99ed4dae329c4fcf128d0c31b9115e5365ca
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNSquareInAppPayments: 89ab00a6ea124a521b9e02d997c367658011ff47
-  SquareBuyerVerificationSDK: 240c715886651e5d70b7a57c4ebcdc54728c308a
-  SquareInAppPaymentsSDK: 8788103000a78b2f69babe9bbc4455a3da87a443
+  RNSquareInAppPayments: d1246e28d586b7188ff17aae7fdd7965c9862f1a
+  SquareBuyerVerificationSDK: 80f67c5409d779abce187818ce560234e719706d
+  SquareInAppPaymentsSDK: 06d1eae6f2765e76ba4c3b3ff90ef18aaadf361a
   Yoga: a7de31c64fe738607e7a3803e3f591a4b1df7393
 
 PODFILE CHECKSUM: adb9e3fbd435b6301ee9085bc3371b858a0f9b58
