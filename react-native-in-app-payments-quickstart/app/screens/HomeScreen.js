@@ -315,7 +315,7 @@ export default class HomeScreen extends Component {
   }
 
   async onBuyerVerificationSuccess(buyerVerificationDetails) {
-    if (this.chargeServerHostIsSet()) {
+    if (this.chargeServerHostIsSet() && buyerVerificationDetails.nonce !== 'ccof:customer-card-id-requires-verification') {
       try {
         await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
         showAlert('Your order was successful',

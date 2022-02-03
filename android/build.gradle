@@ -12,7 +12,7 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
-def MIN_IAP_SDK_VERSION = '1.5.4'
+def MIN_IAP_SDK_VERSION = '1.5.5'
 
 android {
     compileSdkVersion 29
