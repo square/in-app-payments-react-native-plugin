@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -17,38 +17,20 @@ import React from 'react';
 import {
   Text,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-GreenButton.propTypes = {
-  onPress: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
+OrderInformationTitleView.propTypes = {
+  title: PropTypes.string.isRequired,
 };
 
-export default function GreenButton({ onPress, text }) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={styles.button}
-    >
-      <Text style={styles.buttonText}>{text}</Text>
-    </TouchableOpacity>
-  );
+export default function OrderInformationTitleView({ title }: { title: any }) {
+  return (<Text style={styles.title}>{title}</Text>);
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#24988D',
-    borderRadius: 32,
-    justifyContent: 'center',
-    marginLeft: '3%',
-    minHeight: 50,
-    width: '30%',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
+  title: {
+    color: '#24988D',
+    fontSize: 16,
   },
 });

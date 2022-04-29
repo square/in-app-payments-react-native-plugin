@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,44 +15,42 @@
 */
 import React from 'react';
 import {
-  Image,
+  View,
   StyleSheet,
-  TouchableOpacity,
-  Platform,
+  Text,
+  ActivityIndicator,
 } from 'react-native';
-import PropTypes from 'prop-types';
 
-const googlePayLogo = require('../images/applePayLogo.png');
-const applePayLogo = require('../images/googlePayLogo.png');
-
-DigitalWalletButton.propTypes = {
-  onPress: PropTypes.func.isRequired,
-};
-
-export default function DigitalWalletButton({ onPress }) {
-  const imageSource = Platform.OS === 'ios'
-    ? googlePayLogo
-    : applePayLogo;
+export default function PendingModal() {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={styles.button}
-    >
-      <Image
-        source={imageSource}
-      />
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Processing...</Text>
+      </View>
+      <View style={styles.activityContainer}>
+        <ActivityIndicator size="large" color="#24988D" />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
+  activityContainer: {
+    height: '10%',
+    margin: '10%',
+  },
+  container: {
+    width: '100%',
+  },
+  title: {
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  titleContainer: {
     alignItems: 'center',
-    backgroundColor: '#000000',
-    borderRadius: 32,
+    flexDirection: 'row',
     justifyContent: 'center',
-    marginLeft: '3%',
-    minHeight: 50,
-    width: '30%',
+    margin: '3%',
   },
 });

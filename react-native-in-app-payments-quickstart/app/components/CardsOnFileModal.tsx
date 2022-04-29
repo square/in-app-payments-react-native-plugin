@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,25 +19,24 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import PropTypes from 'prop-types';
 
 import CardsOnFileTitleView from './CardsOnFileTitleView';
 import CardsOnFileCardView from './CardsOnFileCardView';
 import GreenButton from './GreenButton';
 
-CardsOnFileModal.propTypes = {
-  cardsOnFile: PropTypes.array.isRequired,
-  onSelectCardOnFile: PropTypes.func.isRequired,
-  onCloseCardsOnFileScreen: PropTypes.func.isRequired,
-  onShowCustomerCardEntry: PropTypes.func.isRequired,
+interface Props {
+  onCloseCardsOnFileScreen: any,
+  onShowCustomerCardEntry: any,
+  onSelectCardOnFile: any,
+  cardsOnFile: any,
 };
 
-export default function CardsOnFileModal({
-  cardsOnFile,
-  onCloseCardsOnFileScreen,
-  onShowCustomerCardEntry,
-  onSelectCardOnFile,
-}) {
+const CardsOnFileModal: React.FC<Props> = (
+  { onCloseCardsOnFileScreen,
+    onShowCustomerCardEntry,
+    onSelectCardOnFile,
+    cardsOnFile }
+) => {
   return (
     <View style={styles.container}>
       <CardsOnFileTitleView onCloseCardsOnFileScreen={() => onCloseCardsOnFileScreen()} />
@@ -46,15 +45,15 @@ export default function CardsOnFileModal({
           ? (
             <Text style={styles.noCardsText}>
               {'No cards on file found.'
-              + 'Please tap the button to add a card that you can use for future transactions.'}
+                + 'Please tap the button to add a card that you can use for future transactions.'}
             </Text>
-          ) : cardsOnFile.map((cardOnFile) => (
+          ) : cardsOnFile.map((cardOnFile: any) => (
             <React.Fragment key={cardOnFile.id}>
               <View style={styles.row}>
                 <CardsOnFileCardView
                   cardOnFile={cardOnFile}
                   // eslint-disable-next-line react/jsx-no-bind
-                  onSelectCardOnFile={onSelectCardOnFile.bind(this, cardOnFile)}
+                  onSelectCardOnFile={onSelectCardOnFile.bind(cardOnFile)}
                 />
               </View>
               <View style={styles.horizontalLine} />
@@ -70,6 +69,8 @@ export default function CardsOnFileModal({
     </View>
   );
 }
+
+export default CardsOnFileModal;
 
 const styles = StyleSheet.create({
   bodyContent: {

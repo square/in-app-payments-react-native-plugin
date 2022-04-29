@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -13,46 +13,57 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
+/* eslint no-undef: */
 import React from 'react';
 import {
   Text,
   View,
   StyleSheet,
+  TouchableHighlight,
+  Image,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-OrderInformationView.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+const closeButton = require('../images/btnClose.png');
+
+OrderTitleView.propTypes = {
+  onCloseOrderScreen: PropTypes.func.isRequired,
 };
 
-export default function OrderInformationView({ title, description }) {
+export default function OrderTitleView({ onCloseOrderScreen }: { onCloseOrderScreen: any }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <TouchableHighlight
+        style={styles.closeButton}
+        underlayColor="#FFFFFF"
+        onPress={onCloseOrderScreen}
+      >
+        <Image
+          source={closeButton}
+        />
+      </TouchableHighlight>
+      <Text style={styles.title}>Place your order</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  closeButton: {
+    zIndex: 1,
+  },
   container: {
     alignItems: 'center',
-    borderColor: '#000000',
-    borderWidth: 2,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: '10%',
-    marginRight: '10%',
-    width: '80%',
-  },
-  description: {
-    borderColor: '#123456',
-    borderWidth: 2,
-    flex: 1,
+    position: 'relative',
+
   },
   title: {
-    flex: 1,
+    color: '#000000',
     fontSize: 18,
+    fontWeight: 'bold',
+    position: 'absolute',
+    textAlign: 'center',
+    width: '100%',
+    zIndex: 0,
   },
 });

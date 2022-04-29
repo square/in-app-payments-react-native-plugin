@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -81,54 +81,26 @@ const iOSCardEntryTheme = {
 
 let errorMsg = null;
 
-export default class HomeScreen extends Component {
-  constructor() {
-    super();
-    this.state = {
-      showingBottomSheet: false,
-      showingCardsOnFileScreen: false,
-      showingPendingScreen: false,
-      showingCardEntry: false,
-      showingGiftCardEntry: false,
-      showingCustomerCardEntry: false,
-      showingDigitalWallet: false,
-      canUseDigitalWallet: false,
-      showingBuyerVerification: false,
-      applePayState: applePayStatus.none,
-      applePayError: null,
-      cardsOnFile: [],
-    };
-    this.onStartCardEntry = this.startCardEntry.bind(this);
-    this.onStartGiftCardEntry = this.startGiftCardEntry.bind(this);
-    this.onShowCardEntry = this.onShowCardEntry.bind(this);
-    this.onShowGiftCardEntry = this.onShowGiftCardEntry.bind(this);
-    this.onBuyerVerification = this.onBuyerVerification.bind(this);
-    this.onShowCustomerCardEntry = this.onShowCustomerCardEntry.bind(this);
-    this.onCardNonceRequestSuccess = this.onCardNonceRequestSuccess.bind(this);
-    this.onCustomerCardNonceRequestSuccess = this.onCustomerCardNonceRequestSuccess.bind(this);
-    this.onCardEntryCancel = this.onCardEntryCancel.bind(this);
-    this.onCustomerCardEntryCancel = this.onCustomerCardEntryCancel.bind(this);
-    this.onApplePayRequestNonceSuccess = this.onApplePayRequestNonceSuccess.bind(this);
-    this.onApplePayRequestNonceFailure = this.onApplePayRequestNonceFailure.bind(this);
-    this.onApplePayComplete = this.onApplePayComplete.bind(this);
-    this.onGooglePayRequestNonceSuccess = this.onGooglePayRequestNonceSuccess.bind(this);
-    this.onGooglePayRequestNonceFailure = this.onGooglePayRequestNonceFailure.bind(this);
-    this.onGooglePayCanceled = this.onGooglePayCanceled.bind(this);
-    this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
-    this.startCardEntry = this.startCardEntry.bind(this);
-    this.startGiftCardEntry = this.startGiftCardEntry.bind(this);
-    this.showOrderScreen = this.showOrderScreen.bind(this);
-    this.showPendingScreen = this.showPendingScreen.bind(this);
-    this.closeOrderScreen = this.closeOrderScreen.bind(this);
-    this.showCardsOnFileScreen = this.showCardsOnFileScreen.bind(this);
-    this.closeCardsOnFileScreen = this.closeCardsOnFileScreen.bind(this);
-    this.onSelectCardOnFile = this.onSelectCardOnFile.bind(this);
-    this.startCardEntryWithBuyerVerification = this.startCardEntryWithBuyerVerification.bind(this);
-    this.onBuyerVerificationSuccess = this.onBuyerVerificationSuccess.bind(this);
-    this.onBuyerVerificationFailure = this.onBuyerVerificationFailure.bind(this);
-  }
+export default function HomeScreen() {
 
-  async componentDidMount() {
+  const [showingBottomSheet, setshowingBottomSheet] = useState(false)
+  const [showingCardsOnFileScreen, setshowingCardsOnFileScreen] = useState(false)
+  const [showingPendingScreen, setshowingPendingScreen] = useState(false)
+  const [showingCardEntry, setshowingCardEntry] = useState(false)
+  const [showingGiftCardEntry, setshowingGiftCardEntry] = useState(false)
+  const [showingCustomerCardEntry, setshowingCustomerCardEntry] = useState(false)
+  const [showingDigitalWallet, setshowingDigitalWallet] = useState(false)
+  const [canUseDigitalWallet, setcanUseDigitalWallet] = useState(false)
+  const [showingBuyerVerification, setshowingBuyerVerification] = useState(false)
+  const [applePayState, setapplePayState] = useState(applePayStatus.none)
+  const [applePayError, setapplePayError] = useState(null)
+  const [cardsOnFile, setcardsOnFile] = useState<any>([])
+
+  useEffect(() => {
+    initState()
+  })
+
+  const initState = async () => {
     await SQIPCore.setSquareApplicationId(SQUARE_APP_ID);
     let digitalWalletEnabled = false;
     if (Platform.OS === 'ios') {
@@ -148,58 +120,56 @@ export default class HomeScreen extends Component {
         console.log(ex);
       }
     }
-
-    this.setState({
-      canUseDigitalWallet: digitalWalletEnabled,
-    });
+    setcanUseDigitalWallet(digitalWalletEnabled)
   }
 
-  async onApplePayRequestNonceSuccess(cardDetails) {
-    if (this.chargeServerHostIsSet()) {
+
+  const onApplePayRequestNonceSuccess = async (cardDetails: any) => {
+    if (chargeServerHostIsSet()) {
       try {
         await chargeCardNonce(cardDetails.nonce);
         await SQIPApplePay.completeApplePayAuthorization(true);
-        this.setState({ applePayState: applePayStatus.succeeded });
-      } catch (error) {
+        setapplePayState(applePayStatus.succeeded)
+      } catch (error: any) {
         await SQIPApplePay.completeApplePayAuthorization(false, error.message);
-        this.setState({ applePayError: error.message });
+        setapplePayError(error.message)
       }
     } else {
       await SQIPApplePay.completeApplePayAuthorization(true);
-      this.setState({ applePayState: applePayStatus.nonceNotCharged });
+      setapplePayState(applePayStatus.nonceNotCharged)
       printCurlCommand(cardDetails.nonce, SQUARE_APP_ID);
     }
   }
 
-  async onApplePayRequestNonceFailure(errorInfo) {
+  const onApplePayRequestNonceFailure = async (errorInfo: any) => {
     errorMsg = errorInfo.message;
     await SQIPApplePay.completeApplePayAuthorization(false, errorInfo.message);
     showAlert('Error processing Apple Pay payment', errorMsg);
   }
 
-  async onApplePayComplete() {
-    if (this.state.applePayState === applePayStatus.succeeded) {
+  const onApplePayComplete = async () => {
+    if (applePayState === applePayStatus.succeeded) {
       showAlert('Your order was successful',
         'Go to your Square dashboard to see this order reflected in the sales tab.');
-    } else if (this.state.applePayState === applePayStatus.nonceNotCharged) {
+    } else if (applePayState === applePayStatus.nonceNotCharged) {
       showAlert(
         'Nonce generated but not charged',
         'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
       );
-    } else if (this.state.applePayError != null) {
-      showAlert('Error processing Apple Pay payment', this.state.applePayError);
+    } else if (applePayError != null) {
+      showAlert('Error processing Apple Pay payment', applePayError);
     } else { // the state is none, so they canceled
-      this.showOrderScreen();
+      showOrderScreen();
     }
   }
 
-  async onGooglePayRequestNonceSuccess(cardDetails) {
-    if (this.chargeServerHostIsSet()) {
+  const onGooglePayRequestNonceSuccess = async (cardDetails: any) => {
+    if (chargeServerHostIsSet()) {
       try {
         await chargeCardNonce(cardDetails.nonce);
         showAlert('Your order was successful',
           'Go to your Square dashbord to see this order reflected in the sales tab.');
-      } catch (error) {
+      } catch (error: any) {
         showAlert('Error processing GooglePay payment', error.message);
       }
     } else {
@@ -211,23 +181,23 @@ export default class HomeScreen extends Component {
     }
   }
 
-  onGooglePayRequestNonceFailure(errorInfo) {
+  const onGooglePayRequestNonceFailure = (errorInfo: any) => {
     showAlert('Could not create GooglePay nonce', errorInfo);
   }
 
-  onGooglePayCanceled() {
-    this.showOrderScreen();
+  const onGooglePayCanceled = () => {
+    showOrderScreen();
   }
 
-  async onCardNonceRequestSuccess(cardDetails) {
-    if (this.chargeServerHostIsSet()) {
+  const onCardNonceRequestSuccess = async (cardDetails: any) => {
+    if (chargeServerHostIsSet()) {
       try {
         await chargeCardNonce(cardDetails.nonce);
         SQIPCardEntry.completeCardEntry(() => {
           showAlert('Your order was successful',
             'Go to your Square dashbord to see this order reflected in the sales tab.');
         });
-      } catch (error) {
+      } catch (error: any) {
         SQIPCardEntry.showCardNonceProcessingError(error.message);
       }
     } else {
@@ -241,34 +211,35 @@ export default class HomeScreen extends Component {
     }
   }
 
-  async onSelectCardOnFile(cardOnFile) {
+  const onSelectCardOnFile = async (cardOnFile: any) => {
     try {
-      this.showPendingScreen();
+      showPendingScreen();
       await chargeCustomerCard(CUSTOMER_ID, cardOnFile.id);
       showAlert('Your order was successful',
         'Go to your Square dashbord to see this order reflected in the sales tab.',
-        this.showOrderScreen);
-    } catch (error) {
+        showOrderScreen);
+    } catch (error: any) {
       showAlert(
         'An error occured processing the card on file',
         error.message,
-        this.showCardsOnFileScreen,
+        showCardsOnFileScreen,
       );
     }
   }
 
-  async onCustomerCardNonceRequestSuccess(cardDetails) {
-    if (this.chargeServerHostIsSet()) {
+  const onCustomerCardNonceRequestSuccess = async (cardDetails: any) => {
+    if (chargeServerHostIsSet()) {
       try {
         // create the customer card record and add it to the state
         const customerCard = await createCustomerCard(CUSTOMER_ID, cardDetails.nonce);
         // eslint-disable-next-line react/no-access-state-in-setstate
-        this.setState({ cardsOnFile: [...this.state.cardsOnFile, customerCard] });
+        var array = [...cardsOnFile, customerCard]
+        setcardsOnFile(array)
         SQIPCardEntry.completeCardEntry(() => {
           showAlert('Your card was saved and is ready to use.');
         });
-        this.showCardsOnFileScreen();
-      } catch (error) {
+        showCardsOnFileScreen();
+      } catch (error: any) {
         SQIPCardEntry.showCardNonceProcessingError(error.message);
       }
     } else {
@@ -281,46 +252,46 @@ export default class HomeScreen extends Component {
     }
   }
 
-  onCardEntryCancel() {
-    this.showOrderScreen();
+  const onCardEntryCancel = () => {
+    showOrderScreen();
   }
 
-  onCustomerCardEntryCancel() {
-    this.showCardsOnFileScreen();
+  const onCustomerCardEntryCancel = () => {
+    showCardsOnFileScreen();
   }
 
-  onShowDigitalWallet() {
-    this.closeOrderScreen();
-    this.setState({ showingDigitalWallet: true });
+  const onShowDigitalWallet = () => {
+    closeOrderScreen();
+    setshowingDigitalWallet(true)
   }
 
-  onShowCardEntry() {
-    this.closeOrderScreen();
-    this.setState({ showingCardEntry: true });
+  const onShowCardEntry = () => {
+    closeOrderScreen();
+    setshowingCardEntry(true)
   }
 
-  onShowGiftCardEntry() {
-    this.closeOrderScreen();
-    this.setState({ showingGiftCardEntry: true });
+  const onShowGiftCardEntry = () => {
+    closeOrderScreen();
+    setshowingGiftCardEntry(true)
   }
 
-  onShowCustomerCardEntry() {
-    this.closeOrderScreen();
-    this.setState({ showingCustomerCardEntry: true });
+  const onShowCustomerCardEntry = () => {
+    closeOrderScreen();
+    setshowingCustomerCardEntry(true)
   }
 
-  onBuyerVerification() {
-    this.closeOrderScreen();
-    this.setState({ showingBuyerVerification: true });
+  const onBuyerVerification = () => {
+    closeOrderScreen();
+    setshowingBuyerVerification(true)
   }
 
-  async onBuyerVerificationSuccess(buyerVerificationDetails) {
-    if (this.chargeServerHostIsSet()) {
+  const onBuyerVerificationSuccess = async (buyerVerificationDetails: any) => {
+    if (chargeServerHostIsSet() && buyerVerificationDetails.nonce !== 'ccof:customer-card-id-requires-verification') {
       try {
         await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
         showAlert('Your order was successful',
           'Go to your Square dashbord to see this order reflected in the sales tab.');
-      } catch (error) {
+      } catch (error: any) {
         showAlert('Error processing card payment', error.message);
       }
     } else {
@@ -336,92 +307,84 @@ export default class HomeScreen extends Component {
     }
   }
 
-  async onBuyerVerificationFailure(errorInfo) {
+  const onBuyerVerificationFailure = (errorInfo: any) => {
     showAlert('Error verifying buyer', errorInfo.message);
   }
 
-  showOrderScreen() {
-    this.setState({
-      showingBottomSheet: true,
-      showingCardsOnFileScreen: false,
-      showingPendingScreen: false,
-    });
+  const showOrderScreen = () => {
+    setshowingBottomSheet(true)
+    setshowingCardsOnFileScreen(false)
+    setshowingPendingScreen(false)
   }
 
-  closeOrderScreen() {
-    this.setState({ showingBottomSheet: false });
+  const closeOrderScreen = () => {
+    setshowingBottomSheet(false)
   }
 
-  showCardsOnFileScreen() {
-    this.setState({
-      showingBottomSheet: true,
-      showingCardsOnFileScreen: true,
-      showingPendingScreen: false,
-    });
+  const showCardsOnFileScreen = () => {
+    setshowingBottomSheet(true)
+    setshowingCardsOnFileScreen(true)
+    setshowingPendingScreen(false)
   }
 
-  closeCardsOnFileScreen() {
-    this.setState({
-      showingCardsOnFileScreen: false,
-    });
+  const closeCardsOnFileScreen = () => {
+    setshowingCardsOnFileScreen(false)
   }
 
-  showPendingScreen() {
-    this.setState({
-      showingPendingScreen: true,
-      showingCardsOnFileScreen: false,
-    });
+  const showPendingScreen = () => {
+    setshowingPendingScreen(true)
+    setshowingCardsOnFileScreen(true)
   }
 
-  applicationIdIsSet() { return SQUARE_APP_ID !== 'REPLACE_ME'; }
+  const applicationIdIsSet = async () => { return SQUARE_APP_ID; }
 
-  chargeServerHostIsSet() { return CHARGE_SERVER_HOST !== 'REPLACE_ME'; }
+  const chargeServerHostIsSet = () => { return CHARGE_SERVER_HOST; }
 
-  googlePayLocationIsSet() { return GOOGLE_PAY_LOCATION_ID !== 'REPLACE_ME'; }
+  const googlePayLocationIsSet = () => { return GOOGLE_PAY_LOCATION_ID !== 'REPLACE_ME'; }
 
-  applePayMerchantIsSet() { return APPLE_PAY_MERCHANT_ID !== 'REPLACE_ME'; }
+  const applePayMerchantIsSet = () => { return APPLE_PAY_MERCHANT_ID !== 'REPLACE_ME'; }
 
-  customerIdIsSet() { return CUSTOMER_ID !== 'REPLACE_ME'; }
+  const customerIdIsSet = () => { return CUSTOMER_ID !== 'REPLACE_ME'; }
 
-  checkStateAndPerform() {
-    if (this.state.showingCardEntry) {
+  const checkStateAndPerform = async () => {
+    if (showingCardEntry) {
       // if application id is not set, we will let you know where to set it,
       // but the card entry will still open due to allowing visuals to be shown
-      if (!this.applicationIdIsSet()) {
+      if (!applicationIdIsSet()) {
         showAlert('Missing Square Application ID',
           'To request a nonce, replace SQUARE_APP_ID in Constants.js with an Square Application ID.',
-          this.startCardEntry);
+          startCardEntry);
       } else {
         // call this.startCardEntry() to start Card Entry without buyer verification (SCA)
-        this.startCardEntry();
+        startCardEntry();
         // OR call this.startCardEntryWithBuyerVerification() to
         // start Card Entry with buyer verification (SCA)
         // NOTE this requires _squareLocationSet to be set
         // this.startCardEntryWithBuyerVerification();
       }
-    } else if (this.state.showingCustomerCardEntry) {
+    } else if (showingCustomerCardEntry) {
       // if application id is not set, we will let you know where to set it,
       // but the card entry will still open due to allowing visuals to be shown
-      if (!this.applicationIdIsSet()) {
+      if (!applicationIdIsSet()) {
         showAlert('Missing Square Application ID',
           'To request a nonce, replace SQUARE_APP_ID in Constants.js with an Square Application ID.',
-          this.startCustomerCardEntry);
+          startCustomerCardEntry);
       } else {
-        this.startCustomerCardEntry();
+        startCustomerCardEntry();
       }
-    } else if (this.state.showingGiftCardEntry) {
-      this.startGiftCardEntry();
-    } else if (this.state.showingDigitalWallet) {
-      this.startDigitalWallet();
-      this.setState({ showingDigitalWallet: false });
-    } else if (this.state.showingBuyerVerification) {
-      this.startBuyerVerificationFlow();
+    } else if (showingGiftCardEntry) {
+      startGiftCardEntry();
+    } else if (showingDigitalWallet) {
+      startDigitalWallet();
+      setshowingDigitalWallet(false)
+    } else if (showingBuyerVerification) {
+      startBuyerVerificationFlow();
     }
   }
 
-  async startBuyerVerificationFlow() {
+  const startBuyerVerificationFlow = async () => {
     console.log('STARTING Buyer Verification');
-    this.setState({ showingBuyerVerification: false });
+    setshowingBuyerVerification(false);
     const paymentSourceId = 'ccof:customer-card-id-requires-verification';
     const cardEntryConfig = {
       collectPostalCode: true,
@@ -441,15 +404,15 @@ export default class HomeScreen extends Component {
     await SQIPCardEntry.startBuyerVerificationFlow(
       paymentSourceId,
       cardEntryConfig,
-      this.onBuyerVerificationSuccess,
-      this.onBuyerVerificationFailure,
-      this.onCardEntryCancel,
+      onBuyerVerificationSuccess,
+      onBuyerVerificationFailure,
+      onCardEntryCancel,
     );
   }
 
-  async startCardEntry() {
+  const startCardEntry = async () => {
     console.log('STARTING card entry');
-    this.setState({ showingCardEntry: false });
+    setshowingCardEntry(false)
     const cardEntryConfig = {
       collectPostalCode: true,
     };
@@ -461,14 +424,14 @@ export default class HomeScreen extends Component {
     }
     await SQIPCardEntry.startCardEntryFlow(
       cardEntryConfig,
-      this.onCardNonceRequestSuccess,
-      this.onCardEntryCancel,
+      onCardNonceRequestSuccess,
+      onCardEntryCancel,
     );
   }
 
-  async startGiftCardEntry() {
+  const startGiftCardEntry = async () => {
     console.log('STARTING gift card entry');
-    this.setState({ showingGiftCardEntry: false });
+    setshowingGiftCardEntry(false)
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
         ...iOSCardEntryTheme,
@@ -476,13 +439,13 @@ export default class HomeScreen extends Component {
       });
     }
     await SQIPCardEntry.startGiftCardEntryFlow(
-      this.onCardNonceRequestSuccess,
-      this.onCardEntryCancel,
+      onCardNonceRequestSuccess,
+      onCardEntryCancel,
     );
   }
 
-  async startCustomerCardEntry() {
-    this.setState({ showingCustomerCardEntry: false });
+  const startCustomerCardEntry = async () => {
+    setshowingCustomerCardEntry(false)
     const cardEntryConfig = {
       collectPostalCode: true,
     };
@@ -494,39 +457,39 @@ export default class HomeScreen extends Component {
     }
     await SQIPCardEntry.startCardEntryFlow(
       cardEntryConfig,
-      this.onCustomerCardNonceRequestSuccess,
-      this.onCustomerCardEntryCancel,
+      onCustomerCardNonceRequestSuccess,
+      onCustomerCardEntryCancel,
     );
   }
 
-  async startCardEntryWithBuyerVerification() {
-    this.setState({ showingCardEntry: false });
-    const cardEntryConfig = {
-      collectPostalCode: true,
-      squareLocationId: SQUARE_LOCATION_ID,
-      buyerAction: 'Charge',
-      amount: 100,
-      currencyCode: 'USD',
-      givenName: 'John',
-      familyName: 'Doe',
-      addressLines: ['London Eye', 'Riverside Walk'],
-      city: 'London',
-      countryCode: 'GB',
-      email: 'johndoe@example.com',
-      phone: '8001234567',
-      postalCode: 'SE1 7',
-    };
-    await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
-      cardEntryConfig,
-      this.onBuyerVerificationSuccess,
-      this.onBuyerVerificationFailure,
-      this.onCardEntryCancel,
-    );
-  }
+  // const startCardEntryWithBuyerVerification = async () => {
+  //   setshowingCardEntry(false)
+  //   const cardEntryConfig = {
+  //     collectPostalCode: true,
+  //     squareLocationId: SQUARE_LOCATION_ID,
+  //     buyerAction: 'Charge',
+  //     amount: 100,
+  //     currencyCode: 'USD',
+  //     givenName: 'John',
+  //     familyName: 'Doe',
+  //     addressLines: ['London Eye', 'Riverside Walk'],
+  //     city: 'London',
+  //     countryCode: 'GB',
+  //     email: 'johndoe@example.com',
+  //     phone: '8001234567',
+  //     postalCode: 'SE1 7',
+  //   };
+  //   await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
+  //     cardEntryConfig,
+  //     onBuyerVerificationSuccess,
+  //     onBuyerVerificationFailure,
+  //     onCardEntryCancel,
+  //   );
+  // }
 
-  async startDigitalWallet() {
-    if (Platform.OS === 'ios' && this.state.canUseDigitalWallet) {
-      if (!this.applePayMerchantIsSet()) {
+  const startDigitalWallet = async () => {
+    if (Platform.OS === 'ios' && canUseDigitalWallet) {
+      if (!applePayMerchantIsSet()) {
         showAlert('Missing Apple Merchant ID',
           'To request an Apple Pay nonce, replace APPLE_PAY_MERCHANT_ID'
           + ' in Constants.js with an Apple Merchant ID.');
@@ -539,13 +502,13 @@ export default class HomeScreen extends Component {
             currencyCode: 'USD',
             paymentType: SQIPApplePay.PaymentTypeFinal,
           },
-          this.onApplePayRequestNonceSuccess,
-          this.onApplePayRequestNonceFailure,
-          this.onApplePayComplete,
+          onApplePayRequestNonceSuccess,
+          onApplePayRequestNonceFailure,
+          onApplePayComplete,
         );
       }
     } else if (Platform.OS === 'android') {
-      if (!this.googlePayLocationIsSet()) {
+      if (!googlePayLocationIsSet()) {
         showAlert('Missing GooglePay Location ID',
           'To request a GooglePay nonce, replace GOOGLE_PAY_LOCATION_ID'
           + ' in Constants.js with an Square Location ID.');
@@ -556,67 +519,65 @@ export default class HomeScreen extends Component {
             currencyCode: 'USD',
             priceStatus: SQIPGooglePay.TotalPriceStatusFinal,
           },
-          this.onGooglePayRequestNonceSuccess,
-          this.onGooglePayRequestNonceFailure,
-          this.onGooglePayCanceled,
+          onGooglePayRequestNonceSuccess,
+          onGooglePayRequestNonceFailure,
+          onGooglePayCanceled,
         );
       }
     }
   }
 
-  renderModal() {
-    if (this.state.showingPendingScreen) {
+  const renderModal = () => {
+    if (showingPendingScreen) {
       return <PendingModal />;
-    // eslint-disable-next-line no-else-return
-    } else if (this.state.showingCardsOnFileScreen) {
+      // eslint-disable-next-line no-else-return
+    } else if (showingCardsOnFileScreen) {
       return (
         <CardsOnFileModal
-          onCloseCardsOnFileScreen={this.closeCardsOnFileScreen}
-          onShowCustomerCardEntry={this.onShowCustomerCardEntry}
-          onSelectCardOnFile={this.onSelectCardOnFile}
-          cardsOnFile={this.state.cardsOnFile}
+          onCloseCardsOnFileScreen={closeCardsOnFileScreen}
+          onShowCustomerCardEntry={onShowCustomerCardEntry}
+          onSelectCardOnFile={onSelectCardOnFile}
+          cardsOnFile={cardsOnFile}
         />
       );
     } else {
       return (
         <OrderModal
-          onCloseOrderScreen={this.closeOrderScreen}
-          onPayWithGiftCard={this.onShowGiftCardEntry}
-          onPayWithCard={this.customerIdIsSet() ? this.showCardsOnFileScreen : this.onShowCardEntry}
-          onShowDigitalWallet={this.onShowDigitalWallet}
-          onBuyerVerification={this.onBuyerVerification}
+          onCloseOrderScreen={closeOrderScreen}
+          onPayWithGiftCard={onShowGiftCardEntry}
+          onPayWithCard={customerIdIsSet() ? showCardsOnFileScreen : onShowCardEntry}
+          onShowDigitalWallet={onShowDigitalWallet}
+          onBuyerVerification={onBuyerVerification}
         />
       );
     }
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Image source={cookieImage} />
-        <Text style={styles.title}>Super Cookie</Text>
-        <Text style={styles.description}>
-          Instantly gain special powers when ordering a super cookie
-        </Text>
-        <GreenButton
-          onPress={this.showOrderScreen}
-          text="Buy"
-        />
-        <Modal
-          isVisible={this.state.showingBottomSheet}
-          style={styles.bottomModal}
-          onBackdropPress={this.closeOrderScreen}
-          // set timeout due to iOS needing to make sure modal is closed
-          // before presenting another view
-          onModalHide={() => setTimeout(() => this.checkStateAndPerform(), 200)}
-        >
-          <View style={styles.modalContent}>
-            {this.renderModal()}
-          </View>
-        </Modal>
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <Image source={cookieImage} />
+      <Text style={styles.title}>Super Cookie</Text>
+      <Text style={styles.description}>
+        Instantly gain special powers when ordering a super cookie
+      </Text>
+      <GreenButton
+        onPress={showOrderScreen}
+        text="Buy"
+      />
+      <Modal
+        isVisible={showingBottomSheet}
+        style={styles.bottomModal}
+        onBackdropPress={closeOrderScreen}
+        // set timeout due to iOS needing to make sure modal is closed
+        // before presenting another view
+        onModalHide={() => setTimeout(() => checkStateAndPerform(), 200)}
+      >
+        <View style={styles.modalContent}>
+          {renderModal()}
+        </View>
+      </Modal>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

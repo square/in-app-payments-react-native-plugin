@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ export function uuidv4() {
   });
 }
 
-export function printCurlCommand(nonce, appId, verificationToken) {
+export function printCurlCommand(nonce: any, appId: any, verificationToken = undefined) {
   // set host url based on application id
   //   production: https://connect.squareup.com
   //   sandbox: https://connect.squareupsandbox.com
@@ -62,16 +62,16 @@ export function printCurlCommand(nonce, appId, verificationToken) {
   }
 }
 
-export async function showAlert(title, message, onPress = null) {
-  await Alert.alert(
+export async function showAlert(title: any, message = "", onPress = () => { }) {
+  Alert.alert(
     title,
     message,
     [
       {
         text: 'OK',
-        onPress: onPress == null ? null : () => { onPress(); },
+        onPress: onPress,
       },
     ],
-    { cancelable: false },
+    { cancelable: false }
   );
 }

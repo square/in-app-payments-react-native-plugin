@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -28,23 +28,23 @@ import AddressView from './AddressView';
 import GreenButton from './GreenButton';
 import DigitalWalletButton from './DigitalWalletButton';
 
-OrderModal.propTypes = {
-  onCloseOrderScreen: PropTypes.func.isRequired,
-  onPayWithGiftCard: PropTypes.func.isRequired,
-  onPayWithCard: PropTypes.func.isRequired,
-  onShowDigitalWallet: PropTypes.func.isRequired,
-  onBuyerVerification: PropTypes.func.isRequired,
+interface OrderModal {
+  onCloseOrderScreen: any,
+  onPayWithGiftCard: any,
+  onPayWithCard: any,
+  onShowDigitalWallet: any,
+  onBuyerVerification: any,
 };
 
-export default function OrderModal({
+const OrderModal: React.FC<OrderModal> = ({
   onCloseOrderScreen,
   onPayWithGiftCard,
   onPayWithCard,
   onShowDigitalWallet,
-  onBuyerVerification,
-}) {
+  onBuyerVerification },
+) => {
   return (
-    <View style={styles.container}>
+    <View>
       <OrderTitleView onCloseOrderScreen={() => onCloseOrderScreen()} />
       <View style={styles.bodyContent}>
         <View style={styles.row}>
@@ -93,6 +93,9 @@ export default function OrderModal({
     </View>
   );
 }
+
+
+export default OrderModal;
 
 const styles = StyleSheet.create({
   bodyContent: {

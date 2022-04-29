@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ CardsOnFileTitleView.propTypes = {
   onCloseCardsOnFileScreen: PropTypes.func.isRequired,
 };
 
-export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }) {
+export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }: { onCloseCardsOnFileScreen: any }) {
   return (
     <View style={styles.container}>
       <TouchableHighlight
@@ -39,7 +39,6 @@ export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }) {
         onPress={onCloseCardsOnFileScreen}
       >
         <Image
-          style={styles.button}
           source={closeButton}
         />
       </TouchableHighlight>

@@ -1,6 +1,5 @@
-/* eslint-disable camelcase */
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -14,29 +13,36 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { CHARGE_CUSTOMER_CARD_SERVER_URL } from '../Constants';
-import ChargeCustomerCardError from '../ChargeCustomerCardError';
+import { CHARGE_SERVER_URL } from '../Constants';
+import ChargeError from '../ChargeError';
 
-export default async function chargeCustomerCard(customer_id, customer_card_id) {
-  const response = await fetch(CHARGE_CUSTOMER_CARD_SERVER_URL, {
+export default async function chargeCardNonce(nonce: any, verificationToken = undefined) {
+  let body;
+  if (verificationToken === undefined) {
+    body = JSON.stringify({
+      nonce,
+    });
+  } else {
+    body = JSON.stringify({
+      nonce,
+      verificationToken,
+    });
+  }
+  const response = await fetch(CHARGE_SERVER_URL, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      customer_id,
-      customer_card_id,
-    }),
+    body,
   });
 
   try {
     const responseJson = await response.json();
     if (responseJson.errorMessage != null) {
-      throw new ChargeCustomerCardError(responseJson.errorMessage);
+      throw new ChargeError(responseJson.errorMessage);
     }
-    return responseJson;
-  } catch (error) {
-    throw new ChargeCustomerCardError(error.message);
+  } catch (error: any) {
+    throw new ChargeError(error.message);
   }
 }

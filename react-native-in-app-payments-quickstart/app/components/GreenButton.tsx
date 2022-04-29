@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,42 +15,48 @@
 */
 import React from 'react';
 import {
-  View,
-  StyleSheet,
   Text,
-  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
+import PropTypes from 'prop-types';
 
-export default function PendingModal() {
+interface GreenButton {
+  onPress: any,
+  text: any,
+};
+
+// GreenButton.propTypes = {
+//   onPress: PropTypes.func.isRequired,
+//   text: PropTypes.string.isRequired,
+// };
+
+const GreenButton: React.FC<GreenButton> = (
+  { onPress, text }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Processing...</Text>
-      </View>
-      <View style={styles.activityContainer}>
-        <ActivityIndicator size="large" color="#24988D" />
-      </View>
-    </View>
+    <TouchableOpacity
+      onPress={onPress}
+      style={styles.button}
+    >
+      <Text style={styles.buttonText}>{text}</Text>
+    </TouchableOpacity>
   );
 }
 
+export default GreenButton
+
 const styles = StyleSheet.create({
-  activityContainer: {
-    height: '10%',
-    margin: '10%',
-  },
-  container: {
-    width: '100%',
-  },
-  title: {
-    color: '#000000',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  titleContainer: {
+  button: {
     alignItems: 'center',
-    flexDirection: 'row',
+    backgroundColor: '#24988D',
+    borderRadius: 32,
     justifyContent: 'center',
-    margin: '3%',
+    marginLeft: '3%',
+    minHeight: 50,
+    width: '30%',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
   },
 });

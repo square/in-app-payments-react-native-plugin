@@ -6,8 +6,8 @@
 The In-App Payments plugin for Square [In-App Payments SDK] is a wrapper for the native Android and iOS SDKs and 
 supports the following native In-App Payments SDK versions:
 
-  * iOS: `1.5.4`
-  * Android: `1.5.4`
+  * iOS: `1.5.5`
+  * Android: `1.5.5`
 
 ## Additional documentation
 
@@ -49,7 +49,7 @@ takes the nonce created by the React Native app and uses it to create a payment 
 ## License
 
 ```
-Copyright 2019 Square Inc.
+Copyright 2022 Square Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -29,21 +29,21 @@ CardsOnFileCardView.propTypes = {
   onSelectCardOnFile: PropTypes.func.isRequired,
 };
 
-function showConfirmation(cardOnFile, onConfirm) {
+function showConfirmation(cardOnFile: any, onConfirm: any) {
   Alert.alert('Confirm',
     `Purchase a cookie for $1 using your ${cardOnFile.card_brand} ${cardOnFile.last_4} card`, [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Purchase',
-        onPress: onConfirm,
-      },
-    ]);
+    {
+      text: 'Cancel',
+      style: 'cancel',
+    },
+    {
+      text: 'Purchase',
+      onPress: onConfirm,
+    },
+  ]);
 }
 
-export default function CardsOnFileCardView({ cardOnFile, onSelectCardOnFile }) {
+export default function CardsOnFileCardView({ cardOnFile }: { cardOnFile: any }, { onSelectCardOnFile }: { onSelectCardOnFile: any }) {
   return (
     <>
       <View style={styles.titleColumn}>
