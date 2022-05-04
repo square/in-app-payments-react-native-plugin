@@ -30,13 +30,13 @@ CardsOnFileTitleView.propTypes = {
   onCloseCardsOnFileScreen: PropTypes.func.isRequired,
 };
 
-export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }: { onCloseCardsOnFileScreen: any }) {
+export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }: { onCloseCardsOnFileScreen: () => void }) {
   return (
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.closeButton}
         underlayColor="#FFFFFF"
-        onPress={onCloseCardsOnFileScreen}
+        onPress={() => onCloseCardsOnFileScreen()}
       >
         <Image
           source={closeButton}

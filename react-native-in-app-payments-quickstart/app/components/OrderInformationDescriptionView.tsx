@@ -24,7 +24,7 @@ OrderInformationDescriptionView.propTypes = {
   description: PropTypes.string.isRequired,
 };
 
-export default function OrderInformationDescriptionView({ description }: { description: any }) {
+export default function OrderInformationDescriptionView({ description }: { description: string }) {
   return (<Text style={styles.description}>{description}</Text>);
 }
 

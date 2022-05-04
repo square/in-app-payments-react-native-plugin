@@ -26,7 +26,7 @@ export function uuidv4() {
   });
 }
 
-export function printCurlCommand(nonce: any, appId: any, verificationToken = undefined) {
+export function printCurlCommand(nonce: string, appId: string, verificationToken = undefined) {
   // set host url based on application id
   //   production: https://connect.squareup.com
   //   sandbox: https://connect.squareupsandbox.com
@@ -62,9 +62,9 @@ export function printCurlCommand(nonce: any, appId: any, verificationToken = und
   }
 }
 
-export async function showAlert(title: any, message = "", onPress = () => { }) {
+export async function showAlert(title: string, message = "", onPress = () => { }) {
   Alert.alert(
-    title,
+    title.toString(),
     message,
     [
       {

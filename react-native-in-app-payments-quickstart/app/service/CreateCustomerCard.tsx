@@ -17,7 +17,7 @@
 import { CREATE_CUSTOMER_CARD_SERVER_URL } from '../Constants';
 import CreateCustomerCardError from '../CreateCustomerCardError';
 
-export default async function createCustomerCard(customer_id: any, nonce: any) {
+export default async function createCustomerCard(customer_id: string, nonce: string) {
   const response = await fetch(CREATE_CUSTOMER_CARD_SERVER_URL, {
     method: 'POST',
     headers: {

@@ -16,7 +16,7 @@
 import { CHARGE_SERVER_URL } from '../Constants';
 import ChargeError from '../ChargeError';
 
-export default async function chargeCardNonce(nonce: any, verificationToken = undefined) {
+export default async function chargeCardNonce(nonce: string, verificationToken = undefined) {
   let body;
   if (verificationToken === undefined) {
     body = JSON.stringify({

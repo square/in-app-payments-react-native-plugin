@@ -26,7 +26,7 @@ OrderInformationView.propTypes = {
   description: PropTypes.string.isRequired,
 };
 
-export default function OrderInformationView({ title }: { title: any }, { description }: { description: any }) {
+export default function OrderInformationView({ title }: { title: string }, { description }: { description: string }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>

@@ -29,13 +29,13 @@ DigitalWalletButton.propTypes = {
   onPress: PropTypes.func.isRequired,
 };
 
-export default function DigitalWalletButton({ onPress }: { onPress: any }) {
+export default function DigitalWalletButton({ onPress }: { onPress: () => void }) {
   const imageSource = Platform.OS === 'ios'
     ? googlePayLogo
     : applePayLogo;
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => onPress()}
       style={styles.button}
     >
       <Image

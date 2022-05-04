@@ -29,7 +29,15 @@ CardsOnFileCardView.propTypes = {
   onSelectCardOnFile: PropTypes.func.isRequired,
 };
 
-function showConfirmation(cardOnFile: any, onConfirm: any) {
+interface CardOnFile {
+  card_brand: string;
+  last_4: string;
+  exp_month: string;
+  exp_year: string;
+}
+
+
+function showConfirmation(cardOnFile: CardOnFile, onConfirm: () => void) {
   Alert.alert('Confirm',
     `Purchase a cookie for $1 using your ${cardOnFile.card_brand} ${cardOnFile.last_4} card`, [
     {
@@ -38,12 +46,12 @@ function showConfirmation(cardOnFile: any, onConfirm: any) {
     },
     {
       text: 'Purchase',
-      onPress: onConfirm,
+      onPress: () => onConfirm(),
     },
   ]);
 }
 
-export default function CardsOnFileCardView({ cardOnFile }: { cardOnFile: any }, { onSelectCardOnFile }: { onSelectCardOnFile: any }) {
+export default function CardsOnFileCardView({ cardOnFile }: { cardOnFile: CardOnFile }, { onSelectCardOnFile }: { onSelectCardOnFile: () => void }) {
   return (
     <>
       <View style={styles.titleColumn}>

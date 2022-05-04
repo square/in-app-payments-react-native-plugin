@@ -25,11 +25,19 @@ import CardsOnFileCardView from './CardsOnFileCardView';
 import GreenButton from './GreenButton';
 
 interface Props {
-  onCloseCardsOnFileScreen: any,
-  onShowCustomerCardEntry: any,
-  onSelectCardOnFile: any,
+  onCloseCardsOnFileScreen: () => void,
+  onShowCustomerCardEntry: () => void,
+  onSelectCardOnFile: () => void,
   cardsOnFile: any,
 };
+
+interface CardOnFile {
+  id: string;
+  card_brand: string;
+  last_4: string;
+  exp_month: string;
+  exp_year: string;
+}
 
 const CardsOnFileModal: React.FC<Props> = (
   { onCloseCardsOnFileScreen,
@@ -47,13 +55,13 @@ const CardsOnFileModal: React.FC<Props> = (
               {'No cards on file found.'
                 + 'Please tap the button to add a card that you can use for future transactions.'}
             </Text>
-          ) : cardsOnFile.map((cardOnFile: any) => (
+          ) : cardsOnFile.map((cardOnFile: CardOnFile) => (
             <React.Fragment key={cardOnFile.id}>
               <View style={styles.row}>
                 <CardsOnFileCardView
                   cardOnFile={cardOnFile}
                   // eslint-disable-next-line react/jsx-no-bind
-                  onSelectCardOnFile={onSelectCardOnFile.bind(cardOnFile)}
+                  onSelectCardOnFile={() => onSelectCardOnFile.bind(cardOnFile)}
                 />
               </View>
               <View style={styles.horizontalLine} />
@@ -62,7 +70,7 @@ const CardsOnFileModal: React.FC<Props> = (
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onShowCustomerCardEntry}
+          onPress={() => onShowCustomerCardEntry()}
           text="Add card"
         />
       </View>

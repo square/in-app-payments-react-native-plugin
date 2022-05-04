@@ -30,13 +30,13 @@ OrderTitleView.propTypes = {
   onCloseOrderScreen: PropTypes.func.isRequired,
 };
 
-export default function OrderTitleView({ onCloseOrderScreen }: { onCloseOrderScreen: any }) {
+export default function OrderTitleView({ onCloseOrderScreen }: { onCloseOrderScreen: () => void }) {
   return (
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.closeButton}
         underlayColor="#FFFFFF"
-        onPress={onCloseOrderScreen}
+        onPress={() => onCloseOrderScreen()}
       >
         <Image
           source={closeButton}

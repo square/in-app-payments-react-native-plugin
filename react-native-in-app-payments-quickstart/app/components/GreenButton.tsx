@@ -19,23 +19,17 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import PropTypes from 'prop-types';
 
 interface GreenButton {
-  onPress: any,
-  text: any,
+  onPress: () => void,
+  text: string,
 };
-
-// GreenButton.propTypes = {
-//   onPress: PropTypes.func.isRequired,
-//   text: PropTypes.string.isRequired,
-// };
 
 const GreenButton: React.FC<GreenButton> = (
   { onPress, text }) => {
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => onPress()}
       style={styles.button}
     >
       <Text style={styles.buttonText}>{text}</Text>

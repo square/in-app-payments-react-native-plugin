@@ -24,7 +24,7 @@ AddressView.propTypes = {
   address: PropTypes.string.isRequired,
 };
 
-export default function AddressView({ address} : { address: any}) {
+export default function AddressView({ address }: { address: string }) {
   return (
     <Text style={styles.address}>{address}</Text>
   );

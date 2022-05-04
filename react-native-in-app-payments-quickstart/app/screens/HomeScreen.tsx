@@ -79,6 +79,10 @@ const iOSCardEntryTheme = {
   },
 };
 
+interface ErrorInfo {
+  message: string;
+}
+
 let errorMsg = null;
 
 export default function HomeScreen() {
@@ -99,6 +103,19 @@ export default function HomeScreen() {
   useEffect(() => {
     initState()
   })
+
+  interface CardDetails {
+    nonce: string;
+  }
+
+  interface BuyerVerificationDetails {
+    nonce: string;
+    token: string;
+  }
+
+  interface CardOnFile {
+    id: string;
+  }
 
   const initState = async () => {
     await SQIPCore.setSquareApplicationId(SQUARE_APP_ID);
@@ -123,8 +140,7 @@ export default function HomeScreen() {
     setcanUseDigitalWallet(digitalWalletEnabled)
   }
 
-
-  const onApplePayRequestNonceSuccess = async (cardDetails: any) => {
+  const onApplePayRequestNonceSuccess = async (cardDetails: CardDetails) => {
     if (chargeServerHostIsSet()) {
       try {
         await chargeCardNonce(cardDetails.nonce);
@@ -141,7 +157,9 @@ export default function HomeScreen() {
     }
   }
 
-  const onApplePayRequestNonceFailure = async (errorInfo: any) => {
+
+
+  const onApplePayRequestNonceFailure = async (errorInfo: ErrorInfo) => {
     errorMsg = errorInfo.message;
     await SQIPApplePay.completeApplePayAuthorization(false, errorInfo.message);
     showAlert('Error processing Apple Pay payment', errorMsg);
@@ -163,7 +181,7 @@ export default function HomeScreen() {
     }
   }
 
-  const onGooglePayRequestNonceSuccess = async (cardDetails: any) => {
+  const onGooglePayRequestNonceSuccess = async (cardDetails: CardDetails) => {
     if (chargeServerHostIsSet()) {
       try {
         await chargeCardNonce(cardDetails.nonce);
@@ -189,7 +207,7 @@ export default function HomeScreen() {
     showOrderScreen();
   }
 
-  const onCardNonceRequestSuccess = async (cardDetails: any) => {
+  const onCardNonceRequestSuccess = async (cardDetails: CardDetails) => {
     if (chargeServerHostIsSet()) {
       try {
         await chargeCardNonce(cardDetails.nonce);
@@ -211,7 +229,7 @@ export default function HomeScreen() {
     }
   }
 
-  const onSelectCardOnFile = async (cardOnFile: any) => {
+  const onSelectCardOnFile = async (cardOnFile: CardOnFile) => {
     try {
       showPendingScreen();
       await chargeCustomerCard(CUSTOMER_ID, cardOnFile.id);
@@ -227,7 +245,7 @@ export default function HomeScreen() {
     }
   }
 
-  const onCustomerCardNonceRequestSuccess = async (cardDetails: any) => {
+  const onCustomerCardNonceRequestSuccess = async (cardDetails: CardDetails) => {
     if (chargeServerHostIsSet()) {
       try {
         // create the customer card record and add it to the state
@@ -285,7 +303,7 @@ export default function HomeScreen() {
     setshowingBuyerVerification(true)
   }
 
-  const onBuyerVerificationSuccess = async (buyerVerificationDetails: any) => {
+  const onBuyerVerificationSuccess = async (buyerVerificationDetails: BuyerVerificationDetails) => {
     if (chargeServerHostIsSet() && buyerVerificationDetails.nonce !== 'ccof:customer-card-id-requires-verification') {
       try {
         await chargeCardNonce(buyerVerificationDetails.nonce, buyerVerificationDetails.token);
@@ -307,7 +325,7 @@ export default function HomeScreen() {
     }
   }
 
-  const onBuyerVerificationFailure = (errorInfo: any) => {
+  const onBuyerVerificationFailure = (errorInfo: ErrorInfo) => {
     showAlert('Error verifying buyer', errorInfo.message);
   }
 
@@ -534,20 +552,20 @@ export default function HomeScreen() {
     } else if (showingCardsOnFileScreen) {
       return (
         <CardsOnFileModal
-          onCloseCardsOnFileScreen={closeCardsOnFileScreen}
-          onShowCustomerCardEntry={onShowCustomerCardEntry}
-          onSelectCardOnFile={onSelectCardOnFile}
+          onCloseCardsOnFileScreen={() => closeCardsOnFileScreen()}
+          onShowCustomerCardEntry={() => onShowCustomerCardEntry()}
+          onSelectCardOnFile={() => onSelectCardOnFile}
           cardsOnFile={cardsOnFile}
         />
       );
     } else {
       return (
         <OrderModal
-          onCloseOrderScreen={closeOrderScreen}
-          onPayWithGiftCard={onShowGiftCardEntry}
-          onPayWithCard={customerIdIsSet() ? showCardsOnFileScreen : onShowCardEntry}
-          onShowDigitalWallet={onShowDigitalWallet}
-          onBuyerVerification={onBuyerVerification}
+          onCloseOrderScreen={() => closeOrderScreen()}
+          onPayWithGiftCard={() => onShowGiftCardEntry()}
+          onPayWithCard={() => customerIdIsSet() ? showCardsOnFileScreen() : onShowCardEntry()}
+          onShowDigitalWallet={() => onShowDigitalWallet()}
+          onBuyerVerification={() => onBuyerVerification()}
         />
       );
     }
@@ -561,7 +579,7 @@ export default function HomeScreen() {
         Instantly gain special powers when ordering a super cookie
       </Text>
       <GreenButton
-        onPress={showOrderScreen}
+        onPress={() => showOrderScreen()}
         text="Buy"
       />
       <Modal

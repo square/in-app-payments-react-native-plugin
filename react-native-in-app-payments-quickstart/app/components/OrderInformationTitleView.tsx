@@ -24,7 +24,7 @@ OrderInformationTitleView.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export default function OrderInformationTitleView({ title }: { title: any }) {
+export default function OrderInformationTitleView({ title }: { title: string }) {
   return (<Text style={styles.title}>{title}</Text>);
 }
 

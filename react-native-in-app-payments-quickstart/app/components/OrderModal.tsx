@@ -29,11 +29,11 @@ import GreenButton from './GreenButton';
 import DigitalWalletButton from './DigitalWalletButton';
 
 interface OrderModal {
-  onCloseOrderScreen: any,
-  onPayWithGiftCard: any,
-  onPayWithCard: any,
-  onShowDigitalWallet: any,
-  onBuyerVerification: any,
+  onCloseOrderScreen: () => void,
+  onPayWithGiftCard: () => void,
+  onPayWithCard: () => void,
+  onShowDigitalWallet: () => void,
+  onBuyerVerification: () => void,
 };
 
 const OrderModal: React.FC<OrderModal> = ({
@@ -73,11 +73,11 @@ const OrderModal: React.FC<OrderModal> = ({
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onPayWithGiftCard}
+          onPress={() => onPayWithGiftCard()}
           text="Pay with gift card"
         />
         <GreenButton
-          onPress={onPayWithCard}
+          onPress={() => onPayWithCard()}
           text="Pay with card"
         />
         <DigitalWalletButton
@@ -86,7 +86,7 @@ const OrderModal: React.FC<OrderModal> = ({
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onBuyerVerification}
+          onPress={() => onBuyerVerification()}
           text="Buyer Verification"
         />
       </View>
