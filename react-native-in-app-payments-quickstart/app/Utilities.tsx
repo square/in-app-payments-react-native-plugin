@@ -64,7 +64,7 @@ export function printCurlCommand(nonce: string, appId: string, verificationToken
 
 export async function showAlert(title: string, message = "", onPress = () => { }) {
   Alert.alert(
-    title.toString(),
+    title,
     message,
     [
       {
