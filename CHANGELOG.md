@@ -1,5 +1,10 @@
 ## Changelog
 
+### v1.7.1 Feb 8, 2022
+
+* Upgrade IAP SDK to `1.5.5`.
+* Fxied iOS Xcode legacy build issue.
+* Support Typescript.
 
 ### v1.7.0 Oct 29, 2021
 
