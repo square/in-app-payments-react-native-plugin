@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -28,23 +28,23 @@ import AddressView from './AddressView';
 import GreenButton from './GreenButton';
 import DigitalWalletButton from './DigitalWalletButton';
 
-OrderModal.propTypes = {
-  onCloseOrderScreen: PropTypes.func.isRequired,
-  onPayWithGiftCard: PropTypes.func.isRequired,
-  onPayWithCard: PropTypes.func.isRequired,
-  onShowDigitalWallet: PropTypes.func.isRequired,
-  onBuyerVerification: PropTypes.func.isRequired,
+interface OrderModal {
+  onCloseOrderScreen: () => void,
+  onPayWithGiftCard: () => void,
+  onPayWithCard: () => void,
+  onShowDigitalWallet: () => void,
+  onBuyerVerification: () => void,
 };
 
-export default function OrderModal({
+const OrderModal: React.FC<OrderModal> = ({
   onCloseOrderScreen,
   onPayWithGiftCard,
   onPayWithCard,
   onShowDigitalWallet,
-  onBuyerVerification,
-}) {
+  onBuyerVerification },
+) => {
   return (
-    <View style={styles.container}>
+    <View>
       <OrderTitleView onCloseOrderScreen={() => onCloseOrderScreen()} />
       <View style={styles.bodyContent}>
         <View style={styles.row}>
@@ -73,11 +73,11 @@ export default function OrderModal({
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onPayWithGiftCard}
+          onPress={() => onPayWithGiftCard()}
           text="Pay with gift card"
         />
         <GreenButton
-          onPress={onPayWithCard}
+          onPress={() => onPayWithCard()}
           text="Pay with card"
         />
         <DigitalWalletButton
@@ -86,13 +86,16 @@ export default function OrderModal({
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
-          onPress={onBuyerVerification}
+          onPress={() => onBuyerVerification()}
           text="Buyer Verification"
         />
       </View>
     </View>
   );
 }
+
+
+export default OrderModal;
 
 const styles = StyleSheet.create({
   bodyContent: {

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { CHARGE_CUSTOMER_CARD_SERVER_URL } from '../Constants';
 import ChargeCustomerCardError from '../ChargeCustomerCardError';
 
-export default async function chargeCustomerCard(customer_id, customer_card_id) {
+export default async function chargeCustomerCard(customer_id: string, customer_card_id: string) {
   const response = await fetch(CHARGE_CUSTOMER_CARD_SERVER_URL, {
     method: 'POST',
     headers: {
@@ -36,7 +36,7 @@ export default async function chargeCustomerCard(customer_id, customer_card_id) 
       throw new ChargeCustomerCardError(responseJson.errorMessage);
     }
     return responseJson;
-  } catch (error) {
+  } catch (error: any) {
     throw new ChargeCustomerCardError(error.message);
   }
 }

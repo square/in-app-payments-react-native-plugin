@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -29,13 +29,13 @@ DigitalWalletButton.propTypes = {
   onPress: PropTypes.func.isRequired,
 };
 
-export default function DigitalWalletButton({ onPress }) {
+export default function DigitalWalletButton({ onPress }: { onPress: () => void }) {
   const imageSource = Platform.OS === 'ios'
     ? googlePayLogo
     : applePayLogo;
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => onPress()}
       style={styles.button}
     >
       <Image

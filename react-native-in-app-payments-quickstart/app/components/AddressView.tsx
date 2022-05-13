@@ -13,16 +13,27 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import SQIPCore from './src/Core';
-import SQIPCardEntry from './src/CardEntry';
-import SQIPApplePay from './src/ApplePay';
-import SQIPGooglePay from './src/GooglePay';
-import SQIPErrorCodes from './src/ErrorCodes';
+import React from 'react';
+import {
+  Text,
+  StyleSheet,
+} from 'react-native';
+import PropTypes from 'prop-types';
 
-export {
-  SQIPCore,
-  SQIPCardEntry,
-  SQIPApplePay,
-  SQIPGooglePay,
-  SQIPErrorCodes,
+AddressView.propTypes = {
+  address: PropTypes.string.isRequired,
 };
+
+export default function AddressView({ address }: { address: string }) {
+  return (
+    <Text style={styles.address}>{address}</Text>
+  );
+}
+
+const styles = StyleSheet.create({
+  address: {
+    color: '#7B7B7B',
+    fontSize: 16,
+    marginTop: 10,
+  },
+});

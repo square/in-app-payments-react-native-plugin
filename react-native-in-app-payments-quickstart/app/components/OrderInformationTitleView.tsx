@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -20,20 +20,17 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-AddressView.propTypes = {
-  address: PropTypes.string.isRequired,
+OrderInformationTitleView.propTypes = {
+  title: PropTypes.string.isRequired,
 };
 
-export default function AddressView({ address }) {
-  return (
-    <Text style={styles.address}>{address}</Text>
-  );
+export default function OrderInformationTitleView({ title }: { title: string }) {
+  return (<Text style={styles.title}>{title}</Text>);
 }
 
 const styles = StyleSheet.create({
-  address: {
-    color: '#7B7B7B',
+  title: {
+    color: '#24988D',
     fontSize: 16,
-    marginTop: 10,
   },
 });

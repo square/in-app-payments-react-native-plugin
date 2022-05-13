@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -26,24 +26,23 @@ import PropTypes from 'prop-types';
 
 const closeButton = require('../images/btnClose.png');
 
-OrderTitleView.propTypes = {
-  onCloseOrderScreen: PropTypes.func.isRequired,
+CardsOnFileTitleView.propTypes = {
+  onCloseCardsOnFileScreen: PropTypes.func.isRequired,
 };
 
-export default function OrderTitleView({ onCloseOrderScreen }) {
+export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }: { onCloseCardsOnFileScreen: () => void }) {
   return (
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.closeButton}
         underlayColor="#FFFFFF"
-        onPress={onCloseOrderScreen}
+        onPress={() => onCloseCardsOnFileScreen()}
       >
         <Image
-          style={styles.button}
           source={closeButton}
         />
       </TouchableHighlight>
-      <Text style={styles.title}>Place your order</Text>
+      <Text style={styles.title}>My Saved Cards</Text>
     </View>
   );
 }
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     position: 'relative',
-
   },
   title: {
     color: '#000000',

@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,23 +19,25 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import PropTypes from 'prop-types';
 
-GreenButton.propTypes = {
-  onPress: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
+interface GreenButton {
+  onPress: () => void,
+  text: string,
 };
 
-export default function GreenButton({ onPress, text }) {
+const GreenButton: React.FC<GreenButton> = (
+  { onPress, text }) => {
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => onPress()}
       style={styles.button}
     >
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );
 }
+
+export default GreenButton
 
 const styles = StyleSheet.create({
   button: {

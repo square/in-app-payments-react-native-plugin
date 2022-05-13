@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,42 +15,44 @@
 */
 import React from 'react';
 import {
+  Text,
   View,
   StyleSheet,
-  Text,
-  ActivityIndicator,
 } from 'react-native';
+import PropTypes from 'prop-types';
 
-export default function PendingModal() {
+OrderInformationView.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+};
+
+export default function OrderInformationView({ title }: { title: string }, { description }: { description: string }) {
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Processing...</Text>
-      </View>
-      <View style={styles.activityContainer}>
-        <ActivityIndicator size="large" color="#24988D" />
-      </View>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.description}>{description}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  activityContainer: {
-    height: '10%',
-    margin: '10%',
-  },
   container: {
-    width: '100%',
+    alignItems: 'center',
+    borderColor: '#000000',
+    borderWidth: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginLeft: '10%',
+    marginRight: '10%',
+    width: '80%',
+  },
+  description: {
+    borderColor: '#123456',
+    borderWidth: 2,
+    flex: 1,
   },
   title: {
-    color: '#000000',
+    flex: 1,
     fontSize: 18,
-    fontWeight: 'bold',
-  },
-  titleContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    margin: '3%',
   },
 });

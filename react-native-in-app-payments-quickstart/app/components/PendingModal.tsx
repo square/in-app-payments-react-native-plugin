@@ -1,5 +1,5 @@
 /*
- Copyright 2019 Square Inc.
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,23 +15,42 @@
 */
 import React from 'react';
 import {
-  Text,
+  View,
   StyleSheet,
+  Text,
+  ActivityIndicator,
 } from 'react-native';
-import PropTypes from 'prop-types';
 
-OrderInformationDescriptionView.propTypes = {
-  description: PropTypes.string.isRequired,
-};
-
-export default function OrderInformationDescriptionView({ description }) {
-  return (<Text style={styles.description}>{description}</Text>);
+export default function PendingModal() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Processing...</Text>
+      </View>
+      <View style={styles.activityContainer}>
+        <ActivityIndicator size="large" color="#24988D" />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  description: {
+  activityContainer: {
+    height: '10%',
+    margin: '10%',
+  },
+  container: {
+    width: '100%',
+  },
+  title: {
     color: '#000000',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    margin: '3%',
   },
 });
