@@ -14,11 +14,7 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import PropTypes from 'prop-types';
 
 import OrderTitleView from './OrderTitleView';
@@ -29,20 +25,20 @@ import GreenButton from './GreenButton';
 import DigitalWalletButton from './DigitalWalletButton';
 
 interface OrderModal {
-  onCloseOrderScreen: () => void,
-  onPayWithGiftCard: () => void,
-  onPayWithCard: () => void,
-  onShowDigitalWallet: () => void,
-  onBuyerVerification: () => void,
-};
+  onCloseOrderScreen: () => void;
+  onPayWithGiftCard: () => void;
+  onPayWithCard: () => void;
+  onShowDigitalWallet: () => void;
+  onBuyerVerification: () => void;
+}
 
 const OrderModal: React.FC<OrderModal> = ({
   onCloseOrderScreen,
   onPayWithGiftCard,
   onPayWithCard,
   onShowDigitalWallet,
-  onBuyerVerification },
-) => {
+  onBuyerVerification,
+}) => {
   return (
     <View>
       <OrderTitleView onCloseOrderScreen={() => onCloseOrderScreen()} />
@@ -53,7 +49,9 @@ const OrderModal: React.FC<OrderModal> = ({
           </View>
           <View style={styles.descriptionColumn}>
             <OrderInformationDescriptionView description="Lauren Nobel" />
-            <AddressView address={'1455 Market Street\nSan Francisco, CA, 94103'} />
+            <AddressView
+              address={'1455 Market Street\nSan Francisco, CA, 94103'}
+            />
           </View>
         </View>
         <View style={styles.horizontalLine} />
@@ -67,8 +65,8 @@ const OrderModal: React.FC<OrderModal> = ({
         </View>
         <View style={styles.horizontalLine} />
         <Text style={styles.refundText}>
-          You can refund this transaction through your Square dashboard,
-          go to squareup.com/dashboard.
+          You can refund this transaction through your Square dashboard, go to
+          squareup.com/dashboard.
         </Text>
       </View>
       <View style={styles.buttonRow}>
@@ -76,13 +74,8 @@ const OrderModal: React.FC<OrderModal> = ({
           onPress={() => onPayWithGiftCard()}
           text="Pay with gift card"
         />
-        <GreenButton
-          onPress={() => onPayWithCard()}
-          text="Pay with card"
-        />
-        <DigitalWalletButton
-          onPress={() => onShowDigitalWallet()}
-        />
+        <GreenButton onPress={() => onPayWithCard()} text="Pay with card" />
+        <DigitalWalletButton onPress={() => onShowDigitalWallet()} />
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
@@ -92,8 +85,7 @@ const OrderModal: React.FC<OrderModal> = ({
       </View>
     </View>
   );
-}
-
+};
 
 export default OrderModal;
 

@@ -15,13 +15,7 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import PropTypes from 'prop-types';
 
 CardsOnFileCardView.propTypes = {
@@ -36,22 +30,27 @@ interface CardOnFile {
   exp_year: string;
 }
 
-
 function showConfirmation(cardOnFile: CardOnFile, onConfirm: () => void) {
-  Alert.alert('Confirm',
-    `Purchase a cookie for $1 using your ${cardOnFile.card_brand} ${cardOnFile.last_4} card`, [
-    {
-      text: 'Cancel',
-      style: 'cancel',
-    },
-    {
-      text: 'Purchase',
-      onPress: () => onConfirm(),
-    },
-  ]);
+  Alert.alert(
+    'Confirm',
+    `Purchase a cookie for $1 using your ${cardOnFile.card_brand} ${cardOnFile.last_4} card`,
+    [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Purchase',
+        onPress: () => onConfirm(),
+      },
+    ],
+  );
 }
 
-export default function CardsOnFileCardView({ cardOnFile }: { cardOnFile: CardOnFile }, { onSelectCardOnFile }: { onSelectCardOnFile: () => void }) {
+export default function CardsOnFileCardView(
+  {cardOnFile}: {cardOnFile: CardOnFile},
+  {onSelectCardOnFile}: {onSelectCardOnFile: () => void},
+) {
   return (
     <>
       <View style={styles.titleColumn}>
@@ -64,16 +63,13 @@ export default function CardsOnFileCardView({ cardOnFile }: { cardOnFile: CardOn
         </Text>
         <Text style={styles.muted}>
           expires
-          {cardOnFile.exp_month}
-          /
-          {cardOnFile.exp_year}
+          {cardOnFile.exp_month}/{cardOnFile.exp_year}
         </Text>
       </View>
       <View style={styles.buttonColumn}>
         <TouchableOpacity
           onPress={() => showConfirmation(cardOnFile, onSelectCardOnFile)}
-          style={styles.button}
-        >
+          style={styles.button}>
           <Text style={styles.buttonText}>Pay</Text>
         </TouchableOpacity>
       </View>

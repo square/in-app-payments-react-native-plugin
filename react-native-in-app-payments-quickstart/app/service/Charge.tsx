@@ -13,10 +13,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { CHARGE_SERVER_URL } from '../Constants';
+import {CHARGE_SERVER_URL} from '../Constants';
 import ChargeError from '../ChargeError';
 
-export default async function chargeCardNonce(nonce: string, verificationToken = undefined) {
+export default async function chargeCardNonce(
+  nonce: string,
+  verificationToken = undefined,
+) {
   let body;
   if (verificationToken === undefined) {
     body = JSON.stringify({

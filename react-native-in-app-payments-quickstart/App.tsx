@@ -1,5 +1,4 @@
-
- /*Copyright 2022 Square Inc.
+/*Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -14,17 +13,17 @@
  limitations under the License.
 */
 import 'react-native-gesture-handler';
-import {
-  createSwitchNavigator,
-  createAppContainer,
-} from 'react-navigation';
+import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import HomeScreen from './app/screens/HomeScreen';
 
-const RootStack = createSwitchNavigator({
-  Home: { screen: HomeScreen },
-}, {
-  initialRouteName: 'Home',
-});
+const RootStack = createSwitchNavigator(
+  {
+    Home: {screen: HomeScreen},
+  },
+  {
+    initialRouteName: 'Home',
+  },
+);
 
 const App = createAppContainer(RootStack);
 
