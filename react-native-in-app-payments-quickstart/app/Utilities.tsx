@@ -14,23 +14,27 @@
  limitations under the License.
 */
 /* eslint no-bitwise: ["error", { "allow": ["|", "&"] }] */
-import {
-  Alert,
-} from 'react-native';
+import {Alert} from 'react-native';
 
 export function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : ((r & 0x3) | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
 
-export function printCurlCommand(nonce: string, appId: string, verificationToken = undefined) {
+export function printCurlCommand(
+  nonce: string,
+  appId: string,
+  verificationToken = undefined,
+) {
   // set host url based on application id
   //   production: https://connect.squareup.com
   //   sandbox: https://connect.squareupsandbox.com
-  const hostUrl = appId.startsWith('sandbox') ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com';
+  const hostUrl = appId.startsWith('sandbox')
+    ? 'https://connect.squareupsandbox.com'
+    : 'https://connect.squareup.com';
   const uuid = uuidv4();
   if (verificationToken === undefined) {
     console.log(`Run this curl command to charge the nonce:
@@ -62,7 +66,11 @@ export function printCurlCommand(nonce: string, appId: string, verificationToken
   }
 }
 
-export async function showAlert(title: string, message = "", onPress = () => { }) {
+export async function showAlert(
+  title: string,
+  message = '',
+  onPress = () => {},
+) {
   Alert.alert(
     title,
     message,
@@ -72,6 +80,6 @@ export async function showAlert(title: string, message = "", onPress = () => { }
         onPress: onPress,
       },
     ],
-    { cancelable: false }
+    {cancelable: false},
   );
 }

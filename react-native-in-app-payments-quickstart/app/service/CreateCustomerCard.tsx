@@ -14,10 +14,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { CREATE_CUSTOMER_CARD_SERVER_URL } from '../Constants';
+import {CREATE_CUSTOMER_CARD_SERVER_URL} from '../Constants';
 import CreateCustomerCardError from '../CreateCustomerCardError';
 
-export default async function createCustomerCard(customer_id: string, nonce: string) {
+export default async function createCustomerCard(
+  customer_id: string,
+  nonce: string,
+) {
   const response = await fetch(CREATE_CUSTOMER_CARD_SERVER_URL, {
     method: 'POST',
     headers: {

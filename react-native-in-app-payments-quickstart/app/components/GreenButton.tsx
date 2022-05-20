@@ -14,30 +14,22 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 interface GreenButton {
-  onPress: () => void,
-  text: string,
-};
+  onPress: () => void;
+  text: string;
+}
 
-const GreenButton: React.FC<GreenButton> = (
-  { onPress, text }) => {
+const GreenButton: React.FC<GreenButton> = ({onPress, text}) => {
   return (
-    <TouchableOpacity
-      onPress={() => onPress()}
-      style={styles.button}
-    >
+    <TouchableOpacity onPress={() => onPress()} style={styles.button}>
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );
-}
+};
 
-export default GreenButton
+export default GreenButton;
 
 const styles = StyleSheet.create({
   button: {

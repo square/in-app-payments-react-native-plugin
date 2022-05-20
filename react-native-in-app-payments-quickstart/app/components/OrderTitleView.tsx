@@ -15,13 +15,7 @@
 */
 /* eslint no-undef: */
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableHighlight,
-  Image,
-} from 'react-native';
+import {Text, View, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import PropTypes from 'prop-types';
 
 const closeButton = require('../images/btnClose.png');
@@ -30,17 +24,18 @@ OrderTitleView.propTypes = {
   onCloseOrderScreen: PropTypes.func.isRequired,
 };
 
-export default function OrderTitleView({ onCloseOrderScreen }: { onCloseOrderScreen: () => void }) {
+export default function OrderTitleView({
+  onCloseOrderScreen,
+}: {
+  onCloseOrderScreen: () => void;
+}) {
   return (
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.closeButton}
         underlayColor="#FFFFFF"
-        onPress={() => onCloseOrderScreen()}
-      >
-        <Image
-          source={closeButton}
-        />
+        onPress={() => onCloseOrderScreen()}>
+        <Image source={closeButton} />
       </TouchableHighlight>
       <Text style={styles.title}>Place your order</Text>
     </View>
@@ -55,7 +50,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     position: 'relative',
-
   },
   title: {
     color: '#000000',

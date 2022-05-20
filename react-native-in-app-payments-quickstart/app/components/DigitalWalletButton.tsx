@@ -14,12 +14,7 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import PropTypes from 'prop-types';
 
 const googlePayLogo = require('../images/applePayLogo.png');
@@ -29,18 +24,11 @@ DigitalWalletButton.propTypes = {
   onPress: PropTypes.func.isRequired,
 };
 
-export default function DigitalWalletButton({ onPress }: { onPress: () => void }) {
-  const imageSource = Platform.OS === 'ios'
-    ? googlePayLogo
-    : applePayLogo;
+export default function DigitalWalletButton({onPress}: {onPress: () => void}) {
+  const imageSource = Platform.OS === 'ios' ? googlePayLogo : applePayLogo;
   return (
-    <TouchableOpacity
-      onPress={() => onPress()}
-      style={styles.button}
-    >
-      <Image
-        source={imageSource}
-      />
+    <TouchableOpacity onPress={() => onPress()} style={styles.button}>
+      <Image source={imageSource} />
     </TouchableOpacity>
   );
 }

@@ -15,13 +15,7 @@
 */
 /* eslint no-undef: */
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableHighlight,
-  Image,
-} from 'react-native';
+import {Text, View, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import PropTypes from 'prop-types';
 
 const closeButton = require('../images/btnClose.png');
@@ -30,17 +24,18 @@ CardsOnFileTitleView.propTypes = {
   onCloseCardsOnFileScreen: PropTypes.func.isRequired,
 };
 
-export default function CardsOnFileTitleView({ onCloseCardsOnFileScreen }: { onCloseCardsOnFileScreen: () => void }) {
+export default function CardsOnFileTitleView({
+  onCloseCardsOnFileScreen,
+}: {
+  onCloseCardsOnFileScreen: () => void;
+}) {
   return (
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.closeButton}
         underlayColor="#FFFFFF"
-        onPress={() => onCloseCardsOnFileScreen()}
-      >
-        <Image
-          source={closeButton}
-        />
+        onPress={() => onCloseCardsOnFileScreen()}>
+        <Image source={closeButton} />
       </TouchableHighlight>
       <Text style={styles.title}>My Saved Cards</Text>
     </View>

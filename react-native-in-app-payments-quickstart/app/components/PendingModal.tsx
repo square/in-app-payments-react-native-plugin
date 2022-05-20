@@ -14,12 +14,7 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
+import {View, StyleSheet, Text, ActivityIndicator} from 'react-native';
 
 export default function PendingModal() {
   return (

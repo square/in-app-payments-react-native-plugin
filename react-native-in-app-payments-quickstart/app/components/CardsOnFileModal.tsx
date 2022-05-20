@@ -14,22 +14,18 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 
 import CardsOnFileTitleView from './CardsOnFileTitleView';
 import CardsOnFileCardView from './CardsOnFileCardView';
 import GreenButton from './GreenButton';
 
 interface Props {
-  onCloseCardsOnFileScreen: () => void,
-  onShowCustomerCardEntry: () => void,
-  onSelectCardOnFile: () => void,
-  cardsOnFile: any,
-};
+  onCloseCardsOnFileScreen: () => void;
+  onShowCustomerCardEntry: () => void;
+  onSelectCardOnFile: () => void;
+  cardsOnFile: any;
+}
 
 interface CardOnFile {
   id: string;
@@ -39,23 +35,25 @@ interface CardOnFile {
   exp_year: string;
 }
 
-const CardsOnFileModal: React.FC<Props> = (
-  { onCloseCardsOnFileScreen,
-    onShowCustomerCardEntry,
-    onSelectCardOnFile,
-    cardsOnFile }
-) => {
+const CardsOnFileModal: React.FC<Props> = ({
+  onCloseCardsOnFileScreen,
+  onShowCustomerCardEntry,
+  onSelectCardOnFile,
+  cardsOnFile,
+}) => {
   return (
     <View style={styles.container}>
-      <CardsOnFileTitleView onCloseCardsOnFileScreen={() => onCloseCardsOnFileScreen()} />
+      <CardsOnFileTitleView
+        onCloseCardsOnFileScreen={() => onCloseCardsOnFileScreen()}
+      />
       <View style={styles.bodyContent}>
-        {cardsOnFile.length === 0
-          ? (
-            <Text style={styles.noCardsText}>
-              {'No cards on file found.'
-                + 'Please tap the button to add a card that you can use for future transactions.'}
-            </Text>
-          ) : cardsOnFile.map((cardOnFile: CardOnFile) => (
+        {cardsOnFile.length === 0 ? (
+          <Text style={styles.noCardsText}>
+            {'No cards on file found.' +
+              'Please tap the button to add a card that you can use for future transactions.'}
+          </Text>
+        ) : (
+          cardsOnFile.map((cardOnFile: CardOnFile) => (
             <React.Fragment key={cardOnFile.id}>
               <View style={styles.row}>
                 <CardsOnFileCardView
@@ -66,7 +64,8 @@ const CardsOnFileModal: React.FC<Props> = (
               </View>
               <View style={styles.horizontalLine} />
             </React.Fragment>
-          ))}
+          ))
+        )}
       </View>
       <View style={styles.buttonRow}>
         <GreenButton
@@ -76,7 +75,7 @@ const CardsOnFileModal: React.FC<Props> = (
       </View>
     </View>
   );
-}
+};
 
 export default CardsOnFileModal;
 

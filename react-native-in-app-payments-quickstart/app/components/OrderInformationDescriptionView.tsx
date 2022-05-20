@@ -14,18 +14,19 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 
 OrderInformationDescriptionView.propTypes = {
   description: PropTypes.string.isRequired,
 };
 
-export default function OrderInformationDescriptionView({ description }: { description: string }) {
-  return (<Text style={styles.description}>{description}</Text>);
+export default function OrderInformationDescriptionView({
+  description,
+}: {
+  description: string;
+}) {
+  return <Text style={styles.description}>{description}</Text>;
 }
 
 const styles = StyleSheet.create({

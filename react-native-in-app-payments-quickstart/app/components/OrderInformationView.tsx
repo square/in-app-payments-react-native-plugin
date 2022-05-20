@@ -14,11 +14,7 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 
 OrderInformationView.propTypes = {
@@ -26,7 +22,10 @@ OrderInformationView.propTypes = {
   description: PropTypes.string.isRequired,
 };
 
-export default function OrderInformationView({ title }: { title: string }, { description }: { description: string }) {
+export default function OrderInformationView(
+  {title}: {title: string},
+  {description}: {description: string},
+) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>

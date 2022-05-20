@@ -14,20 +14,15 @@
  limitations under the License.
 */
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 
 AddressView.propTypes = {
   address: PropTypes.string.isRequired,
 };
 
-export default function AddressView({ address }: { address: string }) {
-  return (
-    <Text style={styles.address}>{address}</Text>
-  );
+export default function AddressView({address}: {address: string}) {
+  return <Text style={styles.address}>{address}</Text>;
 }
 
 const styles = StyleSheet.create({
