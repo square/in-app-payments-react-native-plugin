@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.7.2 May 23, 2022
+
+* Upgrade IAP SDK to `1.5.6`.
+
 ### v1.7.1 Feb 8, 2022
 
 * Upgrade IAP SDK to `1.5.5`.
