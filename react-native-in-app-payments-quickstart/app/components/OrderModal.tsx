@@ -14,7 +14,7 @@
  limitations under the License.
 */
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import PropTypes from 'prop-types';
 
 import OrderTitleView from './OrderTitleView';
@@ -74,10 +74,11 @@ const OrderModal: React.FC<OrderModal> = ({
           onPress={() => onPayWithGiftCard()}
           text="Pay with gift card"
         />
-        <GreenButton onPress={() => onPayWithCard()} text="Pay with card" />
-        <DigitalWalletButton onPress={() => onShowDigitalWallet()} />
+        <GreenButton onPress={() => onPayWithCard()}
+          text="Pay with card" />
       </View>
       <View style={styles.buttonRow}>
+        <DigitalWalletButton onPress={() => onShowDigitalWallet()} />
         <GreenButton
           onPress={() => onBuyerVerification()}
           text="Buyer Verification"
@@ -91,38 +92,32 @@ export default OrderModal;
 
 const styles = StyleSheet.create({
   bodyContent: {
-    marginLeft: '10%',
-    marginRight: '10%',
-    marginTop: '3%',
+    marginHorizontal: '10%',
+    marginTop: '2%',
   },
   buttonRow: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: '5%',
-    width: '100%',
+    marginBottom: '4%',
   },
   descriptionColumn: {
-    flex: 2,
-    flexDirection: 'column',
   },
   horizontalLine: {
     borderBottomColor: '#D8D8D8',
     borderBottomWidth: 1,
-    marginBottom: '3%',
-    marginTop: '3%',
+    marginVertical: '3%',
   },
   refundText: {
     color: '#7B7B7B',
     fontSize: 12,
-    marginBottom: '3%',
+    marginBottom: '5%',
+    textAlign: 'center'
   },
   row: {
     flexDirection: 'row',
-    width: '80%',
   },
   titleColumn: {
-    flex: 1,
-    flexDirection: 'column',
+    marginRight: '8%'
   },
 });

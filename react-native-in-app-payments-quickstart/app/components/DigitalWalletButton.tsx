@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: '3%',
     minHeight: 50,
-    width: '30%',
+    width: '38%',
   },
 });
