@@ -20,12 +20,12 @@ import PropTypes from 'prop-types';
 const FailIcon = require('../images/failIcon.png');
 const SuccessIcon = require('../images/sucessIcon.png');
 
-AddressView.propTypes = {
+CommonAlert.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
 };
 
-export default function AddressView({ title, description, status, isVisible, onDialogClick }: { title: string, description: string, status: boolean, isVisible: boolean, onDialogClick: Function }) {
+export default function CommonAlert({ title, description, status, isVisible, onDialogClick }: { title: string, description: string, status: boolean, isVisible: boolean, onDialogClick: Function }) {
   return (
     <Modal
       visible={isVisible} transparent

@@ -175,12 +175,14 @@ export default function HomeScreen() {
     if (applePayState === applePayStatus.succeeded) {
       setValue(
         'Congratulation, Your order was successful',
-        'Go to your Square dashboard to see this order reflected in the sales tab.', true
+        'Go to your Square dashboard to see this order reflected in the sales tab.',
+        true
       );
     } else if (applePayState === applePayStatus.nonceNotCharged) {
       setValue(
         'Nonce generated but not charged',
-        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.', false
+        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+        true
       );
     } else if (applePayError != null) {
       setValue('Error processing Apple Pay payment', applePayError, false);
@@ -196,7 +198,8 @@ export default function HomeScreen() {
         await chargeCardNonce(cardDetails.nonce);
         setValue(
           'Congratulation, Your order was successful',
-          'Go to your Square dashbord to see this order reflected in the sales tab.', true
+          'Go to your Square dashbord to see this order reflected in the sales tab.',
+          true
         );
       } catch (error: any) {
         setValue('Error processing GooglePay payment', error.message, false);
@@ -205,7 +208,8 @@ export default function HomeScreen() {
       printCurlCommand(cardDetails.nonce, SQUARE_APP_ID);
       setValue(
         'Nonce generated but not charged',
-        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.', false
+        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+        true
       );
     }
   };
@@ -226,7 +230,8 @@ export default function HomeScreen() {
           console.log(JSON.stringify(cardDetails));
           var cardData = cardDetails.card;
           setValue('Congratulation, Your order was successful',
-            'Go to your Square dashbord to see this order reflected in the sales tab.', true)
+            'Go to your Square dashbord to see this order reflected in the sales tab.',
+            true)
         });
       } catch (error: any) {
         SQIPCardEntry.showCardNonceProcessingError(error.message);
@@ -236,7 +241,8 @@ export default function HomeScreen() {
         printCurlCommand(cardDetails.nonce, SQUARE_APP_ID);
         setValue(
           'Nonce generated but not charged',
-          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.', false)
+          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+          true)
       });
     }
   };
@@ -247,7 +253,8 @@ export default function HomeScreen() {
       await chargeCustomerCard(CUSTOMER_ID, cardOnFile.id);
       setValue(
         'Congratulation, Your order was successful',
-        'Go to your Square dashbord to see this order reflected in the sales tab.', true
+        'Go to your Square dashbord to see this order reflected in the sales tab.',
+        true
       );
     } catch (error: any) {
       setValue(
@@ -282,7 +289,8 @@ export default function HomeScreen() {
       SQIPCardEntry.completeCardEntry(() => {
         setValue(
           'Customer card nonce generated but not charged',
-          'Replace CHARGE_SERVER_HOST with your server host to enable saving the card.', false
+          'Replace CHARGE_SERVER_HOST with your server host to enable saving the card.',
+          true
         );
       });
     }
@@ -336,7 +344,8 @@ export default function HomeScreen() {
         );
         setValue(
           'Congratulation, Your order was successful',
-          'Go to your Square dashbord to see this order reflected in the sales tab.', true
+          'Go to your Square dashbord to see this order reflected in the sales tab.',
+          true
         );
       } catch (error: any) {
         setValue('Error processing card payment', error.message, false);
@@ -349,7 +358,8 @@ export default function HomeScreen() {
       );
       setValue(
         'Nonce and verification token generated but not charged',
-        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.', false
+        'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+        true
       );
     }
   };
@@ -554,7 +564,8 @@ export default function HomeScreen() {
         setValue(
           'Missing Apple Merchant ID',
           'To request an Apple Pay nonce, replace APPLE_PAY_MERCHANT_ID' +
-          ' in Constants.js with an Apple Merchant ID.', false
+          ' in Constants.js with an Apple Merchant ID.',
+          false
         );
       } else {
         await SQIPApplePay.requestApplePayNonce(
@@ -575,7 +586,8 @@ export default function HomeScreen() {
         setValue(
           'Missing GooglePay Location ID',
           'To request a GooglePay nonce, replace GOOGLE_PAY_LOCATION_ID' +
-          ' in Constants.js with an Square Location ID.', false
+          ' in Constants.js with an Square Location ID.',
+          false
         );
       } else {
         await SQIPGooglePay.requestGooglePayNonce(
@@ -620,7 +632,7 @@ export default function HomeScreen() {
     }
   };
 
-  const showValue = (title, description) => {
+  const showCommonAlert = (title: string, description: string) => {
     return (
       <CommonAlert title={title} description={description} status={status} isVisible={showingDialogSheet} onDialogClick={onDialogClick} />
     )
@@ -645,7 +657,7 @@ export default function HomeScreen() {
         Instantly gain special powers when ordering a super cookie
       </Text>
       <GreenButton onPress={() => { setshowingBottomSheet(true) }} text="Buy" />
-      {showValue(title, description)}
+      {showCommonAlert(title, description)}
       <Modal
         isVisible={showingBottomSheet}
         style={styles.bottomModal}
