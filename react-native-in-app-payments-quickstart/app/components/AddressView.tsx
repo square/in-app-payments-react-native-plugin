@@ -28,7 +28,7 @@ export default function AddressView({address}: {address: string}) {
 const styles = StyleSheet.create({
   address: {
     color: '#7B7B7B',
-    fontSize: 16,
-    marginTop: 10,
+    fontSize: 15,
+    marginTop: 4,
   },
 });
