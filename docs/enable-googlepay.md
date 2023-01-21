@@ -8,70 +8,99 @@ for more detailed information about the Google Pay methods available.
 
 ## Before you start
 
-* If you haven't already created a React Native project with In-App Payments SDK, use the [Getting Started with the React Native Plugin for In-App Payments SDK](get-started.md) to 
-set up a React Native project .
-
+- If you haven't already created a React Native project with In-App Payments SDK, use the [Getting Started with the React Native Plugin for In-App Payments SDK](get-started.md) to
+  set up a React Native project .
 
 ## Process overview
 
-* [Step 1: Update the AndroidManifiest](#step-1-update-the-androidmanifiest)
-* [Step 2: Initialize Google Pay](#step-2-initialize-google-pay)
-* [Step 3: Implement the Google Pay flow](#step-3-implement-the-google-pay-flow)
+- [Enable Google Pay with the React Native Plugin for In-App Payments SDK](#enable-google-pay-with-the-react-native-plugin-for-in-app-payments-sdk)
+  - [Before you start](#before-you-start)
+  - [Process overview](#process-overview)
+  - [Step 1: Update the Android Manifiest](#step-1-update-the-android-manifiest)
+  - [Step 1a: Update the Android Manifiest (Expo)](#step-1a-update-the-android-manifiest-expo)
+  - [Step 2: Initialize Google Pay](#step-2-initialize-google-pay)
+  - [Step 3: Implement the Google Pay flow](#step-3-implement-the-google-pay-flow)
 
 ## Step 1: Update the Android Manifiest
 
 1. Open the `myRNInAppPaymentsSample/android/app/src/main/AndroidManifest.xml`
 2. Add the following `meta-data` element inside of the `application` element of the manifest:
 
-    ```xml
-    <meta-data
-        android:name="com.google.android.gms.wallet.api.enabled"
-        android:value="true" />
-    ```
+   ```xml
+   <meta-data
+       android:name="com.google.android.gms.wallet.api.enabled"
+       android:value="true" />
+   ```
+
+## Step 1a: Update the Android Manifiest (Expo)
+
+Alternatively, if you're using Expo, you can utilize the built-in config plugin to automatically configure this for you.
+
+Add the following to your `app.json`:
+
+```json
+{
+  "expo": {
+    ...
+    "plugins": [
+      [
+        "react-native-square-in-app-payments",
+        {
+          "merchantIdentifier": string | string [],
+          "enableGooglePay": boolean
+        }
+      ]
+    ],
+  }
+}
+```
 
 ## Step 2: Initialize Google Pay
 
-1. Add code to initialize Google Pay in your application State class. 
-    ```javascript
-    import {
-      ...
-      Platform,
-    } from 'react-native';
-    import {
-      SQIPCore,
-      SQIPCardEntry,
-    } from 'react-native-square-in-app-payments';
+1. Add code to initialize Google Pay in your application State class.
 
-    export default class App extends Component {
-      ...
-      async componentDidMount() {
-        ...
-        let digitalWalletEnabled = false;
-        if (Platform.OS === 'ios') {
-        ...
-        } else if (Platform.OS === 'android') {
-          await SQIPGooglePay.initializeGooglePay(
-            'REPLACE_WITH_SQUARE_LOCATION_ID',
-            SQIPGooglePay.EnvironmentTest);
-          try {
-            digitalWalletEnabled = await SQIPGooglePay.canUseGooglePay();
-          } catch (ex) {
-            // Handle InAppPaymentsException
-          }
-        }
+   ```javascript
+   import {
+     ...
+     Platform,
+   } from 'react-native';
+   import {
+     SQIPCore,
+     SQIPCardEntry,
+   } from 'react-native-square-in-app-payments';
 
-        this.setState({
-          canUseDigitalWallet: digitalWalletEnabled,
-        });
-      }
-      ...
-    }
-    ```
-1. Replace `REPLACE_WITH_SQUARE_LOCATION_ID` in this example with a valid Square location ID. 
-The available location IDs for a Square account can be found on the Locations tab 
-of the Square Developer Portal.
+   export default class App extends Component {
+     ...
+     async componentDidMount() {
+       ...
+       let digitalWalletEnabled = false;
+       if (Platform.OS === 'ios') {
+       ...
+       } else if (Platform.OS === 'android') {
+         await SQIPGooglePay.initializeGooglePay(
+           'REPLACE_WITH_SQUARE_LOCATION_ID',
+           SQIPGooglePay.EnvironmentTest);
+         try {
+           digitalWalletEnabled = await SQIPGooglePay.canUseGooglePay();
+         } catch (ex) {
+           // Handle InAppPaymentsException
+         }
+       }
+
+       this.setState({
+         canUseDigitalWallet: digitalWalletEnabled,
+       });
+     }
+     ...
+   }
+   ```
+
+1. Replace `REPLACE_WITH_SQUARE_LOCATION_ID` in this example with a valid Square location ID.
+   The available location IDs for a Square account can be found on the Locations tab
+   of the Square Developer Portal.
 
 ## Step 3: Implement the Google Pay flow
+
 ```javascript
 export default class App extends Component {
   constructor() {
@@ -153,21 +182,23 @@ export default class App extends Component {
   }
 }
 ```
+
 ---
+
 **Note:** the `chargeCard` method in this example shows a typical REST request on a backend process
 that uses the **Payments API** to take a payment with the supplied nonce.
 See [BackendQuickStart Sample] to learn about building an app that processes payment nonces on a server.
 
 [//]: # "Link anchor definitions"
-[In-App Payments SDK]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
-[Square Dashboard]: https://squareup.com/dashboard/
-[Testing Mobile Apps]: https://developer.squareup.com/docs/testing/mobile
+[in-app payments sdk]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
+[square dashboard]: https://squareup.com/dashboard/
+[testing mobile apps]: https://developer.squareup.com/docs/testing/mobile
 [squareup.com/activate]: https://squareup.com/activate
-[Square Application Dashboard]: https://connect.squareup.com/apps/
-[root README]: ../README.md
-[React Native Getting Started]: https://facebook.github.io/react-native/docs/getting-started.html
-[Google Pay]: https://developers.google.com/pay/api/android/overview
-[Google Pay methods]: https://developers.google.com/pay/api/android/reference/client
-[Google Pay objects]: https://developers.google.com/pay/api/android/reference/object 
-[BackendQuickStart Sample]: https://github.com/square/in-app-payments-server-quickstart
+[square application dashboard]: https://connect.squareup.com/apps/
+[root readme]: ../README.md
+[react native getting started]: https://facebook.github.io/react-native/docs/getting-started.html
+[google pay]: https://developers.google.com/pay/api/android/overview
+[google pay methods]: https://developers.google.com/pay/api/android/reference/client
+[google pay objects]: https://developers.google.com/pay/api/android/reference/object
+[backendquickstart sample]: https://github.com/square/in-app-payments-server-quickstart
 [add a card or payment account]: https://support.google.com/pay/answer/7625139?visit_id=636775920124642581-1648826871&rd=1
