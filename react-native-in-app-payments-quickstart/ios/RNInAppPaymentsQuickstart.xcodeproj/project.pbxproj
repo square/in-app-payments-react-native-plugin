@@ -14,7 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		31618CB9F61E48A0857E0EFE /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE6BCB3A1728442EB9F5104E /* libRNGestureHandler.a */; };
 		59F1AC18231992AF00621E95 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59F1ABF1231992AF00621E95 /* JavaScriptCore.framework */; };
-		7D2F321427389C7D3B9CF13E /* libPods-RNInAppPaymentsQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D720F16BB491CCD68B66501 /* libPods-RNInAppPaymentsQuickstart.a */; };
+		A96B315A82207DB42672CC35 /* libPods-RNInAppPaymentsQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC94E46D932A24B73B00614 /* libPods-RNInAppPaymentsQuickstart.a */; };
 		F108A1E60E2743E49C3E176F /* libRNSquareInAppPayments.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CB49B87AF84302B7235299 /* libRNSquareInAppPayments.a */; };
 /* End PBXBuildFile section */
 
@@ -46,7 +46,7 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		315C57ABDEA6FCB718DFE80E /* Pods-RNInAppPaymentsQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNInAppPaymentsQuickstart.debug.xcconfig"; path = "Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
 		59F1ABF1231992AF00621E95 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		9D720F16BB491CCD68B66501 /* libPods-RNInAppPaymentsQuickstart.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNInAppPaymentsQuickstart.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AC94E46D932A24B73B00614 /* libPods-RNInAppPaymentsQuickstart.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNInAppPaymentsQuickstart.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8CB49B87AF84302B7235299 /* libRNSquareInAppPayments.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSquareInAppPayments.a; sourceTree = "<group>"; };
 		DE6BCB3A1728442EB9F5104E /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,7 +59,7 @@
 				59F1AC18231992AF00621E95 /* JavaScriptCore.framework in Frameworks */,
 				F108A1E60E2743E49C3E176F /* libRNSquareInAppPayments.a in Frameworks */,
 				31618CB9F61E48A0857E0EFE /* libRNGestureHandler.a in Frameworks */,
-				7D2F321427389C7D3B9CF13E /* libPods-RNInAppPaymentsQuickstart.a in Frameworks */,
+				A96B315A82207DB42672CC35 /* libPods-RNInAppPaymentsQuickstart.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +93,7 @@
 			children = (
 				59F1ABF1231992AF00621E95 /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				9D720F16BB491CCD68B66501 /* libPods-RNInAppPaymentsQuickstart.a */,
+				5AC94E46D932A24B73B00614 /* libPods-RNInAppPaymentsQuickstart.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -151,8 +151,8 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				110233C721F10681008F6C3D /* Embed Frameworks */,
-				066C72B6FBACF0EC1EC606EC /* [CP] Embed Pods Frameworks */,
-				5DFE9B67D6F3E5EEF4368CDF /* [CP] Copy Pods Resources */,
+				C2886A3FABD89AE1F5CEBE88 /* [CP] Embed Pods Frameworks */,
+				9C514328C64FFA2712F3E5B7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -228,21 +228,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		066C72B6FBACF0EC1EC606EC /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		0EDC1B834F3EA06D835C73CF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -265,7 +250,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5DFE9B67D6F3E5EEF4368CDF /* [CP] Copy Pods Resources */ = {
+		9C514328C64FFA2712F3E5B7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -278,6 +263,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C2886A3FABD89AE1F5CEBE88 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
