@@ -153,6 +153,7 @@
 				110233C721F10681008F6C3D /* Embed Frameworks */,
 				C2886A3FABD89AE1F5CEBE88 /* [CP] Embed Pods Frameworks */,
 				9C514328C64FFA2712F3E5B7 /* [CP] Copy Pods Resources */,
+				D482C79329B71D45002125B0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -279,6 +280,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		D482C79329B71D45002125B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "FRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

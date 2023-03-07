@@ -13,10 +13,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-const SQUARE_APP_ID = 'REPLACE_ME';
-const SQUARE_LOCATION_ID = 'REPLACE_ME';
+const SQUARE_APP_ID = 'sandbox-sq0idb-k0FohbdehNyXFQwN4HO2fw';
+const SQUARE_LOCATION_ID = 'LKAEMD1Q8S6M5';
 // Make sure to remove trailing `/` since the CHARGE_SERVER_URL puts it
-const CHARGE_SERVER_HOST = 'REPLACE_ME';
+const CHARGE_SERVER_HOST = 'https://testsquare.herokuapp.com';
 const CHARGE_SERVER_URL = `${CHARGE_SERVER_HOST}/chargeForCookie`;
 const GOOGLE_PAY_LOCATION_ID = 'REPLACE_ME';
 const APPLE_PAY_MERCHANT_ID = 'REPLACE_ME';
