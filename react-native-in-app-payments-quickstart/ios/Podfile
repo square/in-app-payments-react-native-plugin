@@ -37,3 +37,4 @@ target 'RNInAppPaymentsQuickstart' do
   #   react_native_post_install(installer)
   # end
 end
+9.0
