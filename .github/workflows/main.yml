@@ -44,8 +44,7 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          brew install cocoapods
-          brew link --overwrite --dry-run cocoapods
+          gem install cocoapods
           cd react-native-in-app-payments-quickstart
           yarn
           cd ios && pod install
