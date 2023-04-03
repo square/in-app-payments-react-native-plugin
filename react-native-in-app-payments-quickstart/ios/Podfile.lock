@@ -285,12 +285,12 @@ PODS:
     - React-perflogger (= 0.68.0)
   - RNGestureHandler (2.9.0):
     - React-Core
-  - RNSquareInAppPayments (1.5.6):
+  - RNSquareInAppPayments (1.6.1):
     - React
-    - SquareBuyerVerificationSDK (= 1.5.6)
-    - SquareInAppPaymentsSDK (= 1.5.6)
-  - SquareBuyerVerificationSDK (1.5.6)
-  - SquareInAppPaymentsSDK (1.5.6)
+    - SquareBuyerVerificationSDK (= 1.6.1)
+    - SquareInAppPaymentsSDK (= 1.6.1)
+  - SquareBuyerVerificationSDK (1.6.1)
+  - SquareInAppPaymentsSDK (1.6.1)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -437,11 +437,11 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 9b1304f48e344c55bb3c36e13bf11461cb4da5d8
   ReactCommon: fab89a13b52f1ac42b59a0e4b4f76f21aea9eebe
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
-  RNSquareInAppPayments: 3b4f6e96d1575c856255de00b27f36e702db45d4
-  SquareBuyerVerificationSDK: d1253b4ed9a1226dc8d4b5bc800cd47886768078
-  SquareInAppPaymentsSDK: 99476a38e643d4f2ebf86c0c2167752553683481
+  RNSquareInAppPayments: ede813773dc54376c765fdf6ca77a68ae763ac99
+  SquareBuyerVerificationSDK: f200ad95adc08bdefc80619cfa462f0451a7c436
+  SquareInAppPaymentsSDK: 44371b3788070e74b43009ab90649455277653b4
   Yoga: 6671cf077f614314c22fd09ddf87d7abeee64e96
 
-PODFILE CHECKSUM: 1d41a1d217b2c7cc0e90c8b7bf895c82a760b977
+PODFILE CHECKSUM: 02a139017a637df9e67a6a8dae0046dd7bb21bfa
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
