@@ -113,7 +113,16 @@ to download In-App Payments SDK automatically by following the steps below.
     ```bash
     pod install
     ```
-
+1. Add an In-App Payments SDK build phase:
+    1. Open the **Xcode** project for your application.
+    1. In the **Build Phases** tab for your application target, click the **+**
+        button at the top of the pane.
+    1. Select **New Run Script Phase**.
+    1. Paste the following into the editor panel of the new run script:
+        ```
+        FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
+        "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"
+        ```
 ## Step 4: Configure your Android project
 
 1. Open `android/build.gradle` and set your `minSdkVersion` to `21` or greater.

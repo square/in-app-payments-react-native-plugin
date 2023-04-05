@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "fbjs": "^3.0.4",
+    "jetifier": "^2.0.0",
     "react": "17.0.2",
     "react-native": "0.68.0",
     "react-native-gesture-handler": "^2.3.2",
@@ -40,6 +41,7 @@
   "resolutions": {
     "**/**/handlebars": "4.5.3",
     "**/**/logkitty": "^0.7.1",
-    "**/**/minimist": "^0.2.1"
+    "**/**/minimist": "^0.2.1",
+    "react-native-gesture-handler": "^2.3.2"
   }
 }

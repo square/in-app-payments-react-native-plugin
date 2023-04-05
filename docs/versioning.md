@@ -17,12 +17,23 @@ You can override the default In-App Payments SDK versions by following this guid
     $sqipVersion = '1.7.1'
     ```
 
-1. Remove the `ios/Podfile.lock` and build your project again.
+2. Remove the `ios/Podfile.lock` and build your project again.
     ```bash
     cd ios
     rm Podfile.lock
     pod install
     ```
+3. Add build phase to setup the SquareInAppPaymentsSDK and/or SquareBuyerVerificationSDK framework
+    After adding the framework using any of the above methods, follow the below instructions to complete the setup.
+
+    On your application targets’ Build Phases settings tab, click the + icon and choose New Run Script Phase. Create a Run Script in which you specify your shell (ex: /bin/sh), add the following contents to the script area below the shell:
+    ```bash
+    FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
+    "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"
+    ```
+
+Note : If you are using SquareBuyerVerificationSDK earlier than version 1.6.1 for iOS, please upgrade to 1.6.1 so that the SDK can process 3DS-enabled payments. The SDK will decline 3DS-enabled payments made after March 31, 2023 if the SDK version is earlier than 1.6.1.
+
 
 ## Android
 
