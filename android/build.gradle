@@ -35,8 +35,8 @@ android {
 rootProject.allprojects {
     repositories {
         google()
-         maven {
-            url "https://maven.google.com"
+       maven {
+            url 'https://sdk.squareup.com/public/android'
         }
     }
 }
