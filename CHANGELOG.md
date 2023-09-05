@@ -1,6 +1,6 @@
 ## Changelog
 
-### v1.7.4 Aep 04, 2023
+### v1.7.4 Sep 04, 2023
 
 * Upgrade IAP SDK for iOS `1.6.2`.
 
