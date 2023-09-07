@@ -32,7 +32,7 @@ You can override the default In-App Payments SDK versions by following this guid
     "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"
     ```
 
-Note : If you are using SquareBuyerVerificationSDK earlier than version 1.6.1 for iOS, please upgrade to 1.6.1 so that the SDK can process 3DS-enabled payments. The SDK will decline 3DS-enabled payments made after March 31, 2023 if the SDK version is earlier than 1.6.1.
+Note : If you are using SquareBuyerVerificationSDK earlier than version 1.6.2 for iOS, please upgrade to 1.6.2 so that the SDK can process 3DS-enabled payments. The SDK will decline 3DS-enabled payments made after March 31, 2023 if the SDK version is earlier than 1.6.2.
 
 
 ## Android
