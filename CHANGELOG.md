@@ -1,5 +1,19 @@
 ## Changelog
 
+### v1.7.5 Oct 12, 2023
+
+* Upgrade IAP SDK for Android `1.6.5`.
+
+### v1.7.4 Oct 05, 2023
+
+* Upgrade IAP SDK for iOS `1.6.2`.
+
+### v1.7.3 April 05, 2023
+
+* Upgrade IAP SDK for Android `1.6.2` and for iOS `1.6.1`.
+* An important update to SquareBuyerVerificationSDK that mitigates the risk of declining 3-D Secure (3DS) payments for ios.
+* Various bug fixes.
+
 ### v1.7.2 May 23, 2022
 
 * Upgrade IAP SDK to `1.5.6`.

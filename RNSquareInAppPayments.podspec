@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "RNSquareInAppPayments"
-  s.version      = "1.5.6"
+  s.version      = "1.6.2"
   s.summary      = "React Native plugin for Square's In-App Payments SDK"
   s.description  = <<-DESC
                    An open source React Native plugin for calling Square’s native In-App Payments SDK to take in-app payments on iOS and Android.
@@ -22,8 +22,8 @@ Pod::Spec.new do |s|
     s.dependency 'SquareInAppPaymentsSDK', $sqipVersion
     s.dependency 'SquareBuyerVerificationSDK', $sqipVersion
   else
-    s.dependency 'SquareInAppPaymentsSDK', '1.5.6'
-    s.dependency 'SquareBuyerVerificationSDK', '1.5.6'
+    s.dependency 'SquareInAppPaymentsSDK', '1.6.2'
+    s.dependency 'SquareBuyerVerificationSDK', '1.6.2'
   end
 
 end
