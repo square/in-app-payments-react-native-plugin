@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 /* eslint-disable @typescript-eslint/comma-dangle */
 /* eslint-disable no-tabs */
 /* eslint-disable @typescript-eslint/quotes */
@@ -13,6 +14,7 @@ import {
   IOSConfig,
   withAndroidManifest,
   withEntitlementsPlist,
+  withXcodeProject,
 } from "expo/config-plugins";
 
 const { addMetaDataItemToMainApplication, getMainApplicationOrThrow, removeMetaDataItemFromMainApplication } = AndroidConfig.Manifest;
@@ -35,10 +37,35 @@ const withSquareIos: ConfigPlugin<SquarePluginProps> = (expoConfig, { merchantId
   });
 };
 
+const withSquareXCodeProject: ConfigPlugin = (config) => {
+  return withXcodeProject(config, async (conf) => {
+    const project = conf.modResults;
+
+    project.addBuildPhase([], "PBXShellScriptBuildPhase", "Square Framework Run Script - InAppPaymentsSDK", project.getFirstTarget().uuid, {
+      shellPath: "/bin/sh",
+      shellScript: 'FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}" && "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"',
+    });
+
+    project.addBuildPhase(
+      [],
+      "PBXShellScriptBuildPhase",
+      "Square Framework Run Script - BuyerVerificationSDK",
+      project.getFirstTarget().uuid,
+      {
+        shellPath: "/bin/sh",
+        shellScript: 'FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}" && "${FRAMEWORKS}/BuyerVerificationSDK.framework/setup"',
+      }
+    );
+
+    return conf;
+  });
+};
+
 const withSquare: ConfigPlugin<SquarePluginProps> = (config, props) => {
   config = withSquareIos(config, props);
   config = withNoopSwiftFile(config);
   config = withSquareAndroid(config, props);
+  config = withSquareXCodeProject(config);
   return config;
 };
 
