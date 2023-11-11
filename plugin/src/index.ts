@@ -46,17 +46,6 @@ const withSquareXCodeProject: ConfigPlugin = (config) => {
       shellScript: 'FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}" && "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"',
     });
 
-    project.addBuildPhase(
-      [],
-      "PBXShellScriptBuildPhase",
-      "Square Framework Run Script - BuyerVerificationSDK",
-      project.getFirstTarget().uuid,
-      {
-        shellPath: "/bin/sh",
-        shellScript: 'FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}" && "${FRAMEWORKS}/BuyerVerificationSDK.framework/setup"',
-      }
-    );
-
     return conf;
   });
 };
