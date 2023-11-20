@@ -19,7 +19,7 @@ environment.
 ## Process overview
 
 * [Step 1: Create a React Native project](#step-1-create-a-react-native-project)
-* [Step 2: Install and link the React Native plugin for In-App Payments SDK](#step-2-install-and-link-the-react-native-plugin-for-in-app-payments-sdk)
+* [Step 2: Install the React Native plugin for In-App Payments SDK](#step-2-install-and-link-the-react-native-plugin-for-in-app-payments-sdk)
 * [Step 3a: Add the In-App Payments SDK to your iOS project without Cocoapods](#step-3a-add-the-in-app-payments-sdk-to-your-ios-project-without-cocoapods)
 * [Step 3b: Add the In-App Payments SDK to your iOS project with Cocoapods](#step-3b-add-the-in-app-payments-sdk-to-your-ios-project-with-cocoapods)
 * [Step 4: Configure your Android project](#step-4-configure-your-android-project)
@@ -54,13 +54,12 @@ run `npm install -g react-native-cli` or if you have installed the **Yarn** depe
 manager, `yarn global add react-native-cli`. 
 
 
-## Step 2: Install and link the React Native plugin for In-App Payments SDK
+## Step 2: Install the React Native plugin for In-App Payments SDK
 
 At a terminal prompt, run the following commands in the project root folder:
 
 ```bash
 yarn add react-native-square-in-app-payments
-react-native link react-native-square-in-app-payments
 ```
 
 ## Step 3a: Add the In-App Payments SDK to your iOS project without CocoaPods
@@ -73,7 +72,7 @@ to make it an available resource for the React Native plugin.
 put the **SquareInAppPaymentsSDK.framework** in folder `<YOUR_PROJECT_DIRECTORY>/ios`, otherwise
 the project won't compile.
     > Check the supported SDK version in the top of [root README].
-1. Set the `iOS Deployment Target` to 12.0 or above
+1. Set the `iOS Deployment Target` to 13.0 or above
 1. Add an In-App Payments SDK build phase:
     1. Open the **Xcode** project for your application.
     1. In the **Build Phases** tab for your application target, click the **+**
@@ -95,10 +94,10 @@ to download In-App Payments SDK automatically by following the steps below.
 
 1. Run `pod --version`, Make sure you have cocoapods version greater than `1.7.0`
 1. Open file `ios/Podfile`
-    * make sure you set the **platform** to `12.0` or above
+    * make sure you set the **platform** to `13.0` or above
     * verify if `RNSquareInAppPayments` pod dependency is added
     ```pod
-    platform :ios, '12.0' # set the platform version to 12.0
+    platform :ios, '13.0' # set the platform version to 13.0
 
     target 'myRNInAppPaymentsSample' do
       use_frameworks! # enalbe use_frameworks!
@@ -135,12 +134,12 @@ are just examples.
     ```gradle
     buildscript {
       ext {
-          buildToolsVersion = "28.0.2"
-          minSdkVersion = 21
-          compileSdkVersion = 28
-          targetSdkVersion = 27
-          supportLibVersion = "28.0.0"
-          sqipVersion = "1.2.0"
+          buildToolsVersion = "33.0.2"
+          minSdkVersion = 24
+          compileSdkVersion = 33
+          targetSdkVersion = 33
+          supportLibVersion = "33.0.0"
+          sqipVersion="1.6.5"
       }
       ...
     }
