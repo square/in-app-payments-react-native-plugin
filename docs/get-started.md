@@ -19,7 +19,7 @@ environment.
 ## Process overview
 
 * [Step 1: Create a React Native project](#step-1-create-a-react-native-project)
-* [Step 2: Install the React Native plugin for In-App Payments SDK](#step-2-install-and-link-the-react-native-plugin-for-in-app-payments-sdk)
+* [Step 2: Install the React Native plugin for In-App Payments SDK](#step-2-install-the-react-native-plugin-for-in-app-payments-sdk)
 * [Step 3a: Add the In-App Payments SDK to your iOS project without Cocoapods](#step-3a-add-the-in-app-payments-sdk-to-your-ios-project-without-cocoapods)
 * [Step 3b: Add the In-App Payments SDK to your iOS project with Cocoapods](#step-3b-add-the-in-app-payments-sdk-to-your-ios-project-with-cocoapods)
 * [Step 4: Configure your Android project](#step-4-configure-your-android-project)

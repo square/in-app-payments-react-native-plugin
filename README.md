@@ -33,7 +33,7 @@ In addition to this README, the following is available in the [React Native plug
 
 * Xcode version: 14.0 or greater.
 * iOS Base SDK: 13.0 or greater.
-* Deployment target: iOS 13.0 or greater.
+* Deployment target: iOS 14.1 or greater.
 
 ## In-App Payments SDK requirements and limitations
 
