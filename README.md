@@ -26,14 +26,14 @@ In addition to this README, the following is available in the [React Native plug
 ### Android
 
 * Android minSdkVersion is API 24 (Nougat, 7.0) or higher.
-* Android Target SDK version: API 28 (Android 9).
-* Android Gradle Plugin: 3.0.0 or greater.
+* Android Target SDK version: API 33 (Android 13).
+* Android Gradle Plugin: 4.0.0 or greater.
 
 ### iOS
 
-* Xcode version: 9.1 or greater.
-* iOS Base SDK: 12.0 or greater.
-* Deployment target: iOS 12.0 or greater.
+* Xcode version: 14.1 or greater.
+* iOS Base SDK: 13.0 or greater.
+* Deployment target: iOS 13.0 or greater.
 
 ## In-App Payments SDK requirements and limitations
 
