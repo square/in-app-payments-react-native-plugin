@@ -11,7 +11,12 @@
   "scripts": {
     "lint": "eslint ./ --ext .js,.ts",
     "test": "jest",
-    "test-coverage": "jest --collectCoverage"
+    "test-coverage": "jest --collectCoverage",
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "prepare": "expo-module prepare",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module"
   },
   "keywords": [
     "react-native",
@@ -22,11 +27,11 @@
   "author": "Square, Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@expo/config-types": "^47.0.0",
     "@types/jest": "^26.0.23",
     "@types/node": "^17.0.23",
     "@types/react": "^17.0.11",
     "@types/react-native": "^0.64.10",
-    "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "babel-eslint": "^10.1.0",
     "babel-jest": "27.0.1",
@@ -37,16 +42,23 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-native": "^3.11.0",
+    "expo": "^49.0.18",
+    "expo-module-scripts": "3.1.0",
     "jest": "^27.0.6",
     "metro-react-native-babel-preset": "0.56.0",
-    "react": "^17.0.2",
-    "react-native": "0.64.1",
-    "react-test-renderer": "16.9.0",
+    "react": "18.0.0",
+    "react-native": "0.69.2",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.3.5"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "react-native": ">= 0.57.8"
+    "expo": ">=47.0.0",
+    "react-native": "*"
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    }
   },
   "jest": {
     "preset": "react-native",

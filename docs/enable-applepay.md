@@ -4,22 +4,45 @@ This guide walks you through the process of enabling the Apple Pay digital walle
 for an app that uses the **React Native plugin for the Square [In-App Payments SDK]**. See the [React Native plugin Technical Reference](reference.md)
 for more detailed information about the [Apple Pay] methods available.
 
-**Apple Pay** can only be used on iOS devices. You must [set up Apple Pay requirements] and [enable Apple Pay] in the `ios/myRNInAppPaymentsSample` React Native project before using Apple Pay in this app. 
+**Apple Pay** can only be used on iOS devices. You must [set up Apple Pay requirements] and [enable Apple Pay] in the `ios/myRNInAppPaymentsSample` React Native project before using Apple Pay in this app.
+
+Alternatively, if you're using Expo, you can utilize the built-in config plugin to automatically configure the Apple Pay Merchant ID in your iOS project.
+
+Add the following to your `app.json`:
+
+```json
+{
+  "expo": {
+    ...
+    "plugins": [
+      [
+        "react-native-square-in-app-payments",
+        {
+          "merchantIdentifier": string | string [],
+        }
+      ]
+    ],
+  }
+}
+```
 
 ## Before you start
 
-* If you haven't already created a React Native project with In-App Payments SDK, use the [Getting Started with the React Native Plugin for In-App Payments SDK](get-started.md) to 
-set up a React Native project .
+- If you haven't already created a React Native project with In-App Payments SDK, use the [Getting Started with the React Native Plugin for In-App Payments SDK](get-started.md) to
+  set up a React Native project .
 
 ## Process overview
 
-* [Step 1: Upload an Apple Pay certificate to the Square Developer Portal](#step-1-upload-an-apple-pay-certificate-to-the-square-developer-portal)
-* [Step 2: Initialize Apple Pay and verify Apple Pay support](#step-2-initialize-apple-pay-and-verify-apple-pay-support)
-* [Step 3: Authorize payment with Apple Pay and get payment authorization result](#step-3-authorize-payment-with-apple-pay-and-get-payment-authorization-result)
+- [Enable Apple Pay with the React Native Plugin for In-App Payments SDK](#enable-apple-pay-with-the-react-native-plugin-for-in-app-payments-sdk)
+  - [Before you start](#before-you-start)
+  - [Process overview](#process-overview)
+  - [Step 1: Upload an Apple Pay certificate to the Square Developer Portal](#step-1-upload-an-apple-pay-certificate-to-the-square-developer-portal)
+  - [Step 2: Initialize Apple Pay and verify Apple Pay support](#step-2-initialize-apple-pay-and-verify-apple-pay-support)
+  - [Step 3: Authorize payment with Apple Pay and get payment authorization result](#step-3-authorize-payment-with-apple-pay-and-get-payment-authorization-result)
 
 ## Step 1: Upload an Apple Pay certificate to the Square Developer Portal
 
-To [add an Apple Pay payment processing certificate] in the **Apple Developer Portal**, 
+To [add an Apple Pay payment processing certificate] in the **Apple Developer Portal**,
 you must first obtain a Certificate Signing
 Request (CSR) from Square. The [Square Application Dashboard]
 provides a CSR file that can be submitted to Apple:
@@ -31,7 +54,7 @@ provides a CSR file that can be submitted to Apple:
 
 ## Step 2: Initialize Apple Pay and verify Apple Pay support
 
-Add code to initialize Apple Pay in your application State class. 
+Add code to initialize Apple Pay in your application State class.
 
 ```javascript
 import {
@@ -62,9 +85,10 @@ export default class App extends Component {
 }
 ```
 
-* Replace `REPLACE_WITH_APPLE_PAY_MERCHANT_ID` in this example with a valid apple pay merchant ID.
+- Replace `REPLACE_WITH_APPLE_PAY_MERCHANT_ID` in this example with a valid apple pay merchant ID.
 
 ## Step 3: Authorize payment with Apple Pay and get payment authorization result
+
 Open the Apple Pay sheet and request the user's authorization of the payment. On authorization, a
 payment nonce is returned in `onApplePayNonceRequestSuccess`.
 
@@ -160,19 +184,19 @@ export default class App extends Component {
   }
 }
 ```
+
 ---
+
 **Note:** the `chargeCard` method in this example shows a typical REST request on a backend process
 that uses the **Payments API** to take a payment with the supplied nonce.
 See [BackendQuickStart Sample] to learn about building an app that processes payment nonces on a server.
 
-
-
 [//]: # "Link anchor definitions"
-[In-App Payments SDK]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
-[root README]: ../README.md
-[Apple Pay]: https://developer.apple.com/documentation/passkit/apple_pay
-[add an Apple Pay payment processing certificate]: https://help.apple.com/developer-account/#/devb2e62b839?sub=devf31990e3f
-[Square Application Dashboard]: https://connect.squareup.com/apps/
-[set up Apple Pay requirements]: https://developer.apple.com/documentation/passkit/apple_pay/setting_up_apple_pay_requirements
-[enable Apple Pay]: https://help.apple.com/xcode/mac/9.3/#/deva43983eb7?sub=dev44ce8ef13
-[BackendQuickStart Sample]: https://github.com/square/in-app-payments-server-quickstart
+[in-app payments sdk]: https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
+[root readme]: ../README.md
+[apple pay]: https://developer.apple.com/documentation/passkit/apple_pay
+[add an apple pay payment processing certificate]: https://help.apple.com/developer-account/#/devb2e62b839?sub=devf31990e3f
+[square application dashboard]: https://connect.squareup.com/apps/
+[set up apple pay requirements]: https://developer.apple.com/documentation/passkit/apple_pay/setting_up_apple_pay_requirements
+[enable apple pay]: https://help.apple.com/xcode/mac/9.3/#/deva43983eb7?sub=dev44ce8ef13
+[backendquickstart sample]: https://github.com/square/in-app-payments-server-quickstart
