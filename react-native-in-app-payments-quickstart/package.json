@@ -14,7 +14,7 @@
     "fbjs": "^3.0.4",
     "jetifier": "^2.0.0",
     "react": "17.0.2",
-    "react-native": "0.68.0",
+    "react-native": "^0.69.12",
     "react-native-gesture-handler": "^2.3.2",
     "react-native-modal": "^13.0.1",
     "react-native-square-in-app-payments": "file:../",
