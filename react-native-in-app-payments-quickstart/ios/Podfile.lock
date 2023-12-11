@@ -405,7 +405,7 @@ EXTERNAL SOURCES:
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNSquareInAppPayments:
-    :path: "../node_modules/react-native-square-in-app-payments"
+    :path: "../.."
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
