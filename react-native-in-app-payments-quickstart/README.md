@@ -57,6 +57,9 @@ Change to the quick start sample folder and install the plugin using `yarn`:
 Run the React Native project from the `react-native-in-app-payments-quickstart` project folder:
 
   ```bash
+  cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart/ios
+  pod install
+  
   cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart
   react-native run-ios
   ```
