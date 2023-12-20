@@ -56,6 +56,17 @@ Change to the quick start sample folder and install the plugin using `yarn`:
 
 Run the React Native project from the `react-native-in-app-payments-quickstart` project folder:
 
+  1. First Add an script in build phase:
+    1. Open the **Xcode** project for your application.
+    1. In the **Build Phases** tab for your application target, click the **+**
+        button at the top of the pane.
+    1. Select **New Run Script Phase**.
+    1. Paste the following into the editor panel of the new run script:
+        ```
+        FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
+        "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"
+        ```
+
   ```bash
   cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart/ios
   pod install
