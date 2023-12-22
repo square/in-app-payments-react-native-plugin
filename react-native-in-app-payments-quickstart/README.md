@@ -56,8 +56,6 @@ Change to the quick start sample folder and install the plugin using `yarn`:
 
 Run the React Native project from the `react-native-in-app-payments-quickstart` project folder:
 
-  1. Add build phase to setup SquareInAppPaymentsSDK:
-    1. Open the **Xcode** project for your application.
     1. In the **Build Phases** tab for the **RNInAppPaymentsQuickstart** target click the **+**
         button at the top of the pane.
     1. Select **New Run Script Phase**.
