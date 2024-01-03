@@ -56,22 +56,29 @@ Change to the quick start sample folder and install the plugin using `yarn`:
 
 Run the React Native project from the `react-native-in-app-payments-quickstart` project folder:
 
-    1. In the **Build Phases** tab for the **RNInAppPaymentsQuickstart** target click the **+**
+1. In the **Build Phases** tab for the **RNInAppPaymentsQuickstart** target click the **+**
         button at the top of the pane.
-    1. Select **New Run Script Phase**.
-    1. Paste the following into the editor panel of the new run script:
-        ```
-        FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
-        "${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"
-        ```
+2. Select **New Run Script Phase**.
+3. Paste the following into the editor panel of the new run script:
 
-  ```bash
-  cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart/ios
-  pod install
+	```
+	FRAMEWORKS="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
+	"${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup"
+	```
+
+1. Install CocoaPods
+
+	```bash
+	cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart/ios
+	pod install
+	```
   
-  cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart
-  react-native run-ios
-  ```
+1. Run the app
+
+	```
+	cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart
+	react-native run-ios
+	```
 
 > **NOTE**: Make sure the folder `/PATH/TO/LOCAL/react-native-in-app-payments-quickstart/node_modules/react-native-square-in-app-payments/node_modules`
   is empty before you run `run-ios`.
