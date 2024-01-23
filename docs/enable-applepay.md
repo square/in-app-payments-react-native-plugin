@@ -4,7 +4,7 @@ This guide walks you through the process of enabling the Apple Pay digital walle
 for an app that uses the **React Native plugin for the Square [In-App Payments SDK]**. See the [React Native plugin Technical Reference](reference.md)
 for more detailed information about the [Apple Pay] methods available.
 
-**Apple Pay** can only be used on iOS devices. You must [set up Apple Pay requirements] and [enable Apple Pay] in the `ios/myRNInAppPaymentsSample` React Native project before using Apple Pay in this app. 
+**Apple Pay** can only be used on iOS devices. You must [set up Apple Pay requirements] and [enable Apple Pay] in the `ios/myRNInAppPaymentsSample` React Native project before using Apple Pay in this app. Apple Pay on sandbox on simulator is currently *unsupported*, and we recommend testing with a physical device.
 
 ## Before you start
 
