@@ -22,8 +22,8 @@ Pod::Spec.new do |s|
     s.dependency 'SquareInAppPaymentsSDK', $sqipVersion
     s.dependency 'SquareBuyerVerificationSDK', $sqipVersion
   else
-    s.dependency 'SquareInAppPaymentsSDK', '1.6.2'
-    s.dependency 'SquareBuyerVerificationSDK', '1.6.2'
+    s.dependency 'SquareInAppPaymentsSDK', '1.6.3'
+    s.dependency 'SquareBuyerVerificationSDK', '1.6.3'
   end
 
 end
