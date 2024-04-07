@@ -301,7 +301,8 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   private long readCardEntryCloseExitAnimationDurationMs() {
     long delayDurationMs = 0;
     Resources.Theme theme = Objects.requireNonNull(getCurrentActivity()).getResources().newTheme();
-    theme.applyStyle(R.style.sqip_Theme_CardEntry, true);
+    // broken with RN 0.73, see: https://github.com/square/in-app-payments-react-native-plugin/issues/229
+    // theme.applyStyle(R.style.sqip_Theme_CardEntry, true);
     int[] attrs = { android.R.attr.activityCloseExitAnimation };
     TypedArray typedArray = theme.obtainStyledAttributes(null, attrs, android.R.attr.windowAnimationStyle, 0);
     int resId = typedArray.getResourceId(0, -1);
