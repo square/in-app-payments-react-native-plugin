@@ -1,5 +1,5 @@
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../../node_modules/react-native/scripts/react_native_pods'
+require_relative '../../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 platform :ios, '13.0'
 
@@ -21,13 +21,13 @@ target 'RNInAppPaymentsQuickstart' do
   # you should disable the next line.
   # use_flipper!()
 
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+  pod 'RNGestureHandler', :path => '../../node_modules/react-native-gesture-handler'
 
   post_install do |installer|
     react_native_post_install(installer)
-    installer.pods_project.build_configurations.each do |config|
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-    end
+    # installer.pods_project.build_configurations.each do |config|
+    #   config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    # end
   end
 
   # post_install do |installer|

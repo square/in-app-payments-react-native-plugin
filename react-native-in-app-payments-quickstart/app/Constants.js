@@ -13,8 +13,8 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-const SQUARE_APP_ID = 'REPLACE_ME';
-const SQUARE_LOCATION_ID = 'REPLACE_ME';
+const SQUARE_APP_ID = 'sq0idp-279w1ejUbhuatNoaumEidg';
+const SQUARE_LOCATION_ID = '8KCT0W4CF2S3E';
 // Make sure to remove trailing `/` since the CHARGE_SERVER_URL puts it
 const CHARGE_SERVER_HOST = 'REPLACE_ME';
 const CHARGE_SERVER_URL = `${CHARGE_SERVER_HOST}/chargeForCookie`;
