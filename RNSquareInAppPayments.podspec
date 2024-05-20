@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/square/in-app-payments-react-native-plugin"
   s.license      = { :file => 'LICENSE' }
   s.author       = { 'Square, Inc.' => 'flutter-team@squareup.com' }
-  s.platform     = :ios, "12.0"
+  s.platform     = :ios, "9.0"
   s.source       = { :path => 'ios' }
   s.source_files  = "ios/**/*.{h,m}"
   s.public_header_files = 'ios/**/*.h'
