@@ -15,12 +15,6 @@
 */
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Platform } from 'react-native';
-import {
-  SQIPCardEntry,
-  SQIPApplePay,
-  SQIPCore,
-  SQIPGooglePay,
-} from 'react-native-square-in-app-payments';
 import Modal from 'react-native-modal';
 import OrderModal from '../components/OrderModal';
 import CardsOnFileModal from '../components/CardsOnFileModal';
@@ -39,8 +33,7 @@ import chargeCardNonce from '../service/Charge';
 import createCustomerCard from '../service/CreateCustomerCard';
 import chargeCustomerCard from '../service/ChargeCustomerCard';
 import CommonAlert from '../components/CommonAlert';
-
-require('../images/iconCookie.png');
+import { SQIPApplePay, SQIPCardEntry, SQIPCore, SQIPGooglePay } from "react-native-square-in-app-payments";
 
 const cookieImage = require('../images/iconCookie.png');
 

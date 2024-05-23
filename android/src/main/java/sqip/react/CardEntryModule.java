@@ -301,7 +301,7 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   private long readCardEntryCloseExitAnimationDurationMs() {
     long delayDurationMs = 0;
     Resources.Theme theme = Objects.requireNonNull(getCurrentActivity()).getResources().newTheme();
-    theme.applyStyle(R.style.sqip_Theme_CardEntry, true);
+    theme.applyStyle(R.style.sqip_ThemeCardEntry, true);
     int[] attrs = { android.R.attr.activityCloseExitAnimation };
     TypedArray typedArray = theme.obtainStyledAttributes(null, attrs, android.R.attr.windowAnimationStyle, 0);
     int resId = typedArray.getResourceId(0, -1);

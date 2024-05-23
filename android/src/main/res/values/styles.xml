@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="sqip_ThemeCardEntry" parent="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+</resources>
