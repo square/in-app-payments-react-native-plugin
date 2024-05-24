@@ -9,6 +9,7 @@ module.exports = {
     'import/resolver': {
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        moduleDirectory: ['node_modules', './'],
       },
     },
   },
@@ -32,5 +33,6 @@ module.exports = {
     'class-methods-use-this': 0,
     'import/no-extraneous-dependencies': 0,
     'import/extensions': 0,
+    'import/no-unresolved': 2,
   },
 };
