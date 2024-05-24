@@ -22,7 +22,7 @@ describe('Test Utilities', () => {
     const message = 'test message';
     const debugCode = 'rn_test_debug_code';
     const debugMessage = 'test debug message';
-    const err = {message:''};
+    const err = { message: '' };
     err.message = `{ "message": "${message}", "debugCode": "${debugCode}", "debugMessage": "${debugMessage}" }`;
     const inAppPaymentsError = Utilities.createInAppPayementsError(err);
     expect(inAppPaymentsError.message).toBe(message);
