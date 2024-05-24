@@ -22,7 +22,7 @@ describe('Test Utilities', () => {
     const message = 'test message';
     const debugCode = 'rn_test_debug_code';
     const debugMessage = 'test debug message';
-    const err = new Error();
+    const err = {message:''};
     err.message = `{ "message": "${message}", "debugCode": "${debugCode}", "debugMessage": "${debugMessage}" }`;
     const inAppPaymentsError = Utilities.createInAppPayementsError(err);
     expect(inAppPaymentsError.message).toBe(message);
@@ -31,7 +31,7 @@ describe('Test Utilities', () => {
   });
 
   it('createInAppPayementsError append parseEx with invalid ex.message', () => {
-    const err = new Error('Invalid Error');
+    const err = 'Invalid Error';
     const inAppPaymentsError = Utilities.createInAppPayementsError(err);
     expect(inAppPaymentsError.message).toBe('Invalid Error');
     expect(inAppPaymentsError.debugCode).not.toBeDefined();
@@ -39,7 +39,7 @@ describe('Test Utilities', () => {
   });
 
   it('createInAppPayementsError append parseEx with invalid ex.message', () => {
-    const err = new Error('Invalid Error');
+    const err = '';
     const inAppPaymentsError = Utilities.createInAppPayementsError(err);
     expect(inAppPaymentsError.message).toBe('Invalid Error');
     expect(inAppPaymentsError.debugCode).not.toBeDefined();
