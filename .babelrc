@@ -1,4 +1,11 @@
 {
-  "presets": ["module:metro-react-native-babel-preset"],
-  "plugins": ["jest-hoist"],
+  "presets": [
+    [
+      "next/babel",
+      {
+        "preset-env": { "targets": { "node": true } }
+      }
+    ]
+  ],
+  "plugins": ["jest-hoist"]
 }
