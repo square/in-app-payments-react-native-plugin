@@ -1,4 +1,15 @@
 {
-  "presets": ["es2015"],
-  "plugins": ["jest-hoist"]
+  "presets": [
+    [
+      "env",
+      {
+        "exclude": [
+          "transform-es2015-classes"
+        ]
+      }
+    ]
+  ],
+  "plugins": [
+    "jest-hoist"
+  ]
 }
