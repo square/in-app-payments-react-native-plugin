@@ -1,11 +1,4 @@
 {
-  "presets": [
-    [
-      "next/babel",
-      {
-        "preset-env": { "targets": { "node": true } }
-      }
-    ]
-  ],
+  "presets": ["es2015"],
   "plugins": ["jest-hoist"]
 }
