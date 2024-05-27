@@ -641,7 +641,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../images/iconCookie.png')} />
+      {/* <Image source={require('../images/iconCookie.png')} /> */}
       <Text style={styles.title}>Super Cookie</Text>
       <Text style={styles.description}>
         Instantly gain special powers when ordering a super cookie
