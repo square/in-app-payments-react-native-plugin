@@ -41,27 +41,27 @@ jobs:
           cd react-native-in-app-payments-quickstart && yarn
           cd android && ./gradlew clean build        
 
-  # build-ios:
-  #   needs: install-and-test
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18.x
-  #     - run: |
-  #         gem install cocoapods
-  #         cd react-native-in-app-payments-quickstart
-  #         yarn
-  #         cd ios && pod install
-  #     - name: Build iOS (debug)
-  #       run: "xcodebuild \
-  #       -workspace react-native-in-app-payments-quickstart/ios/RNInAppPaymentsQuickstart.xcworkspace \
-  #       -scheme RNInAppPaymentsQuickstart \
-  #       clean archive \
-  #       -sdk iphoneos \
-  #       -configuration Debug \
-  #       -UseModernBuildSystem=NO \
-  #       -archivePath $PWD/RNInAppPaymentsQuickstart \
-  #       CODE_SIGNING_ALLOWED=NO"  
+  build-ios:
+    needs: install-and-test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: |
+          gem install cocoapods
+          cd react-native-in-app-payments-quickstart
+          yarn
+          cd ios && pod install
+      - name: Build iOS (debug)
+        run: "xcodebuild \
+        -workspace react-native-in-app-payments-quickstart/ios/RNInAppPaymentsQuickstart.xcworkspace \
+        -scheme RNInAppPaymentsQuickstart \
+        clean archive \
+        -sdk iphoneos \
+        -configuration Debug \
+        -UseModernBuildSystem=NO \
+        -archivePath $PWD/RNInAppPaymentsQuickstart \
+        CODE_SIGNING_ALLOWED=NO"  
