@@ -1185,6 +1185,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNReanimated (3.11.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNSquareInAppPayments (1.6.3):
     - React
     - SquareBuyerVerificationSDK (= 1.6.3)
@@ -1251,6 +1272,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNSquareInAppPayments (from `../node_modules/react-native-square-in-app-payments`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1370,6 +1392,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNSquareInAppPayments:
     :path: "../node_modules/react-native-square-in-app-payments"
   Yoga:
@@ -1430,6 +1454,7 @@ SPEC CHECKSUMS:
   React-utils: 3285151c9d1e3a28a9586571fc81d521678c196d
   ReactCommon: f42444e384d82ab89184aed5d6f3142748b54768
   RNGestureHandler: 2282cfbcf86c360d29f44ace393203afd5c6cff7
+  RNReanimated: 7ad0f08a845cb60955ee5d461d2156d7b9707118
   RNSquareInAppPayments: 69e4c6d6be92bc7f94cca947fc91264dc8f8343b
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   SquareBuyerVerificationSDK: d325f473a724cfa5684a837296a307152ca52854
