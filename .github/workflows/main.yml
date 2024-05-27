@@ -17,9 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: action/checkout@v2
+        uses: action/checkout@v4
       - name: Set up JDK 17
-        uses: action/setup-java@v3
+        uses: action/setup-java@v4
         with: 
           distribution: 'temurin'
           java-version: '17'
