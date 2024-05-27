@@ -16,8 +16,9 @@ jobs:
     needs: install-and-test
     runs-on: ubuntu-latest
     steps:
-      - uses: action/checkout@v2
-      - name: Use Java 17
+      - name: Checkout repository
+        uses: action/checkout@v2
+      - name: Set up JDK 17
         uses: action/setup-java@v3
         with: 
           distribution: 'temurin'
