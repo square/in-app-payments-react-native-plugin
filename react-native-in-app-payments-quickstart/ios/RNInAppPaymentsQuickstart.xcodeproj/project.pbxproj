@@ -7,18 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		06E09225FED4A89E27671146 /* libPods-RNInAppPaymentsQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDF4066AFD654EF26A80E39 /* libPods-RNInAppPaymentsQuickstart.a */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		31618CB9F61E48A0857E0EFE /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE6BCB3A1728442EB9F5104E /* libRNGestureHandler.a */; };
 		3374A13B269408843FD7A96A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 54C0997F197CAB5980784EC7 /* PrivacyInfo.xcprivacy */; };
 		59F1AC18231992AF00621E95 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59F1ABF1231992AF00621E95 /* JavaScriptCore.framework */; };
-		8C35AE142BFF58BB0085874A /* SquareInAppPaymentsSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8CD0B5102BFF1999008E3251 /* SquareInAppPaymentsSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8CA4A31A2BFDF8B3003FB39E /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4A3192BFDF8B3003FB39E /* AppDelegate.mm */; };
-		8CD0B5112BFF1999008E3251 /* SquareInAppPaymentsSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CD0B5102BFF1999008E3251 /* SquareInAppPaymentsSDK.framework */; };
 		8CD213032BFF804E00599581 /* SquareInAppPaymentsSDK.framework in Resources */ = {isa = PBXBuildFile; fileRef = 8CD0B5102BFF1999008E3251 /* SquareInAppPaymentsSDK.framework */; };
-		F108A1E60E2743E49C3E176F /* libRNSquareInAppPayments.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CB49B87AF84302B7235299 /* libRNSquareInAppPayments.a */; };
+		8CD48A742C04F77B00976978 /* SquareInAppPaymentsSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2496382C04A06B00F27BC9 /* SquareInAppPaymentsSDK.xcframework */; };
+		AA147E4AF2AF391A39B0BC38 /* Pods_RNInAppPaymentsQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6561D0AC31E91D634DEC5C49 /* Pods_RNInAppPaymentsQuickstart.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,7 +26,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8C35AE142BFF58BB0085874A /* SquareInAppPaymentsSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -47,11 +44,13 @@
 		54C0997F197CAB5980784EC7 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = RNInAppPaymentsQuickstart/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		59F1ABF1231992AF00621E95 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		610FCFFB76AF32F6B0766BAB /* Pods-RNInAppPaymentsQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNInAppPaymentsQuickstart.release.xcconfig"; path = "Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart.release.xcconfig"; sourceTree = "<group>"; };
+		6561D0AC31E91D634DEC5C49 /* Pods_RNInAppPaymentsQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RNInAppPaymentsQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C2496382C04A06B00F27BC9 /* SquareInAppPaymentsSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SquareInAppPaymentsSDK.xcframework; path = Pods/SquareInAppPaymentsSDK/XCFrameworks/SquareInAppPaymentsSDK.xcframework; sourceTree = "<group>"; };
+		8C24963A2C04A07A00F27BC9 /* libRNSquareInAppPayments.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNSquareInAppPayments.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CA4A3192BFDF8B3003FB39E /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = RNInAppPaymentsQuickstart/AppDelegate.mm; sourceTree = "<group>"; };
 		8CD0B5102BFF1999008E3251 /* SquareInAppPaymentsSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SquareInAppPaymentsSDK.framework; sourceTree = "<group>"; };
 		9366025E6D82E1C7C7E4FAF9 /* Pods-RNInAppPaymentsQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNInAppPaymentsQuickstart.debug.xcconfig"; path = "Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
 		C8CB49B87AF84302B7235299 /* libRNSquareInAppPayments.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSquareInAppPayments.a; sourceTree = "<group>"; };
-		DDDF4066AFD654EF26A80E39 /* libPods-RNInAppPaymentsQuickstart.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNInAppPaymentsQuickstart.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE6BCB3A1728442EB9F5104E /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,11 +59,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CD48A742C04F77B00976978 /* SquareInAppPaymentsSDK.xcframework in Frameworks */,
 				59F1AC18231992AF00621E95 /* JavaScriptCore.framework in Frameworks */,
-				F108A1E60E2743E49C3E176F /* libRNSquareInAppPayments.a in Frameworks */,
 				31618CB9F61E48A0857E0EFE /* libRNGestureHandler.a in Frameworks */,
-				8CD0B5112BFF1999008E3251 /* SquareInAppPaymentsSDK.framework in Frameworks */,
-				06E09225FED4A89E27671146 /* libPods-RNInAppPaymentsQuickstart.a in Frameworks */,
+				AA147E4AF2AF391A39B0BC38 /* Pods_RNInAppPaymentsQuickstart.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,9 +95,11 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8C24963A2C04A07A00F27BC9 /* libRNSquareInAppPayments.a */,
+				8C2496382C04A06B00F27BC9 /* SquareInAppPaymentsSDK.xcframework */,
 				59F1ABF1231992AF00621E95 /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				DDDF4066AFD654EF26A80E39 /* libPods-RNInAppPaymentsQuickstart.a */,
+				6561D0AC31E91D634DEC5C49 /* Pods_RNInAppPaymentsQuickstart.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -159,7 +159,7 @@
 				110233C721F10681008F6C3D /* Embed Frameworks */,
 				4574BDB937B7D93FB3DBACE8 /* [CP] Embed Pods Frameworks */,
 				54553DFF54BD7138AACCB48D /* [CP] Copy Pods Resources */,
-				8C306ADE2BD7A2CF0002B7AF /* ShellScript */,
+				8C070E592C048CA3005F4D42 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -225,6 +225,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -261,7 +262,7 @@
 		};
 		4574BDB937B7D93FB3DBACE8 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -276,10 +277,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SquareInAppPaymentsSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		54553DFF54BD7138AACCB48D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -302,8 +302,9 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8C306ADE2BD7A2CF0002B7AF /* ShellScript */ = {
+		8C070E592C048CA3005F4D42 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -318,6 +319,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -355,8 +357,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = RNInAppPaymentsQuickstart/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -389,7 +395,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = RNInAppPaymentsQuickstart/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -460,12 +466,26 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -515,11 +535,25 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD = "";
 				LDPLUSPLUS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
