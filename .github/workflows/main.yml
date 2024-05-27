@@ -16,12 +16,12 @@ jobs:
     needs: install-and-test
     runs-on: ubuntu-latest
     steps:
-        - uses: action/checkout@v2
-        - name: Use Java 17
-        - uses: action/setup-java@v3
-          with: 
-            distribution: 'temurin'
-            java-version: '17'
+      - uses: action/checkout@v2
+      - name: Use Java 17
+      - uses: action/setup-java@v3
+        with: 
+          distribution: 'temurin'
+          java-version: '17'
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
         with:
