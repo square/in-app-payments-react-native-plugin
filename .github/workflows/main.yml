@@ -62,6 +62,6 @@ jobs:
         clean archive \
         -sdk iphoneos \
         -configuration Debug \
-        -UseModernBuildSystem=NO \
+        -UseModernBuildSystem=YES \
         -archivePath $PWD/RNInAppPaymentsQuickstart \
         CODE_SIGNING_ALLOWED=NO"  
