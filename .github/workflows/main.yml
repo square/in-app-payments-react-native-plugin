@@ -16,6 +16,13 @@ jobs:
     needs: install-and-test
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: action/checkout@v2
+      - name: Set up JDK 17
+        uses: action/setup-java@v3
+        with: 
+          distribution: 'temurin'
+          java-version: '17'
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
         with:
@@ -42,7 +49,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
       - run: |
           gem install cocoapods
           cd react-native-in-app-payments-quickstart
