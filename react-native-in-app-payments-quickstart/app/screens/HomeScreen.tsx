@@ -35,8 +35,6 @@ import chargeCustomerCard from '../service/ChargeCustomerCard';
 import CommonAlert from '../components/CommonAlert';
 import { SQIPApplePay, SQIPCardEntry, SQIPCore, SQIPGooglePay } from "react-native-square-in-app-payments";
 
-const cookieImage = require('../images/iconCookie.png');
-
 const applePayStatus = {
   none: 0,
   succeeded: 1,
@@ -643,7 +641,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={cookieImage} />
+      <Image source={require('../images/iconCookie.png')} />
       <Text style={styles.title}>Super Cookie</Text>
       <Text style={styles.description}>
         Instantly gain special powers when ordering a super cookie
