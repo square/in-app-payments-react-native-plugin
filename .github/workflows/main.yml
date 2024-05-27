@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: action/checkout@v2
+        - name: Use Java 17
         - uses: action/setup-java@v3
           with: 
             distribution: 'temurin'
