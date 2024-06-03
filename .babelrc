@@ -1,4 +1,15 @@
 {
-  "presets": ["module:metro-react-native-babel-preset"],
-  "plugins": ["jest-hoist"],
+  "presets": [
+    [
+      "env",
+      {
+        "exclude": [
+          "transform-es2015-classes"
+        ]
+      }
+    ]
+  ],
+  "plugins": [
+    "jest-hoist"
+  ]
 }

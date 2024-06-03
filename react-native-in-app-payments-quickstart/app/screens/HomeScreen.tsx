@@ -15,12 +15,6 @@
 */
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Platform } from 'react-native';
-import {
-  SQIPCardEntry,
-  SQIPApplePay,
-  SQIPCore,
-  SQIPGooglePay,
-} from 'react-native-square-in-app-payments';
 import Modal from 'react-native-modal';
 import OrderModal from '../components/OrderModal';
 import CardsOnFileModal from '../components/CardsOnFileModal';
@@ -39,10 +33,7 @@ import chargeCardNonce from '../service/Charge';
 import createCustomerCard from '../service/CreateCustomerCard';
 import chargeCustomerCard from '../service/ChargeCustomerCard';
 import CommonAlert from '../components/CommonAlert';
-
-require('../images/iconCookie.png');
-
-const cookieImage = require('../images/iconCookie.png');
+import { SQIPApplePay, SQIPCardEntry, SQIPCore, SQIPGooglePay } from "react-native-square-in-app-payments";
 
 const applePayStatus = {
   none: 0,
@@ -650,7 +641,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={cookieImage} />
+      <Image source={require('../images/iconCookie.png')} />
       <Text style={styles.title}>Super Cookie</Text>
       <Text style={styles.description}>
         Instantly gain special powers when ordering a super cookie

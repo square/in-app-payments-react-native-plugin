@@ -14,4 +14,5 @@ module.exports = {
     '\\.snap$',
     '<rootDir>/node_modules/',
   ],
+  testEnvironment: 'node',
 };

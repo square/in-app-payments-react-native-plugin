@@ -7,15 +7,22 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.x
+          node-version: 18.x
       - run: |
           yarn && yarn lint && yarn test
-          cd react-native-in-app-payments-quickstart && yarn && yarn lint && cd .. 
+          cd react-native-in-app-payments-quickstart && yarn && cd .. 
 
   build-android:
     needs: install-and-test
     runs-on: ubuntu-latest
-    steps:      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with: 
+          distribution: 'temurin'
+          java-version: '17'
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
         with:
@@ -37,12 +44,12 @@ jobs:
   build-ios:
     needs: install-and-test
     runs-on: macos-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 18.x
       - run: |
           gem install cocoapods
           cd react-native-in-app-payments-quickstart
@@ -57,4 +64,6 @@ jobs:
         -configuration Debug \
         -UseModernBuildSystem=NO \
         -archivePath $PWD/RNInAppPaymentsQuickstart \
-        CODE_SIGNING_ALLOWED=NO"  
+        CODE_SIGNING_ALLOWED=NO \
+        CODE_SIGNING_REQUIRED=NO \
+        CODE_SIGN_IDENTITY=NO"
