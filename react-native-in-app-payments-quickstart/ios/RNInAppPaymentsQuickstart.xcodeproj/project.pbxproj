@@ -10,7 +10,6 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		31618CB9F61E48A0857E0EFE /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE6BCB3A1728442EB9F5104E /* libRNGestureHandler.a */; };
 		3374A13B269408843FD7A96A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 54C0997F197CAB5980784EC7 /* PrivacyInfo.xcprivacy */; };
 		59F1AC18231992AF00621E95 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59F1ABF1231992AF00621E95 /* JavaScriptCore.framework */; };
 		8CA4A31A2BFDF8B3003FB39E /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4A3192BFDF8B3003FB39E /* AppDelegate.mm */; };
@@ -50,8 +49,6 @@
 		8CA4A3192BFDF8B3003FB39E /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = RNInAppPaymentsQuickstart/AppDelegate.mm; sourceTree = "<group>"; };
 		8CD0B5102BFF1999008E3251 /* SquareInAppPaymentsSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SquareInAppPaymentsSDK.framework; sourceTree = "<group>"; };
 		9366025E6D82E1C7C7E4FAF9 /* Pods-RNInAppPaymentsQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNInAppPaymentsQuickstart.debug.xcconfig"; path = "Target Support Files/Pods-RNInAppPaymentsQuickstart/Pods-RNInAppPaymentsQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
-		C8CB49B87AF84302B7235299 /* libRNSquareInAppPayments.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSquareInAppPayments.a; sourceTree = "<group>"; };
-		DE6BCB3A1728442EB9F5104E /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +58,6 @@
 			files = (
 				8CD48A742C04F77B00976978 /* SquareInAppPaymentsSDK.xcframework in Frameworks */,
 				59F1AC18231992AF00621E95 /* JavaScriptCore.framework in Frameworks */,
-				31618CB9F61E48A0857E0EFE /* libRNGestureHandler.a in Frameworks */,
 				AA147E4AF2AF391A39B0BC38 /* Pods_RNInAppPaymentsQuickstart.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,8 +68,6 @@
 		117DD16E21EE93C900EB6DC8 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				C8CB49B87AF84302B7235299 /* libRNSquareInAppPayments.a */,
-				DE6BCB3A1728442EB9F5104E /* libRNGestureHandler.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -482,10 +476,7 @@
 				LDPLUSPLUS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -550,10 +541,7 @@
 				LD = "";
 				LDPLUSPLUS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
