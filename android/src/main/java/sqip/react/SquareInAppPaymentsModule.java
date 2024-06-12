@@ -33,6 +33,8 @@ class SquareInAppPaymentsModule extends ReactContextBaseJavaModule {
   public SquareInAppPaymentsModule(ReactApplicationContext reactContext) {
     super(reactContext);
     mainLooperHandler = new Handler(Looper.getMainLooper());
+    this.listeners = new HashMap<>();
+
   }
 
   @Override
