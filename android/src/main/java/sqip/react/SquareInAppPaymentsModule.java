@@ -47,4 +47,24 @@ class SquareInAppPaymentsModule extends ReactContextBaseJavaModule {
       }
     });
   }
+
+    @ReactMethod
+    public void addListener(String eventName) {
+      if (!listeners.containsKey(eventName)) {
+        listeners.put(eventName, 1);
+    } else {
+        listeners.put(eventName, listeners.get(eventName) + 1);
+    }    }
+
+    @ReactMethod
+    public void removeListeners(Integer count) {
+      for (Map.Entry<String, Integer> entry : listeners.entrySet()) {
+        int currentCount = entry.getValue();
+        if (currentCount <= count) {
+            listeners.remove(entry.getKey());
+        } else {
+            listeners.put(entry.getKey(), currentCount - count);
+        }
+    }    }
 }
+
