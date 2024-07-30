@@ -1,4 +1,5 @@
-/*Copyright 2022 Square Inc.
+/*
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -12,21 +13,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './app/screens/HomeScreen';
-
-const Stack = createNativeStackNavigator();
-
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+export default class CreateCustomerCardError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'CreateCustomerCardError';
+  }
 }
-
-export default App;

@@ -14,14 +14,13 @@
  limitations under the License.
 */
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Platform } from 'react-native';
+import { StyleSheet, Text, View, Image, Platform, Modal } from 'react-native';
 import {
   SQIPCardEntry,
   SQIPApplePay,
   SQIPCore,
   SQIPGooglePay,
 } from 'react-native-square-in-app-payments';
-import Modal from 'react-native-modal';
 import OrderModal from '../components/OrderModal';
 import CardsOnFileModal from '../components/CardsOnFileModal';
 import PendingModal from '../components/PendingModal';
@@ -657,24 +656,20 @@ export default function HomeScreen() {
       </Text>
       <GreenButton onPress={() => { setshowingBottomSheet(true) }} text="Buy" />
       {showCommonAlert(title, description)}
-      <Modal
-        isVisible={showingBottomSheet}
-        style={styles.bottomModal}
-        onBackdropPress={closeOrderScreen}
+      {<Modal
+        visible={showingBottomSheet}
+        animationType="slide"
+        transparent={false}
         // set timeout due to iOS needing to make sure modal is closed
         // before presenting another view
-        onModalHide={() => setTimeout(() => checkStateAndPerform(), 200)}>
+        onDismiss={() => setTimeout(() => checkStateAndPerform(), 200)}>
         <View style={styles.modalContent}>{renderModal()}</View>
-      </Modal>
+      </Modal>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  bottomModal: {
-    justifyContent: 'flex-end',
-    margin: 0,
-  },
   container: {
     alignItems: 'center',
     backgroundColor: '#78CCC5',

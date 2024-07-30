@@ -1,4 +1,5 @@
-/*Copyright 2022 Square Inc.
+/*
+ Copyright 2022 Square Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -12,21 +13,22 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './app/screens/HomeScreen';
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
-const Stack = createNativeStackNavigator();
+OrderInformationTitleView.propTypes = {
+  title: PropTypes.string.isRequired,
+};
 
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+export default function OrderInformationTitleView({ title }: { title: string }) {
+  return <Text style={styles.title}>{title}</Text>;
 }
 
-export default App;
+const styles = StyleSheet.create({
+  title: {
+    color: '#24988D',
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+});

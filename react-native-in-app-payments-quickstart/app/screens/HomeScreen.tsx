@@ -280,6 +280,14 @@ export default function HomeScreen() {
         SQIPCardEntry.completeCardEntry(() => {
           setAlertValue('Your card was saved and is ready to use.', '', true);
         });
+        Alert.alert('Alert Title', 'My Alert Msg', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
         showCardsOnFileScreen();
       } catch (error: any) {
         SQIPCardEntry.showCardNonceProcessingError(error.message);
