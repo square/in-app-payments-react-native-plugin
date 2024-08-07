@@ -22,7 +22,6 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import sqip.InAppPaymentsSdk;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.HashMap;
 import java.util.Map;
 class SquareInAppPaymentsModule extends ReactContextBaseJavaModule {
