@@ -1,8 +1,6 @@
 # In-App Payments SDK React Native Plugin Technical Reference
 
-This technical reference documents methods available in the React Native
-plugin for In-App Payments SDK. For detailed documentation on In-App Payments SDK, please see
-[https://developer.squareup.com/docs/].
+This technical reference outlines the methods available in the React Native plugin for the In-App Payments SDK. For comprehensive documentation on the In-App Payments SDK, visit [this link](https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does).
 
 ---
 
@@ -269,7 +267,7 @@ if (Platform.OS === 'ios') {
 ---
 ### startBuyerVerificationFlow
 
-Starts the buyer verification for a given payment source id. The most likely use case will be to pass in a card-on-file (cof). This will display a verification view to the user for some geographies to address Strong Customer Authentication. The method takes two callback parameters which correspond to the possible results of the request.
+Starts the buyer verification for a given payment source id. The most likely use case will be to pass in a card-on-file (cof). This will display a verification view to the user for some geographies to address Strong Customer Authentication. The method takes two callback parameters which correspond to the possible results of the request. Please see [this link](https://developer.squareup.com/docs/in-app-payments-sdk/verify-buyer) for more detailed documentation on this flow.
 
 Parameter                          | Type                                                                          | Description
 :----------------------------------| :---------------------------------------------------------------------------- | :-----------
@@ -279,7 +277,7 @@ onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificati
 onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when card entry with buyer verification encounters errors.
 onCardEntryCancel                  | [cardEntryCancelCallback](#cardentrycancelcallback)                           | Invoked when card entry is canceled.
 
-#### Example usage
+#### Example usage for a charge
 
 ```javascript
 import {
@@ -290,7 +288,7 @@ const paymentSourceId  =  'ccof:customer-card-id-requires-verification';
 const cardEntryConfig = {
   collectPostalCode: true,
   squareLocationId: SQUARE_LOCATION_ID,
-  buyerAction: 'Charge',
+  buyerAction: 'Charge', // Either Charge or Store, depending on your usage.
   amount: 100,
   currencyCode: 'USD',
   givenName: 'John',

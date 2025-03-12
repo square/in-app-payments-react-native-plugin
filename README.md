@@ -31,7 +31,7 @@ In addition to this README, the following is available in the [React Native plug
 
 ### iOS
 
-* Xcode version: 14.1 or greater.
+* Xcode version: 15.0 or greater.
 * iOS Base SDK: 13.0 or greater.
 * Deployment target: iOS 13.0 or greater.
 
