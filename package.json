@@ -24,9 +24,9 @@
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/node": "^17.0.23",
-    "@types/react": "^17.0.11",
-    "@types/react-native": "^0.64.10",
-    "@types/react-test-renderer": "^17.0.1",
+    "@types/react": "^18.2.6",
+    "@types/react-native": "^0.72.0",
+    "@types/react-test-renderer": "^18.2.0",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "babel-eslint": "^10.1.0",
     "babel-jest": "27.0.1",
@@ -41,7 +41,7 @@
     "metro-react-native-babel-preset": "0.56.0",
     "react": "18.2.0",
     "react-native": "0.74.1",
-    "react-test-renderer": "16.9.0",
+    "react-test-renderer": "18.2.0",
     "ts-jest": "^27.0.3",
     "typescript": "^4.3.5"
   },
