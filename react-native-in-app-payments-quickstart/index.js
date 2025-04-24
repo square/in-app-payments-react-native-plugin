@@ -24,4 +24,3 @@ AppRegistry.registerComponent(appName, () => App);
 A lot of libraries still haven't released a new version to handle
 these errors (or warnings in some cases).
 so we can hide the warning for now with this logBox. */
-LogBox.ignoreAllLogs();
