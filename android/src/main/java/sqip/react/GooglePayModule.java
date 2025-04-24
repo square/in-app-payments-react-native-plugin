@@ -185,4 +185,13 @@ class GooglePayModule extends ReactContextBaseJavaModule {
     }
     return deviceEventEmitter;
   }
+  @ReactMethod
+  public void addListener(String eventName) {
+
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+
+  }
 }
