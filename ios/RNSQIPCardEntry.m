@@ -27,6 +27,7 @@ typedef void (^CompletionHandler)(NSError *_Nullable);
 
 @interface RNSQIPCardEntry ()
 
+@property (weak, readwrite)   UIViewController *parentVC;
 @property (strong, readwrite) SQIPTheme *theme;
 @property (strong, readwrite) CompletionHandler completionHandler;
 @property (strong, readwrite) SQIPCardEntryViewController *cardEntryViewController;
@@ -72,12 +73,17 @@ RCT_REMAP_METHOD(startCardEntryFlow,
         self.cardEntryViewController = cardEntryForm;
 
         UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+        if ([rootViewController presentedViewController] && ![[rootViewController presentedViewController] isBeingDismissed]) {
+            rootViewController = [rootViewController presentedViewController];
+        }
+
         if ([rootViewController isKindOfClass:[UINavigationController class]]) {
             [((UINavigationController *)rootViewController) pushViewController:cardEntryForm animated:YES];
         } else {
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
             [rootViewController presentViewController:navigationController animated:YES completion:nil];
         }
+        self.parentVC = rootViewController;
         resolve([NSNull null]);
     });
 }
@@ -118,6 +124,7 @@ RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
             [rootViewController presentViewController:navigationController animated:YES completion:nil];
         }
+        self.parentVC = rootViewController;
         resolve([NSNull null]);
     });
 }
@@ -316,7 +323,7 @@ RCT_REMAP_METHOD(setTheme,
 
 - (void)cardEntryViewController:(SQIPCardEntryViewController *)cardEntryViewController didCompleteWithStatus:(SQIPCardEntryCompletionStatus)status
 {
-    UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+    UIViewController *rootViewController = self.parentVC;
 
     if (self.contact && status == SQIPCardEntryCompletionStatusSuccess) {
         NSString *paymentSourceId = self.cardDetails.nonce;
