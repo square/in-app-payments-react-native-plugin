@@ -118,6 +118,10 @@ RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
         self.cardEntryViewController = cardEntryForm;
 
         UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+        if ([rootViewController presentedViewController] && ![[rootViewController presentedViewController] isBeingDismissed]) {
+            rootViewController = [rootViewController presentedViewController];
+        }
+
         if ([rootViewController isKindOfClass:[UINavigationController class]]) {
             [((UINavigationController *)rootViewController) pushViewController:cardEntryForm animated:YES];
         } else {
