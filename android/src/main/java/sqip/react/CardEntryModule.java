@@ -73,6 +73,12 @@ class CardEntryModule extends ReactContextBaseJavaModule {
   private Contact contact;
   private CardDetails cardResult;
   private String paymentSourceId;
+  private Boolean collectPostalCode;
+
+
+  private boolean shouldContinueWithGiftCardEntry = false;
+  private boolean shouldContinueWithCardEntry = false;
+  private boolean shouldListen = false;
 
   public CardEntryModule(final ReactApplicationContext reactContext) {
     super(reactContext);
@@ -81,9 +87,15 @@ class CardEntryModule extends ReactContextBaseJavaModule {
     cardDetailsConverter = new CardDetailsConverter(new CardConverter());
     reference = new AtomicReference<>();
 
+    this.shouldContinueWithGiftCardEntry = false;
+    this.shouldContinueWithCardEntry = false;
+    this.shouldListen = false;
+
     reactContext.addActivityEventListener(new BaseActivityEventListener() {
       @Override
       public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+        if (!CardEntryModule.this.shouldListen) return;
+        CardEntryModule.this.shouldListen = false;
         if (requestCode == CardEntry.DEFAULT_CARD_ENTRY_REQUEST_CODE) {
           CardEntry.handleActivityResult(data, new Callback<CardEntryActivityResult>() {
             @Override public void onResult(final CardEntryActivityResult cardEntryActivityResult) {
@@ -121,19 +133,54 @@ class CardEntryModule extends ReactContextBaseJavaModule {
               if(CardEntryModule.this.paymentSourceId == null) {
                 WritableMap mapToReturn = cardDetailsConverter.toMapObject(CardEntryModule.this.cardResult);
                 mapToReturn.putString("token", result.getSuccessValue().getVerificationToken());
-                getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
+                mainLooperHandler.post(new Runnable() {
+                  @Override
+                  public void run() {
+                    getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
+                  }
+                });
               } else {
                 WritableMap mapToReturn = new WritableNativeMap();
                 mapToReturn.putString("nonce", CardEntryModule.this.paymentSourceId);
                 mapToReturn.putString("token", result.getSuccessValue().getVerificationToken());
-                getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
+                mainLooperHandler.post(new Runnable() {
+                  @Override
+                  public void run() {
+                    getDeviceEventEmitter().emit("onBuyerVerificationSuccess", mapToReturn);
+                  }
+                });
+              }
+              if(CardEntryModule.this.shouldContinueWithGiftCardEntry) {
+                CardEntryModule.this.shouldContinueWithGiftCardEntry = false;
+                mainLooperHandler.post(new Runnable() {
+                  @Override
+                  public void run() {
+                    CardEntry.startGiftCardEntryActivity(Objects.requireNonNull(getCurrentActivity()));
+                  }
+                });
+              }
+              if(CardEntryModule.this.shouldContinueWithCardEntry) {
+                CardEntryModule.this.shouldContinueWithCardEntry = false;
+                mainLooperHandler.post(new Runnable() {
+                  @Override
+                  public void run() {
+                    CardEntry.startCardEntryActivity(Objects.requireNonNull(getCurrentActivity()), CardEntryModule.this.collectPostalCode);
+                  }
+                });
               }
             } else if (result.isError()) {
+              CardEntryModule.this.shouldContinueWithGiftCardEntry = false;
+              CardEntryModule.this.shouldContinueWithCardEntry = false;
               sqip.BuyerVerificationResult.Error error = result.getErrorValue();
               WritableMap errorMap =
                 ErrorHandlerUtils.getCallbackErrorObject(error.getCode().name(), error.getMessage(), error.getDebugCode(),
                   error.getDebugMessage());
-              getDeviceEventEmitter().emit("onBuyerVerificationError", errorMap);
+              mainLooperHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                  getDeviceEventEmitter().emit("onBuyerVerificationError", errorMap);
+                }
+              });
             }
           });
 
@@ -152,7 +199,12 @@ class CardEntryModule extends ReactContextBaseJavaModule {
 
         WritableMap mapToReturn = cardDetailsConverter.toMapObject(cardDetails);
         countDownLatch = new CountDownLatch(1);
-        getDeviceEventEmitter().emit("cardEntryDidObtainCardDetails", mapToReturn);
+        mainLooperHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            getDeviceEventEmitter().emit("cardEntryDidObtainCardDetails", mapToReturn);
+          }
+        });
         try {
           // completeCardEntry or showCardNonceProcessingError must be called,
           // otherwise the thread will be leaked.
@@ -173,6 +225,9 @@ class CardEntryModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void startCardEntryFlow(final Boolean collectPostalCode, final Promise promise) {
+    this.shouldContinueWithGiftCardEntry = false;
+    this.shouldContinueWithCardEntry = false;
+    this.shouldListen = true;
     mainLooperHandler.post(new Runnable() {
       @Override
       public void run() {
@@ -184,6 +239,9 @@ class CardEntryModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void startGiftCardEntryFlow(final Promise promise) {
+    this.shouldContinueWithGiftCardEntry = false;
+    this.shouldContinueWithCardEntry = false;
+    this.shouldListen = true;
     mainLooperHandler.post(new Runnable() {
       @Override
       public void run() {
@@ -207,39 +265,102 @@ class CardEntryModule extends ReactContextBaseJavaModule {
     this.buyerAction = buyerAction;
     this.contact = contact;
 
+    this.shouldContinueWithGiftCardEntry = false;
+    this.shouldContinueWithCardEntry = false;
+    this.shouldListen = true;
+   
     VerificationParameters verificationParameters =
     new VerificationParameters(CardEntryModule.this.paymentSourceId, CardEntryModule.this.buyerAction, CardEntryModule.this.squareIdentifier,
     CardEntryModule.this.contact);
-    BuyerVerification.verify(Objects.requireNonNull(getCurrentActivity()), verificationParameters);
+
+    mainLooperHandler.post(new Runnable() {
+      @Override
+      public void run() {
+        BuyerVerification.verify(Objects.requireNonNull(getCurrentActivity()), verificationParameters);
+      }
+    });
     promise.resolve(null);
   }
   
   @ReactMethod
   public void startCardEntryFlowWithVerification(
-    final Boolean collectPostalCode, final String locationId, final String buyerActionString,
-    final ReadableMap moneyMap, final ReadableMap contactMap, final Promise promise) {
+    final String paymentSourceId,
+    final String locationId, 
+    final String buyerActionString,
+    final Boolean collectPostalCode,
+    final ReadableMap moneyMap, 
+    final ReadableMap contactMap, 
+    final Promise promise) {
     Money money = getMoney(moneyMap);
     BuyerAction buyerAction = getBuyerAction(buyerActionString, money);
     Contact contact = getContact(contactMap);
 
     SquareIdentifier squareIdentifier = new SquareIdentifier.LocationToken(locationId);
 
-    this.paymentSourceId = null;
+    this.paymentSourceId = paymentSourceId;
     this.squareIdentifier = squareIdentifier;
     this.buyerAction = buyerAction;
     this.contact = contact;
+    this.collectPostalCode = collectPostalCode;
+
+    this.shouldContinueWithGiftCardEntry = false;
+    this.shouldContinueWithCardEntry = true;
+    this.shouldListen = true;
+    
+    VerificationParameters verificationParameters =
+    new VerificationParameters(CardEntryModule.this.paymentSourceId, CardEntryModule.this.buyerAction, CardEntryModule.this.squareIdentifier,
+    CardEntryModule.this.contact);
 
     mainLooperHandler.post(new Runnable() {
       @Override
       public void run() {
-        CardEntry.startCardEntryActivity(Objects.requireNonNull(getCurrentActivity()), collectPostalCode);
-        promise.resolve(null);
+        BuyerVerification.verify(Objects.requireNonNull(getCurrentActivity()), verificationParameters);
       }
     });
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void startGiftCardEntryFlowWithVerification(
+    final String paymentSourceId, 
+    final String locationId, 
+    final String buyerActionString,
+    final ReadableMap moneyMap, 
+    final ReadableMap contactMap,
+    final Promise promise
+  ) {
+    Money money = getMoney(moneyMap);
+    BuyerAction buyerAction = getBuyerAction(buyerActionString, money);
+    Contact contact = getContact(contactMap);                                        
+
+    SquareIdentifier squareIdentifier = new SquareIdentifier.LocationToken(locationId);
+
+    this.paymentSourceId = paymentSourceId;
+    this.squareIdentifier = squareIdentifier;
+    this.buyerAction = buyerAction;
+    this.contact = contact;
+
+    this.shouldContinueWithGiftCardEntry = true;
+    this.shouldContinueWithCardEntry = false;
+    this.shouldListen = true;
+    
+    VerificationParameters verificationParameters =
+    new VerificationParameters(CardEntryModule.this.paymentSourceId, CardEntryModule.this.buyerAction, CardEntryModule.this.squareIdentifier,
+    CardEntryModule.this.contact);
+    mainLooperHandler.post(new Runnable() {
+      @Override
+      public void run() {
+        BuyerVerification.verify(Objects.requireNonNull(getCurrentActivity()), verificationParameters);
+      }
+    });
+    promise.resolve(null);
   }
 
   @ReactMethod
   public void completeCardEntry(Promise promise) {
+    this.shouldContinueWithGiftCardEntry = false;
+    this.shouldContinueWithCardEntry = false;
+    this.shouldListen = true;
     reference.set(new CardEntryActivityCommand.Finish());
     countDownLatch.countDown();
     promise.resolve(null);
@@ -247,6 +368,9 @@ class CardEntryModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void showCardNonceProcessingError(String errorMessage, Promise promise) {
+    this.shouldContinueWithGiftCardEntry = false;
+    this.shouldContinueWithCardEntry = false;
+    this.shouldListen = true;
     reference.set(new CardEntryActivityCommand.ShowError(errorMessage));
     countDownLatch.countDown();
     promise.resolve(null);

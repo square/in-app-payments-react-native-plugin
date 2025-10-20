@@ -25,7 +25,7 @@ import VerificationResult from './models/VerificationResult';
 import Utilities from './Utilities';
 import ThemeType from './models/ThemeType';
 
-const { RNSQIPCardEntry } = NativeModules;
+const { RNSQIPCardEntry, RNSQIPApplePay } = NativeModules;
 
 let cardEntryCancelCallback: () => void;
 const onNativeCardEntryCanceled = () => {
@@ -59,6 +59,7 @@ const onNativeBuyerVerificationError = (error:ErrorDetails) => {
 };
 
 const cardEntryEmitter = new NativeEventEmitter(RNSQIPCardEntry);
+
 cardEntryEmitter.addListener('cardEntryCancel', onNativeCardEntryCanceled);
 cardEntryEmitter.addListener('cardEntryDidObtainCardDetails', onNativeCardEntryDidObtainCardDetails);
 cardEntryEmitter.addListener('cardEntryComplete', onNativeCardEntryComplete);
@@ -114,10 +115,14 @@ const startBuyerVerificationFlow = async (paymentSourceId:string,
   );
 };
 
-const startCardEntryFlowWithBuyerVerification = async (cardEntryConfig:CardEntryConfig,
+const startCardEntryFlowWithBuyerVerification = async (
+  cardEntryConfig:CardEntryConfig,
+  paymentSourceId:string,
   onBuyerVerificationSuccess:BuyerVerificationSuccessCallback,
   onBuyerVerificationFailure:FailureCallback,
-  onCardEntryCancel:CancelAndCompleteCallback) => {
+  onCardNonceRequestSuccess:NonceSuccessCallback,
+  onCardEntryCancel:CancelAndCompleteCallback
+) => {
   let cardEntryInternalConfig : CardEntryConfig = { collectPostalCode: true };
   if (cardEntryConfig) {
     Utilities.verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object.');
@@ -130,8 +135,57 @@ const startCardEntryFlowWithBuyerVerification = async (cardEntryConfig:CardEntry
     cardEntryInternalConfig.collectPostalCode = true;
   }
 
-  const { squareLocationId } = cardEntryConfig;
-  const { buyerAction } = cardEntryConfig;
+  const money = {
+    amount: cardEntryInternalConfig.amount,
+    currencyCode: cardEntryInternalConfig.currencyCode,
+  };
+  const contact = {
+    givenName: cardEntryInternalConfig.givenName,
+    familyName: cardEntryInternalConfig.familyName,
+    addressLines: cardEntryInternalConfig.addressLines,
+    city: cardEntryInternalConfig.city,
+    countryCode: cardEntryInternalConfig.countryCode,
+    email: cardEntryInternalConfig.email,
+    phone: cardEntryInternalConfig.phone,
+    postalCode: cardEntryInternalConfig.postalCode,
+    region: cardEntryInternalConfig.region,
+  };
+
+  buyerVerificationSuccessCallback = onBuyerVerificationSuccess;
+  buyerVerificationErrorCallback = onBuyerVerificationFailure;
+  cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
+  cardEntryCancelCallback = onCardEntryCancel;
+
+  await RNSQIPCardEntry.startCardEntryFlowWithVerification(
+    paymentSourceId, 
+    cardEntryInternalConfig.squareLocationId, 
+    cardEntryInternalConfig.buyerAction, 
+    cardEntryInternalConfig.collectPostalCode,
+    money, 
+    contact,
+  );
+};
+
+const startGiftCardEntryFlow = async (onCardNonceRequestSuccess:NonceSuccessCallback,
+  onCardEntryCancel:CancelAndCompleteCallback) => {
+  cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
+  cardEntryCancelCallback = onCardEntryCancel;
+  await RNSQIPCardEntry.startGiftCardEntryFlow();
+};
+
+const startGiftCardEntryFlowWithBuyerVerification = async (
+  paymentSourceId:string,
+  cardEntryConfig:CardEntryConfig,
+  onBuyerVerificationSuccess:BuyerVerificationSuccessCallback,
+  onBuyerVerificationFailure:FailureCallback,
+  onCardEntryCancel:CancelAndCompleteCallback,
+  onCardNonceRequestSuccess:NonceSuccessCallback,
+) => {
+  cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
+  cardEntryCancelCallback = onCardEntryCancel;
+  buyerVerificationSuccessCallback = onBuyerVerificationSuccess;
+  buyerVerificationErrorCallback = onBuyerVerificationFailure;
+
   const money = {
     amount: cardEntryConfig.amount,
     currencyCode: cardEntryConfig.currencyCode,
@@ -148,19 +202,13 @@ const startCardEntryFlowWithBuyerVerification = async (cardEntryConfig:CardEntry
     region: cardEntryConfig.region,
   };
 
-  buyerVerificationSuccessCallback = onBuyerVerificationSuccess;
-  buyerVerificationErrorCallback = onBuyerVerificationFailure;
-  cardEntryCancelCallback = onCardEntryCancel;
-  await RNSQIPCardEntry.startCardEntryFlowWithVerification(
-    cardEntryInternalConfig.collectPostalCode, squareLocationId, buyerAction, money, contact,
+  await RNSQIPCardEntry.startGiftCardEntryFlowWithVerification(
+    paymentSourceId, 
+    cardEntryConfig.squareLocationId, 
+    cardEntryConfig.buyerAction, 
+    money, 
+    contact
   );
-};
-
-const startGiftCardEntryFlow = async (onCardNonceRequestSuccess:NonceSuccessCallback,
-  onCardEntryCancel:CancelAndCompleteCallback) => {
-  cardEntryCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
-  cardEntryCancelCallback = onCardEntryCancel;
-  await RNSQIPCardEntry.startGiftCardEntryFlow();
 };
 
 const completeCardEntry = async (onCardEntryComplete:CancelAndCompleteCallback) => {
@@ -176,11 +224,13 @@ const showCardNonceProcessingError = async (errorMessage:string) => {
 const setIOSCardEntryTheme = async (theme:ThemeType) => {
   Utilities.verifyThemeType(theme);
   await RNSQIPCardEntry.setTheme(theme);
+  await RNSQIPApplePay.setTheme(theme);
 };
 
 export default Platform.select({
   ios: {
     startGiftCardEntryFlow,
+    startGiftCardEntryFlowWithBuyerVerification,
     startCardEntryFlow,
     startCardEntryFlowWithBuyerVerification,
     completeCardEntry,
@@ -190,6 +240,7 @@ export default Platform.select({
   },
   android: {
     startGiftCardEntryFlow,
+    startGiftCardEntryFlowWithBuyerVerification,
     startCardEntryFlow,
     startCardEntryFlowWithBuyerVerification,
     completeCardEntry,

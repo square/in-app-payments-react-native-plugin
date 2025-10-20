@@ -21,8 +21,9 @@
 #import "RCTBridgeModule.h"
 #import "RCTEventEmitter.h"
 #endif
-@import SquareInAppPaymentsSDK;
 
+@import SquareInAppPaymentsSDK;
+@import SquareBuyerVerificationSDK;
 
 @interface RNSQIPApplePay : RCTEventEmitter <RCTBridgeModule, PKPaymentAuthorizationViewControllerDelegate>
 

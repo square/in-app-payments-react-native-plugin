@@ -5796,7 +5796,7 @@ react-native-safe-area-view@^0.14.9:
     hoist-non-react-statics "^2.3.1"
 
 "react-native-square-in-app-payments@file:..":
-  version "1.7.5"
+  version "1.7.6"
 
 react-native@0.74.1:
   version "0.74.1"

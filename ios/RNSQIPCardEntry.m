@@ -83,12 +83,14 @@ RCT_REMAP_METHOD(startCardEntryFlow,
 }
 
 RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
-                 collectPostalCode
-                 : (BOOL)collectPostalCode
+                 paymentSourceId
+                 : (NSString *)paymentSourceId
                  locationId
                  : (NSString *)locationId
                  buyerActionString
                  : (NSString *)buyerActionString
+                 collectPostalCode
+                 : (BOOL)collectPostalCode
                  moneyMap
                  : (NSDictionary *)moneyMap
                  contactMap
@@ -106,18 +108,59 @@ RCT_REMAP_METHOD(startCardEntryFlowWithVerification,
         self.locationId = locationId;
         self.buyerAction = buyerAction;
         self.contact = contact;
-        SQIPCardEntryViewController *cardEntryForm = [self _makeCardEntryForm];
-        cardEntryForm.collectPostalCode = collectPostalCode;
-        cardEntryForm.delegate = self;
-        self.cardEntryViewController = cardEntryForm;
 
         UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+
+    
+        SQIPVerificationParameters *params = [[SQIPVerificationParameters alloc] initWithPaymentSourceID:paymentSourceId
+                                                buyerAction:self.buyerAction
+                                                locationID:self.locationId
+                                                contact:self.contact];
+
         if ([rootViewController isKindOfClass:[UINavigationController class]]) {
-            [((UINavigationController *)rootViewController) pushViewController:cardEntryForm animated:YES];
+            [rootViewController.navigationController popViewControllerAnimated:YES];
         } else {
-            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
-            [rootViewController presentViewController:navigationController animated:YES completion:nil];
+            [rootViewController dismissViewControllerAnimated:YES completion:nil];
         }
+        
+        if (self.theme == nil) {
+            self.theme = [[SQIPTheme alloc] init];
+        }
+        [SQIPBuyerVerificationSDK.shared verifyWithParameters:params
+            theme:self.theme
+            viewController:rootViewController
+            success:^(SQIPBuyerVerifiedDetails *_Nonnull verifiedDetails) {
+                NSDictionary *verificationResult =
+                    @{
+                        @"nonce" : paymentSourceId,
+                        @"token" : verifiedDetails.verificationToken
+                    };
+
+                [self sendEventWithName:RNSQIPOnBuyerVerificationSuccessEventName
+                    body:verificationResult];
+
+                SQIPCardEntryViewController *cardEntryForm = [self _makeCardEntryForm];
+                cardEntryForm.collectPostalCode = collectPostalCode;
+                cardEntryForm.delegate = self;
+                self.cardEntryViewController = cardEntryForm;
+
+                UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+                if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+                    [((UINavigationController *)rootViewController) pushViewController:cardEntryForm animated:YES];
+                } else {
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
+                    [rootViewController presentViewController:navigationController animated:YES completion:nil];
+                }
+            }
+            failure:^(NSError *_Nonnull error) {
+                NSString *debugCode = error.userInfo[SQIPErrorDebugCodeKey];
+                NSString *debugMessage = error.userInfo[SQIPErrorDebugMessageKey];
+                [self sendEventWithName:RNSQIPOnBuyerVerificationErrorEventName
+                    body:[RNSQIPErrorUtilities callbackErrorObject:RNSQIPUsageError
+                                    message:error.localizedDescription
+                                    debugCode:debugCode
+                                    debugMessage:debugMessage]];
+            }];
         resolve([NSNull null]);
     });
 }
@@ -208,6 +251,86 @@ RCT_REMAP_METHOD(startGiftCardEntryFlow,
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
             [rootViewController presentViewController:navigationController animated:YES completion:nil];
         }
+        resolve([NSNull null]);
+    });
+}
+
+RCT_REMAP_METHOD(startGiftCardEntryFlowWithVerification,
+                 gce_paymentSourceId
+                 : (NSString *)gce_paymentSourceId
+                 locationId
+                 : (NSString *)locationId
+                 buyerActionString
+                 : (NSString *)buyerActionString
+                 moneyMap
+                 : (NSDictionary *)moneyMap
+                 contactMap
+                 : (NSDictionary *)contactMap
+                 startCardEntryFlowWithResolver
+                 : (RCTPromiseResolveBlock)resolve
+                 rejecter
+                 : (RCTPromiseRejectBlock)reject) 
+{
+    dispatch_async([self methodQueue], ^{
+        SQIPMoney *money = [self _getMoney:moneyMap];
+        SQIPBuyerAction *buyerAction = [self _getBuyerAction:buyerActionString money:money];
+        SQIPContact *contact = [self _getContact:contactMap];
+
+        self.locationId = locationId;
+        self.buyerAction = buyerAction;
+        self.contact = contact;
+
+        UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+
+    
+        SQIPVerificationParameters *params = [[SQIPVerificationParameters alloc] initWithPaymentSourceID:gce_paymentSourceId
+                                                buyerAction:self.buyerAction
+                                                locationID:self.locationId
+                                                contact:self.contact];
+
+        if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+            [rootViewController.navigationController popViewControllerAnimated:YES];
+        } else {
+            [rootViewController dismissViewControllerAnimated:YES completion:nil];
+        }
+        
+        if (self.theme == nil) {
+            self.theme = [[SQIPTheme alloc] init];
+        }
+        [SQIPBuyerVerificationSDK.shared verifyWithParameters:params
+            theme:self.theme
+            viewController:rootViewController
+            success:^(SQIPBuyerVerifiedDetails *_Nonnull verifiedDetails) {
+                NSDictionary *verificationResult =
+                    @{
+                        @"nonce" : gce_paymentSourceId,
+                        @"token" : verifiedDetails.verificationToken
+                    };
+
+                [self sendEventWithName:RNSQIPOnBuyerVerificationSuccessEventName
+                    body:verificationResult];
+
+                SQIPCardEntryViewController *cardEntryForm = [self _makeGiftCardEntryForm];
+                cardEntryForm.delegate = self;
+                self.cardEntryViewController = cardEntryForm;
+
+                UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+                if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+                    [((UINavigationController *)rootViewController) pushViewController:cardEntryForm animated:YES];
+                } else {
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:cardEntryForm];
+                    [rootViewController presentViewController:navigationController animated:YES completion:nil];
+                }
+            }
+            failure:^(NSError *_Nonnull error) {
+                NSString *debugCode = error.userInfo[SQIPErrorDebugCodeKey];
+                NSString *debugMessage = error.userInfo[SQIPErrorDebugMessageKey];
+                [self sendEventWithName:RNSQIPOnBuyerVerificationErrorEventName
+                    body:[RNSQIPErrorUtilities callbackErrorObject:RNSQIPUsageError
+                                    message:error.localizedDescription
+                                    debugCode:debugCode
+                                    debugMessage:debugMessage]];
+            }];
         resolve([NSNull null]);
     });
 }

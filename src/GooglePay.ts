@@ -21,8 +21,30 @@ import FailureCallback from './models/FailureCallback';
 import GooglePayConfig from './models/GooglePayConfig';
 import NonceSuccessCallback from './models/NonceSuccessCallback';
 import Utilities from './Utilities';
+import BuyerVerificationSuccessCallback from './models/BuyerVerificationSuccessCallback';
+import CardEntryConfig from './models/CardEntryConfig';
+import VerificationResult from './models/VerificationResult';
 
 const { RNSQIPGooglePay } = NativeModules;
+
+let cardEntryCancelCallback: () => void;
+const onNativeCardEntryCanceled = () => {
+  if (cardEntryCancelCallback) cardEntryCancelCallback();
+};
+
+let buyerVerificationSuccessCallback:{ (verificationResult:VerificationResult) : void; };
+const onNativeBuyerVerificationSuccess = (verificationResult:VerificationResult) => {
+  if (buyerVerificationSuccessCallback) {
+    buyerVerificationSuccessCallback(verificationResult);
+  }
+};
+
+let buyerVerificationErrorCallback:{ (error:ErrorDetails) : void; };
+const onNativeBuyerVerificationError = (error:ErrorDetails) => {
+  if (buyerVerificationErrorCallback) {
+    buyerVerificationErrorCallback(error);
+  }
+};
 
 let googlePayNonceRequestSuccessCallback: { (cardDetails:CardDetails) : void; };
 const onNativeGooglePayNonceRequestSuccess = (cardDetails:CardDetails) => {
@@ -44,6 +66,9 @@ if (Platform.OS === 'android') {
   googlePayEmitter.addListener('onGooglePayNonceRequestSuccess', onNativeGooglePayNonceRequestSuccess);
   googlePayEmitter.addListener('onGooglePayNonceRequestFailure', onNativeGooglePayNonceRequestFailure);
   googlePayEmitter.addListener('onGooglePayCanceled', onNativeGooglePayCanceled);
+  googlePayEmitter.addListener('onBuyerVerificationSuccessFromGooglePay', onNativeBuyerVerificationSuccess);
+  googlePayEmitter.addListener('onBuyerVerificationErrorFromGooglePay', onNativeBuyerVerificationError);
+  googlePayEmitter.addListener('cardEntryCancelFromGooglePay', onNativeCardEntryCanceled);
 }
 
 const initializeGooglePay = async (squareLocationId:string, environment:number) => {
@@ -88,6 +113,61 @@ const requestGooglePayNonce = async (
   }
 };
 
+const requestGooglePayNonceWithBuyerVerification = async (
+  paymentSourceId:string,
+  cardEntryConfig:CardEntryConfig,
+  googlePayConfig:GooglePayConfig,
+  onBuyerVerificationSuccess:BuyerVerificationSuccessCallback,
+  onBuyerVerificationFailure:FailureCallback,
+  onCardEntryCancel:CancelAndCompleteCallback,
+  onGooglePayNonceRequestSuccess:NonceSuccessCallback,
+  onGooglePayNonceRequestFailure:FailureCallback,
+  onGooglePayCanceled:CancelAndCompleteCallback,
+) => {
+  Utilities.verifyObjectType(googlePayConfig, 'googlePayConfig should be a valid object');
+  Utilities.verifyStringType(googlePayConfig.price, 'googlePayConfig.price should be a valid string');
+  Utilities.verifyStringType(googlePayConfig.currencyCode, 'googlePayConfig.currencyCode should be a valid string');
+  Utilities.verifyIntegerType(googlePayConfig.priceStatus, 'googlePayConfig.priceStatus should be a valid integer');
+
+  googlePayNonceRequestSuccessCallback = onGooglePayNonceRequestSuccess;
+  googlePayNonceRequestFailureCallback = onGooglePayNonceRequestFailure;
+  googlePayCancelCallback = onGooglePayCanceled;
+  buyerVerificationSuccessCallback = onBuyerVerificationSuccess;
+  buyerVerificationErrorCallback = onBuyerVerificationFailure;
+  cardEntryCancelCallback = onCardEntryCancel;
+
+  const money = {
+    amount: cardEntryConfig.amount,
+    currencyCode: cardEntryConfig.currencyCode,
+  };
+  const contact = {
+    givenName: cardEntryConfig.givenName,
+    familyName: cardEntryConfig.familyName,
+    addressLines: cardEntryConfig.addressLines,
+    city: cardEntryConfig.city,
+    countryCode: cardEntryConfig.countryCode,
+    email: cardEntryConfig.email,
+    phone: cardEntryConfig.phone,
+    postalCode: cardEntryConfig.postalCode,
+    region: cardEntryConfig.region,
+  };
+
+  try {
+    await RNSQIPGooglePay.requestGooglePayNonceWithVerification(
+      paymentSourceId, 
+      cardEntryConfig.squareLocationId, 
+      cardEntryConfig.buyerAction, 
+      money, 
+      contact,
+      googlePayConfig.price,
+      googlePayConfig.currencyCode,
+      googlePayConfig.priceStatus,
+    );
+  } catch (ex) {
+    throw Utilities.createInAppPayementsError(ex);
+  }
+};
+
 const TotalPriceStatusNotCurrentlyKnown = 1;
 const TotalPriceStatusEstimated = 2;
 const TotalPriceStatusFinal = 3;
@@ -99,6 +179,7 @@ export default {
   initializeGooglePay,
   canUseGooglePay,
   requestGooglePayNonce,
+  requestGooglePayNonceWithBuyerVerification,
   TotalPriceStatusNotCurrentlyKnown,
   TotalPriceStatusEstimated,
   TotalPriceStatusFinal,
