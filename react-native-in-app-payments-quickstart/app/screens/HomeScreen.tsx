@@ -392,14 +392,17 @@ export default function HomeScreen() {
   };
 
   const googlePayLocationIsSet = () => {
+    //@ts-ignore
     return GOOGLE_PAY_LOCATION_ID !== 'REPLACE_ME';
   };
 
   const applePayMerchantIsSet = () => {
+    //@ts-ignore
     return APPLE_PAY_MERCHANT_ID !== 'REPLACE_ME';
   };
 
   const customerIdIsSet = () => {
+    //@ts-ignore
     return CUSTOMER_ID !== 'REPLACE_ME';
   };
 
@@ -476,6 +479,18 @@ export default function HomeScreen() {
     setshowingCardEntry(false);
     const cardEntryConfig = {
       collectPostalCode: true,
+      squareLocationId: SQUARE_LOCATION_ID,
+      buyerAction: 'Charge',
+      amount: 100,
+      currencyCode: 'USD',
+      givenName: 'John',
+      familyName: 'Doe',
+      addressLines: ['London Eye', 'Riverside Walk'],
+      city: 'London',
+      countryCode: 'GB',
+      email: 'johndoe@example.com',
+      phone: '8001234567',
+      postalCode: 'SE1 7',
     };
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
@@ -483,8 +498,13 @@ export default function HomeScreen() {
         saveButtonTitle: 'Pay 🍪',
       });
     }
-    await SQIPCardEntry.startCardEntryFlow(
+    const paymentSourceId = 'ccof:customer-card-id-requires-verification';
+
+    await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
       cardEntryConfig,
+      paymentSourceId,
+      onBuyerVerificationSuccess,
+      onBuyerVerificationFailure,
       onCardNonceRequestSuccess,
       onCardEntryCancel,
     );
@@ -499,9 +519,30 @@ export default function HomeScreen() {
         saveButtonTitle: 'Pay 🍪',
       });
     }
-    await SQIPCardEntry.startGiftCardEntryFlow(
-      onCardNonceRequestSuccess,
+    const paymentSourceId = 'ccof:customer-card-id-requires-verification';
+    const cardEntryConfig = {
+      collectPostalCode: true,
+      squareLocationId: SQUARE_LOCATION_ID,
+      buyerAction: 'Charge',
+      amount: 100,
+      currencyCode: 'USD',
+      givenName: 'John',
+      familyName: 'Doe',
+      addressLines: ['London Eye', 'Riverside Walk'],
+      city: 'London',
+      countryCode: 'GB',
+      email: 'johndoe@example.com',
+      phone: '8001234567',
+      postalCode: 'SE1 7',
+    };
+
+    await SQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
+      paymentSourceId,
+      cardEntryConfig,
+      onBuyerVerificationSuccess,
+      onBuyerVerificationFailure,
       onCardEntryCancel,
+      onCardNonceRequestSuccess,
     );
   };
 
@@ -509,6 +550,18 @@ export default function HomeScreen() {
     setshowingCustomerCardEntry(false);
     const cardEntryConfig = {
       collectPostalCode: true,
+      squareLocationId: SQUARE_LOCATION_ID,
+      buyerAction: 'Charge',
+      amount: 100,
+      currencyCode: 'USD',
+      givenName: 'John',
+      familyName: 'Doe',
+      addressLines: ['London Eye', 'Riverside Walk'],
+      city: 'London',
+      countryCode: 'GB',
+      email: 'johndoe@example.com',
+      phone: '8001234567',
+      postalCode: 'SE1 7',
     };
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
@@ -516,10 +569,15 @@ export default function HomeScreen() {
         saveButtonTitle: 'Save 🍪',
       });
     }
-    await SQIPCardEntry.startCardEntryFlow(
+    const paymentSourceId = 'ccof:customer-card-id-requires-verification';
+
+    await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
       cardEntryConfig,
-      onCustomerCardNonceRequestSuccess,
-      onCustomerCardEntryCancel,
+      paymentSourceId,
+      onBuyerVerificationSuccess,
+      onBuyerVerificationFailure,
+      onCardNonceRequestSuccess,
+      onCardEntryCancel,
     );
   };
 
@@ -558,14 +616,36 @@ export default function HomeScreen() {
           false
         );
       } else {
-        await SQIPApplePay.requestApplePayNonce(
-          {
-            price: '1.00',
-            summaryLabel: 'Test Item',
-            countryCode: 'US',
-            currencyCode: 'USD',
-            paymentType: SQIPApplePay.PaymentTypeFinal,
-          },
+        const paymentSourceId = 'ccof:customer-card-id-requires-verification';
+        const cardEntryConfig = {
+          collectPostalCode: true,
+          squareLocationId: SQUARE_LOCATION_ID,
+          buyerAction: 'Charge',
+          amount: 100,
+          currencyCode: 'USD',
+          givenName: 'John',
+          familyName: 'Doe',
+          addressLines: ['London Eye', 'Riverside Walk'],
+          city: 'London',
+          countryCode: 'GB',
+          email: 'johndoe@example.com',
+          phone: '8001234567',
+          postalCode: 'SE1 7',
+        };
+        const applePayConfig = {
+          price: '1.00',
+          summaryLabel: 'Test Item',
+          countryCode: 'US',
+          currencyCode: 'USD',
+          paymentType: SQIPApplePay.PaymentTypeFinal,
+        };
+        await SQIPApplePay.requestApplePayNonceWithBuyerVerification(
+          paymentSourceId,
+          cardEntryConfig,
+          applePayConfig,
+          onBuyerVerificationSuccess,
+          onBuyerVerificationFailure,
+          onCardEntryCancel,
           onApplePayRequestNonceSuccess,
           onApplePayRequestNonceFailure,
           onApplePayComplete,
@@ -580,12 +660,34 @@ export default function HomeScreen() {
           false
         );
       } else {
-        await SQIPGooglePay.requestGooglePayNonce(
-          {
-            price: '1.00',
-            currencyCode: 'USD',
-            priceStatus: SQIPGooglePay.TotalPriceStatusFinal,
-          },
+        const paymentSourceId = 'ccof:customer-card-id-requires-verification';
+        const cardEntryConfig = {
+          collectPostalCode: true,
+          squareLocationId: SQUARE_LOCATION_ID,
+          buyerAction: 'Charge',
+          amount: 100,
+          currencyCode: 'USD',
+          givenName: 'John',
+          familyName: 'Doe',
+          addressLines: ['London Eye', 'Riverside Walk'],
+          city: 'London',
+          countryCode: 'GB',
+          email: 'johndoe@example.com',
+          phone: '8001234567',
+          postalCode: 'SE1 7',
+        };
+        const googlePayConfig = {
+          price: '1.00',
+          currencyCode: 'USD',
+          priceStatus: SQIPGooglePay.TotalPriceStatusFinal,
+        };
+        await SQIPGooglePay.requestGooglePayNonceWithBuyerVerification(
+          paymentSourceId,
+          cardEntryConfig,
+          googlePayConfig,
+          onBuyerVerificationSuccess,
+          onBuyerVerificationFailure,
+          onCardEntryCancel,
           onGooglePayRequestNonceSuccess,
           onGooglePayRequestNonceFailure,
           onGooglePayCanceled,

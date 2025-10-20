@@ -22,6 +22,9 @@ import FailureCallback from './models/FailureCallback';
 import NonceSuccessCallback from './models/NonceSuccessCallback';
 import PaymentType from './models/PaymentType';
 import Utilities from './Utilities';
+import CardEntryConfig from './models/CardEntryConfig';
+import BuyerVerificationSuccessCallback from './models/BuyerVerificationSuccessCallback';
+import VerificationResult from './models/VerificationResult';
 
 // const PaymentTypePending = 1;
 // const PaymentTypeFinal = 2;
@@ -42,10 +45,31 @@ const onNativeApplePayComplete = () => {
   if (applePayCompleteCallback) applePayCompleteCallback();
 };
 
+let cardEntryCancelCallback: () => void;
+const onNativeCardEntryCanceled = () => {
+  if (cardEntryCancelCallback) cardEntryCancelCallback();
+};
+
+let buyerVerificationSuccessCallback:{ (verificationResult:VerificationResult) : void; };
+const onNativeBuyerVerificationSuccess = (verificationResult:VerificationResult) => {
+  if (buyerVerificationSuccessCallback) {
+    buyerVerificationSuccessCallback(verificationResult);
+  }
+};
+
+let buyerVerificationErrorCallback:{ (error:ErrorDetails) : void; };
+const onNativeBuyerVerificationError = (error:ErrorDetails) => {
+  if (buyerVerificationErrorCallback) {
+    buyerVerificationErrorCallback(error);
+  }
+};
+
 const applePayEmitter = new NativeEventEmitter(RNSQIPApplePay);
 applePayEmitter.addListener('onApplePayNonceRequestSuccess', onNativeApplePayNonceRequestSuccess);
 applePayEmitter.addListener('onApplePayNonceRequestFailure', onNativeApplePayNonceRequestFailure);
 applePayEmitter.addListener('onApplePayComplete', onNativeApplePayComplete);
+applePayEmitter.addListener('onBuyerVerificationSuccessFromApplePay', onNativeBuyerVerificationSuccess);
+applePayEmitter.addListener('onBuyerVerificationErrorFromApplePay', onNativeBuyerVerificationError);
 
 const initializeApplePay = async (applePayMerchantId:string) => {
   Utilities.verifyStringType(applePayMerchantId, 'applePayMerchantId should be a string');
@@ -90,6 +114,71 @@ const requestApplePayNonce = async (
   }
 };
 
+const requestApplePayNonceWithBuyerVerification = async (
+  paymentSourceId:string,
+  cardEntryConfig:CardEntryConfig,
+  applePayConfig:ApplePayConfig,
+  onBuyerVerificationSuccess:BuyerVerificationSuccessCallback,
+  onBuyerVerificationFailure:FailureCallback,
+  onCardEntryCancel:CancelAndCompleteCallback,
+  onApplePayNonceRequestSuccess:NonceSuccessCallback,
+  onApplePayNonceRequestFailure:FailureCallback,
+  onApplePayComplete:CancelAndCompleteCallback,
+) => {
+  Utilities.verifyObjectType(applePayConfig, 'applePayConfig should be a valid object');
+  Utilities.verifyStringType(applePayConfig.price, 'applePayConfig.price should be a valid string');
+  Utilities.verifyStringType(applePayConfig.summaryLabel, 'applePayConfig.summaryLabel should be a valid string');
+  Utilities.verifyStringType(applePayConfig.countryCode, 'applePayConfig.countryCode should be a valid string');
+  Utilities.verifyStringType(applePayConfig.currencyCode, 'applePayConfig.currencyCode should be a valid string');
+
+  let { paymentType } = applePayConfig;
+  if (!applePayConfig.paymentType) {
+    paymentType = PaymentType.PaymentTypeFinal;
+  } else {
+    Utilities.verifyIntegerType(applePayConfig.paymentType, 'applePayConfig.paymentType should be a valid integer');
+  }
+
+  const money = {
+    amount: cardEntryConfig.amount,
+    currencyCode: cardEntryConfig.currencyCode,
+  };
+  const contact = {
+    givenName: cardEntryConfig.givenName,
+    familyName: cardEntryConfig.familyName,
+    addressLines: cardEntryConfig.addressLines,
+    city: cardEntryConfig.city,
+    countryCode: cardEntryConfig.countryCode,
+    email: cardEntryConfig.email,
+    phone: cardEntryConfig.phone,
+    postalCode: cardEntryConfig.postalCode,
+    region: cardEntryConfig.region,
+  };
+
+  buyerVerificationSuccessCallback = onBuyerVerificationSuccess;
+  buyerVerificationErrorCallback = onBuyerVerificationFailure;
+  cardEntryCancelCallback = onCardEntryCancel;
+  applePayNonceRequestSuccessCallback = onApplePayNonceRequestSuccess;
+  applePayNonceRequestFailureCallback = onApplePayNonceRequestFailure;
+  applePayCompleteCallback = onApplePayComplete;
+
+  try {
+    await RNSQIPApplePay.requestApplePayNonceWithVerification(
+      paymentSourceId, 
+      cardEntryConfig.squareLocationId, 
+      cardEntryConfig.buyerAction, 
+      money, 
+      contact,
+      applePayConfig.price,
+      applePayConfig.summaryLabel,
+      applePayConfig.countryCode,
+      applePayConfig.currencyCode,
+      paymentType,
+    );
+  } catch (ex) {
+    throw Utilities.createInAppPayementsError(ex);
+  }
+}
+
 const completeApplePayAuthorization = async (isSuccess:boolean, errorMessage = '') => {
   Utilities.verifyBooleanType(isSuccess, 'isSuccess should be a valid boolean');
   Utilities.verifyStringType(errorMessage, 'errorMessage should be a valid string');
@@ -101,5 +190,6 @@ export default {
   initializeApplePay,
   canUseApplePay,
   requestApplePayNonce,
-  completeApplePayAuthorization,
+  requestApplePayNonceWithBuyerVerification,
+  completeApplePayAuthorization
 };
