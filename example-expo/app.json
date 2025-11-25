@@ -1,0 +1,92 @@
+{
+  "expo": {
+    "name": "SquareInAppPaymentsExpoExample",
+    "slug": "SquareInAppPaymentsExpoExample",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "exampleexpo",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "extra": {
+      "router": {
+        "appRoot": "src/app"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.squareinapppayments.exampleexpo"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#78CCC5",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "INTERNET",
+        "READ_PHONE_STATE"
+      ],
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.squareinapppayments.exampleexpo",
+      "minSdkVersion": 28
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "../app.plugin.js",
+        {
+          "cardEntryStyle": {
+            "statusBarColor": "#23988c",
+            "actionBarColor": "#23988c",
+            "backgroundColor": "#ffffff",
+            "textColorHint": "#23988c",
+            "editTextStyle": {
+              "fontFamily": "Roboto",
+              "accentColor": "#202020",
+              "errorColor": "#FF0000",
+              "textColor": "#23988c"
+            },
+            "saveButtonStyle": {
+              "backgroundColor": "#23988c",
+              "fontFamily": "Roboto",
+              "fontSize": 16,
+              "textAllCaps": false,
+              "textColor": "#ffffff",
+              "text": "Pay for 🍪"
+            },
+            "dark": {
+              "backgroundColor": "#202020",
+              "editTextStyle": {
+                "textColor": "#ffffff",
+                "accentColor": "#fefefe"
+              }
+            }
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#78CCC5"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 28
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

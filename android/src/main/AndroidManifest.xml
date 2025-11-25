@@ -1,6 +1,2 @@
-
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="sqip.react">
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.squareinapppayments">
 </manifest>
-

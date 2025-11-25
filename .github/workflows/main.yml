@@ -10,7 +10,7 @@ jobs:
           node-version: 18.x
       - run: |
           yarn && yarn lint && yarn test
-          cd react-native-in-app-payments-quickstart && yarn && cd .. 
+          cd example-expo && yarn && cd .. 
 
   build-android:
     needs: install-and-test
@@ -23,6 +23,18 @@ jobs:
         with: 
           distribution: 'temurin'
           java-version: '17'
+
+      # 🔧 liberar espacio para evitar "No space left on device"
+      - name: Free disk space
+        run: |
+          echo "Disk BEFORE:"
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          echo "Disk AFTER:"
+          df -h
+
       - name: Cache Gradle Wrapper
         uses: actions/cache@v4
         with:
@@ -37,9 +49,20 @@ jobs:
             ${{ runner.os }}-gradle-caches-                
       - name: Install npm dependencies  
         uses: actions/checkout@v2
-      - run: |
-          cd react-native-in-app-payments-quickstart && yarn
-          cd android && ./gradlew clean build        
+
+      - name: Install deps & build plugin (lib/)
+        run: |
+          yarn install
+          yarn prepare
+          echo "Contenido de lib:"
+          ls -R lib || echo "⚠️ lib no existe, bob build no se ejecutó bien"
+      - name: Build Android
+        run: |
+          yarn
+          cd example-expo && yarn
+          npx expo prebuild -p android
+          cd android
+          ./gradlew :app:assembleRelease
 
   build-ios:
     needs: install-and-test
@@ -52,18 +75,19 @@ jobs:
           node-version: 18.x
       - run: |
           gem install cocoapods
-          cd react-native-in-app-payments-quickstart
+          cd example-expo
           yarn
+          npx expo prebuild -p ios
           cd ios && pod install
       - name: Build iOS (debug)
         run: "xcodebuild \
-        -workspace react-native-in-app-payments-quickstart/ios/RNInAppPaymentsQuickstart.xcworkspace \
-        -scheme RNInAppPaymentsQuickstart \
+        -workspace example-expo/ios/SquareInAppPaymentsExpoExample.xcworkspace \
+        -scheme SquareInAppPaymentsExpoExample \
         clean archive \
         -sdk iphoneos \
         -configuration Debug \
         -UseModernBuildSystem=NO \
-        -archivePath $PWD/RNInAppPaymentsQuickstart \
+        -archivePath $PWD/SquareInAppPaymentsExpoExample \
         CODE_SIGNING_ALLOWED=NO \
         CODE_SIGNING_REQUIRED=NO \
         CODE_SIGN_IDENTITY=NO"
