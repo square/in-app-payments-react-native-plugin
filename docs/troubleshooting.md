@@ -19,7 +19,7 @@ package resolver will look into it and cause this ambiguous resolution error.
 1. Remove the nested `node_modules`
 
     ```bash
-    cd /PATH/TO/LOCAL/react-native-in-app-payments-quickstart
+    cd /PATH/TO/LOCAL/example-expo
     rm -rf node_modules/react-native-square-in-app-payments/node_modules/
     ```
 

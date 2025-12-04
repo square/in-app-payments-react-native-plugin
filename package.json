@@ -1,65 +1,181 @@
 {
   "name": "react-native-square-in-app-payments",
-  "version": "1.7.6",
+  "version": "2.0.0",
   "description": "An open source React Native plugin for calling Square’s native In-App Payments SDK to take in-app payments on iOS and Android.",
-  "homepage": "https://github.com/square/in-app-payments-react-native-plugin",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/square/in-app-payments-react-native-plugin"
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json",
+    "./app.plugin.js": "./app.plugin.js"
   },
-  "main": "index.js",
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cpp",
+    "*.podspec",
+    "react-native.config.js",
+    "app.plugin.js",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
   "scripts": {
-    "lint": "eslint ./ --ext .js,.ts",
+    "example": "yarn workspace react-native-square-in-app-payments-example",
+    "example-expo": "yarn workspace react-native-square-in-app-payments-example-expo",
     "test": "jest",
-    "test-coverage": "jest --collectCoverage"
+    "typecheck": "tsc",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build example/ios/Pods lib example-expo/ios/build example-expo/android/build example-expo/android/app/build example-expo/ios/Pods",
+    "prepare": "bob build",
+    "release": "release-it --only-version"
   },
   "keywords": [
     "react-native",
+    "ios",
+    "android",
     "in-app-payments",
     "square",
-    "payments"
+    "payments",
+    "expo"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/square/in-app-payments-react-native-plugin.git"
+  },
   "author": "Square, Inc.",
   "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/square/in-app-payments-react-native-plugin/issues"
+  },
+  "homepage": "https://github.com/square/in-app-payments-react-native-plugin#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "expo": {
+    "plugin": "./app.plugin.js"
+  },
+  "dependencies": {
+    "@expo/config-plugins": "^8.0.0"
+  },
   "devDependencies": {
-    "@types/jest": "^26.0.23",
-    "@types/node": "^17.0.23",
-    "@types/react": "^18.2.6",
-    "@types/react-native": "^0.72.0",
-    "@types/react-test-renderer": "^18.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.29.2",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "27.0.1",
-    "babel-plugin-module-resolver": "^4.1.0",
-    "eslint": "^7.28.0",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-native": "^3.11.0",
-    "jest": "^27.0.6",
-    "metro-react-native-babel-preset": "0.56.0",
-    "react": "18.2.0",
-    "react-native": "0.74.1",
-    "react-test-renderer": "18.2.0",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.3.5"
+    "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/compat": "^1.3.2",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.35.0",
+    "@evilmartians/lefthook": "^1.12.3",
+    "@react-native-community/cli": "20.0.1",
+    "@react-native/babel-preset": "0.81.1",
+    "@react-native/eslint-config": "^0.81.1",
+    "@release-it/conventional-changelog": "^10.0.1",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^19.1.0",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "commitlint": "^19.8.1",
+    "del-cli": "^6.0.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jest": "latest",
+    "eslint-plugin-prettier": "^5.5.4",
+    "jest": "^29.7.0",
+    "prettier": "^3.6.2",
+    "react": "19.1.0",
+    "react-native": "0.81.1",
+    "react-native-builder-bob": "^0.40.13",
+    "release-it": "^19.0.4",
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "react-native": ">= 0.57.8"
+    "react": "*",
+    "react-native": "*"
   },
+  "workspaces": [
+    "example",
+    "example-expo"
+  ],
+  "packageManager": "yarn@3.6.1",
   "jest": {
     "preset": "react-native",
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    },
     "modulePathIgnorePatterns": [
-      "react-native-in-app-payments-quickstart"
+      "<rootDir>/example/node_modules",
+      "<rootDir>/example-expo/node_modules",
+      "<rootDir>/lib/"
     ]
   },
-  "resolutions": {
-    "**/**/handlebars": "4.5.3",
-    "**/**/logkitty": "^0.7.1",
-    "**/**/minimist": "^0.2.1"
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "angular"
+        }
+      }
+    }
+  },
+  "prettier": {
+    "quoteProps": "consistent",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "codegenConfig": {
+    "name": "SquareInAppPaymentsSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.squareinapppayments"
+    }
+  },
+  "create-react-native-library": {
+    "languages": "kotlin-objc",
+    "type": "turbo-module",
+    "version": "0.54.8"
   }
 }

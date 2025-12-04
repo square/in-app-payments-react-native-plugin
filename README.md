@@ -18,7 +18,7 @@ In addition to this README, the following is available in the [React Native plug
 * [Technical reference]
 * [Troubleshooting guide]
 * [`docs`] - Root directory for all documentation.
-* [`react-native-in-app-payments-quickstart`] - Root directory of the React Native sample app (with walkthrough).
+* [`example-expo`] - Root directory of the React Native sample app (with walkthrough).
 * [Getting started with the example app]
 
 ## Build requirements
@@ -40,10 +40,18 @@ In addition to this README, the following is available in the [React Native plug
 * In-App Payments SDK cannot issue refunds. Refunds can be issued programmatically using
   the Refunds API or manually in the [Square Dashboard].
 
+
 ## Sample applications
-* **[Quick start React Native app]:** You can learn how the In-App-Payments React Native plugin is used by [getting started with the example app], a quick-start React Native app that lets you take a payment after completing 6 setup steps. 
-* **Quick start backend app:** The [In-App Payments Server Quickstart](https://github.com/square/in-app-payments-server-quickstart) 
-takes the nonce created by the React Native app and uses it to create a payment credited to your Square account. Use this backend sample to quickly create a complete payment flow.
+
+### Steps
+
+1. Run yarn 
+2. Run yarn prepare
+3. cd example-expo
+4. Run yarn 
+6. Run npx expo prebuild
+7. Run yarn ios
+
 
 ## License
 
@@ -68,12 +76,12 @@ limitations under the License.
 [Square Dashboard]: https://squareup.com/dashboard/
 [Testing Mobile Apps]: https://developer.squareup.com/docs/testing/mobile
 [`docs`]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/docs
-[`react-native-in-app-payments-quickstart`]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/react-native-in-app-payments-quickstart
+[`example-expo`]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/example-expo
 [Getting started guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/get-started.md
 [Enable Apple Pay guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/enable-applepay.md
 [Enable Google Pay guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/enable-googlepay.md
 [Technical reference]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/reference.md
 [Troubleshooting guide]: https://github.com/square/in-app-payments-react-native-plugin/blob/master/docs/troubleshooting.md
 [React Native plugin GitHub repo]: https://github.com/square/in-app-payments-react-native-plugin/tree/master
-[Getting started with the example app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/react-native-in-app-payments-quickstart/README.md
-[Quick start React Native app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/react-native-in-app-payments-quickstart
+[Getting started with the example app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/example-expo/README.md
+[Quick start React Native app]: https://github.com/square/in-app-payments-react-native-plugin/tree/master/example-expo
