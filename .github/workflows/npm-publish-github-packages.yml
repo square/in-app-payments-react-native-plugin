@@ -22,8 +22,20 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm i
-      - run: npm pack    
-      - run: npm publish --provenance --access public
+          cache: 'yarn'
+
+      # Use Yarn instead of npm
+      - name: Enable corepack (Yarn)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build package tarball with Yarn
+        run: yarn pack --out package.tgz
+
+      # Still use npm to publish the already-generated tarball
+      - name: Publish to npm
+        run: npm publish package.tgz --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
