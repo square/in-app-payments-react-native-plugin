@@ -41,6 +41,7 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build example/ios/Pods lib example-expo/ios/build example-expo/android/build example-expo/android/app/build example-expo/ios/Pods",
     "prepare": "bob build",
+    "prepack": "bob build",
     "release": "release-it --only-version"
   },
   "keywords": [
