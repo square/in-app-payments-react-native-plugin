@@ -1,5 +1,9 @@
 ## Changelog
 
+### v2.0.1 Mar 26, 2026
+
+* Support for 16KB 
+
 ### v1.7.6 Jun 03, 2024
 
 * Upgrade IAP SDK for Android `1.6.6` and for iOS `1.6.3`.
