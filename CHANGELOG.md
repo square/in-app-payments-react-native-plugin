@@ -1,5 +1,9 @@
 ## Changelog
 
+### v2.0.1 Jun 4, 2026
+
+* Upgrade IAP SDK for Android `1.6.8` and for iOS `1.6.6`.
+
 ### v1.7.6 Jun 03, 2024
 
 * Upgrade IAP SDK for Android `1.6.6` and for iOS `1.6.3`.
