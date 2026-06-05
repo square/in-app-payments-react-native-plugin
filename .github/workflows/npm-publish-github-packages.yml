@@ -34,8 +34,7 @@ jobs:
       - name: Build package tarball with Yarn
         run: yarn pack --out package.tgz
 
+      - run: npm install -g npm@latest
       # Still use npm to publish the already-generated tarball
       - name: Publish to npm
         run: npm publish package.tgz --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
