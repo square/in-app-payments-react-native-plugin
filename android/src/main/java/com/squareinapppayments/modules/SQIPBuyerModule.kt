@@ -17,7 +17,7 @@ class SQIPBuyerModule(reactContext: ReactApplicationContext) :
   }
 
   init {
-    SQIPBuyer.setActivity(currentActivity)
+    SQIPBuyer.setActivity(getCurrentActivity())
     SQIPBuyer.setReactApplicationContext(reactApplicationContext)
   }
 

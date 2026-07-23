@@ -19,7 +19,7 @@ class SQIPGooglePayModule(reactContext: ReactApplicationContext) :
 
   init {
     SQIPGooglePay.setReactApplicationContext(reactApplicationContext)
-    SQIPGooglePay.setActivity(currentActivity)
+    SQIPGooglePay.setActivity(getCurrentActivity())
   }
 
   override fun initializeGooglePay(

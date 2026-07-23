@@ -3,6 +3,8 @@
 ### v2.0.1 Jun 4, 2026
 
 * Upgrade IAP SDK for Android `1.6.9` and for iOS `1.6.7`.
+* IAP SDK Android `1.6.9` ships Kotlin 2.3.0 metadata, which the Kotlin 2.1.x compiler pinned by current React Native cannot read. The plugin now compiles itself with a Kotlin 2.2 compiler when it detects an older Kotlin Gradle plugin, and keeps the SDK's `kotlin-stdlib` 2.3.0 off the consumer's compile classpath — no changes needed in consuming apps.
+* IAP SDK Android `1.6.9` pulls in OkHttp 5.x, whose multi-release jars ship duplicate `META-INF/versions/9/OSGI-INF/MANIFEST.MF` entries and fail `mergeJavaResource`. The Expo config plugin now excludes it automatically; bare React Native apps should add a `packaging` exclude to `android/app/build.gradle` (see the [getting started guide](docs/get-started.md)).
 
 ### v1.7.6 Jun 03, 2024
 

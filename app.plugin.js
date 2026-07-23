@@ -1,6 +1,7 @@
 const configPlugins = require('@expo/config-plugins');
 const {
   withProjectBuildGradle,
+  withAppBuildGradle,
   withXcodeProject,
   createRunOncePlugin,
   withAndroidStyles,
@@ -304,6 +305,25 @@ function withSquarePaymentsSDK(config, opts = {}) {
         }
         mod.modResults.contents = src;
 
+        return mod;
+      });
+
+      //
+      // 🟢 ANDROID PART 1b exclude duplicate OkHttp multi-release jar manifest
+      //
+      // IAP SDK 1.6.9+ pulls in OkHttp 5.x, whose multi-release jars
+      // (logging-interceptor, jspecify) both ship
+      // META-INF/versions/9/OSGI-INF/MANIFEST.MF, which fails
+      // mergeJavaResource with a duplicate-file error.
+      cfg = withAppBuildGradle(cfg, (mod) => {
+        if (mod.modResults.language !== 'groovy') return mod;
+        const src = mod.modResults.contents || '';
+        const EXCLUDED_RESOURCE = 'META-INF/versions/9/OSGI-INF/MANIFEST.MF';
+        if (src.includes(EXCLUDED_RESOURCE)) return mod;
+        mod.modResults.contents = src.replace(
+          /android\s*\{/,
+          `android {\n    packaging {\n        resources {\n            excludes += "${EXCLUDED_RESOURCE}"\n        }\n    }\n`
+        );
         return mod;
       });
 

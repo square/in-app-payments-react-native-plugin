@@ -145,6 +145,22 @@ are just examples.
     }
     ```
 
+1. In-App Payments Android SDK `1.6.9` and newer depend on OkHttp 5.x, whose
+multi-release jars each ship `META-INF/versions/9/OSGI-INF/MANIFEST.MF`. This
+fails the `mergeJavaResource` task with a duplicate-file error. If you use the
+Expo config plugin this is handled for you; otherwise add the following to
+`android/app/build.gradle`:
+
+    ```gradle
+    android {
+      packaging {
+        resources {
+          excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+        }
+      }
+    }
+    ```
+
 ## Card Entry Usage
 Complete the following steps to add the **In-App Payments** card entry screen to
 your React Native project and use the card entry screen to get a nonce.
