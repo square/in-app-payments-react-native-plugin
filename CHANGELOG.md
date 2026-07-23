@@ -1,10 +1,14 @@
 ## Changelog
 
-### v2.0.1 Jun 4, 2026
+### v2.1.0 Jul 23, 2026
 
-* Upgrade IAP SDK for Android `1.6.9` and for iOS `1.6.7`.
+* Upgrade IAP SDK for Android `1.6.9`.
 * IAP SDK Android `1.6.9` is built with Kotlin 2.3.0 and requires Kotlin `2.2.21`+ to compile, while React Native pins Kotlin 2.1.x (as of RN 0.86). The Expo config plugin now pins the Kotlin Gradle plugin to `2.2.21` automatically; bare React Native apps must pin it in their root `android/build.gradle` (see the [getting started guide](docs/get-started.md)).
 * IAP SDK Android `1.6.9` pulls in OkHttp 5.x, whose multi-release jars ship duplicate `META-INF/versions/9/OSGI-INF/MANIFEST.MF` entries and fail `mergeJavaResource`. The Expo config plugin now excludes it automatically; bare React Native apps should add a `packaging` exclude to `android/app/build.gradle` (see the [getting started guide](docs/get-started.md)).
+
+### v2.0.1 Jun 4, 2026
+
+* Upgrade IAP SDK for Android `1.6.8` and for iOS `1.6.7`.
 
 ### v1.7.6 Jun 03, 2024
 
