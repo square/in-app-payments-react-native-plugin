@@ -145,6 +145,9 @@ are just examples.
     }
     ```
 
+<!-- TODO(kotlin-2.2-workaround): delete this step once the minimum supported
+React Native ships Kotlin 2.2+ (facebook/react-native#56838, expected in
+RN 0.87). -->
 1. In-App Payments Android SDK `1.6.9` and newer are built with Kotlin 2.3.0
 and require Kotlin `2.2.21` or newer to compile. React Native's gradle plugin
 pins an older Kotlin (2.1.x as of RN 0.86), so builds fail with

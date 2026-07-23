@@ -19,7 +19,10 @@ const EDIT_TEXT_STYLE_PARENT = 'Widget.AppCompat.EditText';
 const SAVE_BUTTON_STYLE_NAME = 'sqip.Theme.CardEntry.SaveButton';
 const SAVE_BUTTON_STYLE_PARENT = 'Widget.AppCompat.Button.Colored';
 const PLUGIN_PREFIX = 'sqip_card_entry_';
-// Minimum Kotlin version able to read IAP SDK 1.6.9+ metadata (Kotlin 2.3.0).
+// TODO(kotlin-2.2-workaround): Minimum Kotlin version able to read IAP SDK
+// 1.6.9+ metadata (Kotlin 2.3.0). Remove this constant and the KGP pin below
+// once the minimum supported React Native ships Kotlin 2.2+ — merged to RN
+// main in facebook/react-native#56838 (May 2026), expected in RN 0.87.
 const SQIP_KOTLIN_VERSION = '2.2.21';
 
 const COLOR_MAPPINGS = [
@@ -283,6 +286,8 @@ function withSquarePaymentsSDK(config, opts = {}) {
         if (mod.modResults.language !== 'groovy') return mod;
         let src = mod.modResults.contents || '';
 
+        // TODO(kotlin-2.2-workaround): remove this replace() once the minimum
+        // supported React Native ships Kotlin 2.2+ (facebook/react-native#56838).
         // IAP SDK 1.6.9+ is built with Kotlin 2.3.0 and requires a Kotlin
         // 2.2+ compiler. Expo's generated root build.gradle declares the
         // Kotlin Gradle plugin without a version, which resolves to the
