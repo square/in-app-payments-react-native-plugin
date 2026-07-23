@@ -14,7 +14,7 @@ class SQIPCardEntryModule(reactContext: ReactApplicationContext) :
 
   init {
     SQIPCardEntry.setReactApplicationContext(reactApplicationContext)
-    SQIPCardEntry.setActivity(currentActivity)
+    SQIPCardEntry.setActivity(getCurrentActivity())
   }
 
   override fun getName(): String {

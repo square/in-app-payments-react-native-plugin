@@ -1,6 +1,7 @@
 const configPlugins = require('@expo/config-plugins');
 const {
   withProjectBuildGradle,
+  withAppBuildGradle,
   withXcodeProject,
   createRunOncePlugin,
   withAndroidStyles,
@@ -18,6 +19,11 @@ const EDIT_TEXT_STYLE_PARENT = 'Widget.AppCompat.EditText';
 const SAVE_BUTTON_STYLE_NAME = 'sqip.Theme.CardEntry.SaveButton';
 const SAVE_BUTTON_STYLE_PARENT = 'Widget.AppCompat.Button.Colored';
 const PLUGIN_PREFIX = 'sqip_card_entry_';
+// TODO(kotlin-2.2-workaround): Minimum Kotlin version able to read IAP SDK
+// 1.6.9+ metadata (Kotlin 2.3.0). Remove this constant and the KGP pin below
+// once the minimum supported React Native ships Kotlin 2.2+ — merged to RN
+// main in facebook/react-native#56838 (May 2026), expected in RN 0.87.
+const SQIP_KOTLIN_VERSION = '2.2.21';
 
 const COLOR_MAPPINGS = [
   {
@@ -279,6 +285,19 @@ function withSquarePaymentsSDK(config, opts = {}) {
       cfg = withProjectBuildGradle(cfg, (mod) => {
         if (mod.modResults.language !== 'groovy') return mod;
         let src = mod.modResults.contents || '';
+
+        // TODO(kotlin-2.2-workaround): remove this replace() once the minimum
+        // supported React Native ships Kotlin 2.2+ (facebook/react-native#56838).
+        // IAP SDK 1.6.9+ is built with Kotlin 2.3.0 and requires a Kotlin
+        // 2.2+ compiler. Expo's generated root build.gradle declares the
+        // Kotlin Gradle plugin without a version, which resolves to the
+        // Kotlin pinned by React Native (2.1.x as of RN 0.86) and cannot
+        // read the SDK's metadata. Pin a compatible version explicitly.
+        src = src.replace(
+          /classpath\((['"])org\.jetbrains\.kotlin:kotlin-gradle-plugin\1\)/,
+          `classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:${SQIP_KOTLIN_VERSION}')`
+        );
+
         const SQUARE_REPO_URL = 'https://sdk.squareup.com/public/android';
         const SQUARE_REPO_REGEX =
           /maven\s*{\s*url\s*['"]https:\/\/sdk\.squareup\.com\/public\/android['"]\s*}/;
@@ -304,6 +323,25 @@ function withSquarePaymentsSDK(config, opts = {}) {
         }
         mod.modResults.contents = src;
 
+        return mod;
+      });
+
+      //
+      // 🟢 ANDROID PART 1b exclude duplicate OkHttp multi-release jar manifest
+      //
+      // IAP SDK 1.6.9+ pulls in OkHttp 5.x, whose multi-release jars
+      // (logging-interceptor, jspecify) both ship
+      // META-INF/versions/9/OSGI-INF/MANIFEST.MF, which fails
+      // mergeJavaResource with a duplicate-file error.
+      cfg = withAppBuildGradle(cfg, (mod) => {
+        if (mod.modResults.language !== 'groovy') return mod;
+        const src = mod.modResults.contents || '';
+        const EXCLUDED_RESOURCE = 'META-INF/versions/9/OSGI-INF/MANIFEST.MF';
+        if (src.includes(EXCLUDED_RESOURCE)) return mod;
+        mod.modResults.contents = src.replace(
+          /android\s*\{/,
+          `android {\n    packaging {\n        resources {\n            excludes += "${EXCLUDED_RESOURCE}"\n        }\n    }\n`
+        );
         return mod;
       });
 
