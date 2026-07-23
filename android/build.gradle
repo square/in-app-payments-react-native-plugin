@@ -79,31 +79,6 @@ rootProject.allprojects {
   }
 }
 
-// IAP SDK 1.6.9+ ships Kotlin 2.3.0 metadata, which Kotlin compilers older
-// than 2.2 cannot read. React Native's gradle plugin currently pins Kotlin
-// 2.1.x for ALL modules (its KGP sits on the settings classpath, so root-level
-// kotlinVersion overrides do not change the actual compiler). When we detect
-// such a KGP, swap in a compiler that can read the SDK, without requiring
-// consumers to change their Kotlin/RN setup. Self-disables once RN moves to
-// Kotlin 2.2+.
-def kgpVersion = org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapperKt.getKotlinPluginVersion(project)
-def kgpCannotReadSqipMetadata = kgpVersion.matches(/^(1\.|2\.[01]\.).*/)
-if (kgpCannotReadSqipMetadata) {
-  configurations.matching { it.name == "kotlinCompilerClasspath" }.all {
-    resolutionStrategy.eachDependency { details ->
-      if (details.requested.group == "org.jetbrains.kotlin" && details.requested.name == "kotlin-compiler-embeddable") {
-        details.useVersion "2.2.20"
-      }
-    }
-  }
-  // The newer compiler cannot talk to the Kotlin daemon spawned by the older
-  // Kotlin gradle plugin, so run it inside the Gradle process instead.
-  def inProcessStrategy = org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy.IN_PROCESS
-  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    compilerExecutionStrategy.set(inProcessStrategy)
-  }
-}
-
 def kotlin_version = getExtOrDefault("kotlinVersion")
 def sqipVersion = getExtOrDefault("sqipVersion")
 def googlePayVersion = getExtOrDefault("googlePayVersion")
@@ -112,17 +87,7 @@ dependencies {
   implementation "com.facebook.react:react-android"
   implementation "com.google.android.gms:play-services-wallet:$googlePayVersion"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  // IAP SDK 1.6.9+ depends on kotlin-stdlib 2.3.0, whose metadata the Kotlin
-  // 2.1.x compiler shipped with current React Native cannot read. Keep it off
-  // the consumer's compile classpath; the stdlib is backwards compatible at
-  // runtime, so the consumer's (older) stdlib satisfies it.
-  implementation("com.squareup.sdk.in-app-payments:card-entry:$sqipVersion") {
-    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib"
-  }
-  implementation("com.squareup.sdk.in-app-payments:google-pay:$sqipVersion") {
-    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib"
-  }
-  implementation("com.squareup.sdk.in-app-payments:buyer-verification:$sqipVersion") {
-    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib"
-  }
+  implementation "com.squareup.sdk.in-app-payments:card-entry:$sqipVersion"
+  implementation "com.squareup.sdk.in-app-payments:google-pay:$sqipVersion"
+  implementation "com.squareup.sdk.in-app-payments:buyer-verification:$sqipVersion"
 }

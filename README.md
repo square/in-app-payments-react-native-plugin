@@ -8,6 +8,10 @@ supports the following native In-App Payments SDK versions:
   * iOS: `1.6.7`
   * Android: `1.6.9`
 
+## Android: Kotlin 2.2.x compatibility
+
+In-App Payments Android SDK `1.6.9` is built with Kotlin 2.3.0 and requires Kotlin `2.2.21`+ to compile, which React Native does not ship yet (it pins Kotlin 2.1.x as of RN 0.86). The Expo config plugin handles this automatically; bare React Native apps must pin the Kotlin Gradle plugin in their root `android/build.gradle` — see the [getting started guide](docs/get-started.md#step-4-configure-your-android-project).
+
 ## Additional documentation
 
 In addition to this README, the following is available in the [React Native plugin GitHub repo]:

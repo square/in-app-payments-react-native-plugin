@@ -19,6 +19,8 @@ const EDIT_TEXT_STYLE_PARENT = 'Widget.AppCompat.EditText';
 const SAVE_BUTTON_STYLE_NAME = 'sqip.Theme.CardEntry.SaveButton';
 const SAVE_BUTTON_STYLE_PARENT = 'Widget.AppCompat.Button.Colored';
 const PLUGIN_PREFIX = 'sqip_card_entry_';
+// Minimum Kotlin version able to read IAP SDK 1.6.9+ metadata (Kotlin 2.3.0).
+const SQIP_KOTLIN_VERSION = '2.2.21';
 
 const COLOR_MAPPINGS = [
   {
@@ -280,6 +282,17 @@ function withSquarePaymentsSDK(config, opts = {}) {
       cfg = withProjectBuildGradle(cfg, (mod) => {
         if (mod.modResults.language !== 'groovy') return mod;
         let src = mod.modResults.contents || '';
+
+        // IAP SDK 1.6.9+ is built with Kotlin 2.3.0 and requires a Kotlin
+        // 2.2+ compiler. Expo's generated root build.gradle declares the
+        // Kotlin Gradle plugin without a version, which resolves to the
+        // Kotlin pinned by React Native (2.1.x as of RN 0.86) and cannot
+        // read the SDK's metadata. Pin a compatible version explicitly.
+        src = src.replace(
+          /classpath\((['"])org\.jetbrains\.kotlin:kotlin-gradle-plugin\1\)/,
+          `classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:${SQIP_KOTLIN_VERSION}')`
+        );
+
         const SQUARE_REPO_URL = 'https://sdk.squareup.com/public/android';
         const SQUARE_REPO_REGEX =
           /maven\s*{\s*url\s*['"]https:\/\/sdk\.squareup\.com\/public\/android['"]\s*}/;

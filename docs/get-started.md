@@ -145,6 +145,30 @@ are just examples.
     }
     ```
 
+1. In-App Payments Android SDK `1.6.9` and newer are built with Kotlin 2.3.0
+and require Kotlin `2.2.21` or newer to compile. React Native's gradle plugin
+pins an older Kotlin (2.1.x as of RN 0.86), so builds fail with
+`Module was compiled with an incompatible version of Kotlin`. If you use the
+Expo config plugin this is handled for you; otherwise pin the Kotlin Gradle
+plugin version in your root `android/build.gradle`:
+
+    ```gradle
+    buildscript {
+      ext {
+          ...
+          kotlinVersion = "2.2.21"
+      }
+      dependencies {
+          ...
+          classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+      }
+    }
+    ```
+
+    > The version must be on the `classpath` line — a versionless
+    > `kotlin-gradle-plugin` entry resolves to React Native's pinned Kotlin
+    > even when `ext.kotlinVersion` is set.
+
 1. In-App Payments Android SDK `1.6.9` and newer depend on OkHttp 5.x, whose
 multi-release jars each ship `META-INF/versions/9/OSGI-INF/MANIFEST.MF`. This
 fails the `mergeJavaResource` task with a duplicate-file error. If you use the
