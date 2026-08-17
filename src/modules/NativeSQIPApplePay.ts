@@ -20,7 +20,6 @@ export interface Spec extends TurboModule {
     countryCode: string,
     currencyCode: string,
     paymentType: number,
-    paymentSourceId: string,
     locationId: string,
     buyerAction: string,
     money: Object,

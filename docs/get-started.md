@@ -345,7 +345,7 @@ Add a button and start the card entry in button `onPress` event handler.
     }
   }
   ```
-  **Note**: To start the payment flow with Strong Customer Authentication, you should call `startCardEntryFlowWithBuyerVerification`.
+  **Note**: To start the payment flow with Strong Customer Authentication (3DS), call `startCardEntryFlowWithBuyerVerification`. That method collects the card first, then verifies the collected nonce. See the [technical reference](reference.md#startcardentryflowwithbuyerverification). For Apple Pay or Google Pay with 3DS, use `requestApplePayNonceWithBuyerVerification` / `requestGooglePayNonceWithBuyerVerification`. `cardEntryConfig` carries the buyer-verification parameters (`squareLocationId`, `buyerAction`, amount/currency, and buyer contact fields).
 
 ---
 **Note:** the `chargeCard` method in this example shows a typical REST request on a backend process

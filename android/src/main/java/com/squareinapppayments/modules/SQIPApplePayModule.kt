@@ -49,7 +49,6 @@ class SQIPApplePayModule(reactContext: ReactApplicationContext) :
     countryCode: String,
     currencyCode: String,
     paymentType: Double,
-    paymentSourceId: String,
     locationId: String,
     buyerAction: String,
     money: ReadableMap,

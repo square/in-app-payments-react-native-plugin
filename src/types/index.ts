@@ -63,6 +63,7 @@ export enum Brand {
 
 export interface VerificationResult {
   nonce?: string;
+  card?: Card;
   token?: string;
 }
 

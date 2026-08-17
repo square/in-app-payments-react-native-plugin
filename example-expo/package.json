@@ -4,8 +4,9 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "android": "cd .. && yarn bob build && cd example-expo && expo run:android",
+    "ios:pods": "bundle check || bundle install && cd ios && bundle exec pod install",
+    "ios": "yarn ios:pods && expo run:ios --no-install"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

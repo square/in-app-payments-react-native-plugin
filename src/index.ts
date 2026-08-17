@@ -43,6 +43,42 @@ let lastApplePayNonceRequestState: {
   errorMessage?: string;
 } = { state: ApplePayNonceSuccessState.Canceled, errorMessage: undefined };
 
+function buildVerificationNativeParams(cardEntryConfig: CardEntryConfig) {
+  verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object');
+  verifyStringType(
+    cardEntryConfig.squareLocationId,
+    'squareLocationId should be a valid string'
+  );
+  verifyStringType(
+    cardEntryConfig.buyerAction,
+    'buyerAction should be a valid string'
+  );
+  verifyNumberType(cardEntryConfig.amount, 'amount should be a valid number');
+  verifyStringType(
+    cardEntryConfig.currencyCode,
+    'currencyCode should be a valid string'
+  );
+  return {
+    locationId: cardEntryConfig.squareLocationId!,
+    buyerAction: cardEntryConfig.buyerAction!,
+    money: {
+      amount: cardEntryConfig.amount,
+      currencyCode: cardEntryConfig.currencyCode,
+    },
+    contact: {
+      givenName: cardEntryConfig.givenName,
+      familyName: cardEntryConfig.familyName,
+      addressLines: cardEntryConfig.addressLines,
+      city: cardEntryConfig.city,
+      countryCode: cardEntryConfig.countryCode,
+      email: cardEntryConfig.email,
+      phone: cardEntryConfig.phone,
+      postalCode: cardEntryConfig.postalCode,
+      region: cardEntryConfig.region,
+    },
+  };
+}
+
 export namespace SQIPCore {
   export function setSquareApplicationId(applicationId: string): void {
     verifyStringType(applicationId, 'applicationId should be a valid string');
@@ -249,10 +285,8 @@ export namespace SQIPCardEntry {
     cardEntryConfig: CardEntryConfig,
     onBuyerVerificationSuccess: BuyerVerificationSuccessCallback,
     onBuyerVerificationFailure: FailureCallback,
-    onCardEntryCancel: CancelAndCompleteCallback
+    _onCardEntryCancel: CancelAndCompleteCallback
   ): void {
-    // ? : why is this callback needed?
-    onCardEntryCancel = onCardEntryCancel || (() => {});
     SQIPBuyer.startBuyerVerificationFlow(
       paymentSourceId,
       cardEntryConfig,
@@ -261,6 +295,22 @@ export namespace SQIPCardEntry {
     );
   }
 
+  /**
+   * Collects a card nonce, then runs buyer verification (3DS) on that nonce.
+   * Do not pass a `paymentSourceId` — verification always uses the collected nonce.
+   */
+  export function startCardEntryFlowWithBuyerVerification(
+    collectPostalCode: boolean,
+    cardEntryConfig: CardEntryConfig,
+    onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
+    onBuyerVerificationFailure?: FailureCallback,
+    onCardNonceRequestSuccess?: NonceSuccessCallbackWithResult,
+    onCardEntryCancel?: CancelAndCompleteCallback
+  ): void;
+  /**
+   * @deprecated `paymentSourceId` is ignored. Combined verification methods
+   * collect a nonce first, then run 3DS on that nonce.
+   */
   export function startCardEntryFlowWithBuyerVerification(
     collectPostalCode: boolean,
     paymentSourceId: string,
@@ -269,75 +319,39 @@ export namespace SQIPCardEntry {
     onBuyerVerificationFailure?: FailureCallback,
     onCardNonceRequestSuccess?: NonceSuccessCallbackWithResult,
     onCardEntryCancel?: CancelAndCompleteCallback
+  ): void;
+  export function startCardEntryFlowWithBuyerVerification(
+    collectPostalCode: boolean,
+    paymentSourceIdOrConfig: string | CardEntryConfig,
+    configOrSuccess?: CardEntryConfig | BuyerVerificationSuccessCallback,
+    successOrFailure?: BuyerVerificationSuccessCallback | FailureCallback,
+    failureOrNonce?: FailureCallback | NonceSuccessCallbackWithResult,
+    nonceOrCancel?: NonceSuccessCallbackWithResult | CancelAndCompleteCallback,
+    maybeCancel?: CancelAndCompleteCallback
   ): void {
     verifyBooleanType(
       collectPostalCode,
       'collectPostalCode should be a boolean.'
     );
-    verifyStringType(
-      paymentSourceId,
-      'paymentSourceId should be a valid string'
-    );
-    verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object');
-    verifyStringType(
-      cardEntryConfig.squareLocationId,
-      'squareLocationId should be a valid string'
-    );
-    verifyStringType(
-      cardEntryConfig.buyerAction,
-      'buyerAction should be a valid string'
-    );
-    verifyNumberType(cardEntryConfig.amount, 'amount should be a valid number');
-    verifyStringType(
-      cardEntryConfig.currencyCode,
-      'currencyCode should be a valid string'
-    );
-    const money = {
-      amount: cardEntryConfig.amount,
-      currencyCode: cardEntryConfig.currencyCode,
-    };
-    const contact = {
-      givenName: cardEntryConfig.givenName,
-      familyName: cardEntryConfig.familyName,
-      addressLines: cardEntryConfig.addressLines,
-      city: cardEntryConfig.city,
-      countryCode: cardEntryConfig.countryCode,
-      email: cardEntryConfig.email,
-      phone: cardEntryConfig.phone,
-      postalCode: cardEntryConfig.postalCode,
-      region: cardEntryConfig.region,
-    };
-    onCardNonceRequestSuccessCached = (cardDetails: CardDetails) => {
-      if (onCardNonceRequestSuccess) {
-        Promise.resolve(onCardNonceRequestSuccess(cardDetails))
-          .then((result) => {
-            if (result) {
-              if (result.success) {
-                NativeSQIPCardEntry.completeCardEntry(() => {
-                  if (result.onCardEntryComplete) {
-                    result.onCardEntryComplete();
-                  }
-                });
-                onCardNonceRequestSuccessCached = undefined;
-              } else {
-                showCardNonceProcessingInternal(
-                  result.errorMessage ?? 'Unknown error'
-                );
-              }
-            }
-          })
-          .catch((error: any) => {
-            showCardNonceProcessingInternal(String(error) ?? 'Unknown error');
-          });
-      } else {
-        NativeSQIPCardEntry.completeCardEntry(() => {});
-      }
-    };
+    const hasPaymentSourceId = typeof paymentSourceIdOrConfig === 'string';
+    const cardEntryConfig = (
+      hasPaymentSourceId ? configOrSuccess : paymentSourceIdOrConfig
+    ) as CardEntryConfig;
+    const onBuyerVerificationSuccess = (
+      hasPaymentSourceId ? successOrFailure : configOrSuccess
+    ) as BuyerVerificationSuccessCallback | undefined;
+    const onBuyerVerificationFailure = (
+      hasPaymentSourceId ? failureOrNonce : successOrFailure
+    ) as FailureCallback | undefined;
+    const onCardEntryCancel = (
+      hasPaymentSourceId ? maybeCancel : nonceOrCancel
+    ) as CancelAndCompleteCallback | undefined;
+    const { locationId, buyerAction, money, contact } =
+      buildVerificationNativeParams(cardEntryConfig);
     NativeSQIPCardEntry.startCardEntryFlowWithBuyerVerification(
       collectPostalCode,
-      paymentSourceId,
-      cardEntryConfig.squareLocationId!,
-      cardEntryConfig.buyerAction!,
+      locationId,
+      buyerAction,
       money,
       contact,
       (verificationResult) => {
@@ -350,10 +364,8 @@ export namespace SQIPCardEntry {
           onBuyerVerificationFailure(errorDetails as ErrorDetails);
         }
       },
-      (cardDetails: CardDetails) => {
-        if (onCardNonceRequestSuccessCached) {
-          onCardNonceRequestSuccessCached(cardDetails);
-        }
+      (_cardDetails: CardDetails) => {
+        // Card entry auto-completes before 3DS; this callback is unused.
       },
       () => {
         if (onCardEntryCancel) onCardEntryCancel();
@@ -361,6 +373,21 @@ export namespace SQIPCardEntry {
     );
   }
 
+  /**
+   * Collects a gift-card nonce, then runs buyer verification (3DS) on that nonce.
+   * Do not pass a `paymentSourceId` — verification always uses the collected nonce.
+   */
+  export function startGiftCardEntryFlowWithBuyerVerification(
+    cardEntryConfig: CardEntryConfig,
+    onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
+    onBuyerVerificationFailure?: FailureCallback,
+    onCardNonceRequestSuccess?: NonceSuccessCallbackWithResult,
+    onCardEntryCancel?: CancelAndCompleteCallback
+  ): void;
+  /**
+   * @deprecated `paymentSourceId` is ignored. Combined verification methods
+   * collect a nonce first, then run 3DS on that nonce.
+   */
   export function startGiftCardEntryFlowWithBuyerVerification(
     paymentSourceId: string,
     cardEntryConfig: CardEntryConfig,
@@ -368,70 +395,33 @@ export namespace SQIPCardEntry {
     onBuyerVerificationFailure?: FailureCallback,
     onCardNonceRequestSuccess?: NonceSuccessCallbackWithResult,
     onCardEntryCancel?: CancelAndCompleteCallback
+  ): void;
+  export function startGiftCardEntryFlowWithBuyerVerification(
+    paymentSourceIdOrConfig: string | CardEntryConfig,
+    configOrSuccess?: CardEntryConfig | BuyerVerificationSuccessCallback,
+    successOrFailure?: BuyerVerificationSuccessCallback | FailureCallback,
+    failureOrNonce?: FailureCallback | NonceSuccessCallbackWithResult,
+    nonceOrCancel?: NonceSuccessCallbackWithResult | CancelAndCompleteCallback,
+    maybeCancel?: CancelAndCompleteCallback
   ): void {
-    verifyStringType(
-      paymentSourceId,
-      'paymentSourceId should be a valid string'
-    );
-    verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object');
-    verifyStringType(
-      cardEntryConfig.squareLocationId,
-      'squareLocationId should be a valid string'
-    );
-    verifyStringType(
-      cardEntryConfig.buyerAction,
-      'buyerAction should be a valid string'
-    );
-    verifyNumberType(cardEntryConfig.amount, 'amount should be a valid number');
-    verifyStringType(
-      cardEntryConfig.currencyCode,
-      'currencyCode should be a valid string'
-    );
-    const money = {
-      amount: cardEntryConfig.amount,
-      currencyCode: cardEntryConfig.currencyCode,
-    };
-    const contact = {
-      givenName: cardEntryConfig.givenName,
-      familyName: cardEntryConfig.familyName,
-      addressLines: cardEntryConfig.addressLines,
-      city: cardEntryConfig.city,
-      countryCode: cardEntryConfig.countryCode,
-      email: cardEntryConfig.email,
-      phone: cardEntryConfig.phone,
-      postalCode: cardEntryConfig.postalCode,
-      region: cardEntryConfig.region,
-    };
-    onCardNonceRequestSuccessCached = (cardDetails: CardDetails) => {
-      if (onCardNonceRequestSuccess) {
-        Promise.resolve(onCardNonceRequestSuccess(cardDetails))
-          .then((result) => {
-            if (result) {
-              if (result.success) {
-                NativeSQIPCardEntry.completeCardEntry(() => {
-                  if (result.onCardEntryComplete) {
-                    result.onCardEntryComplete();
-                  }
-                });
-                onCardNonceRequestSuccessCached = undefined;
-              } else {
-                showCardNonceProcessingInternal(
-                  result.errorMessage ?? 'Unknown error'
-                );
-              }
-            }
-          })
-          .catch((error: any) => {
-            showCardNonceProcessingInternal(String(error) ?? 'Unknown error');
-          });
-      } else {
-        NativeSQIPCardEntry.completeCardEntry(() => {});
-      }
-    };
+    const hasPaymentSourceId = typeof paymentSourceIdOrConfig === 'string';
+    const cardEntryConfig = (
+      hasPaymentSourceId ? configOrSuccess : paymentSourceIdOrConfig
+    ) as CardEntryConfig;
+    const onBuyerVerificationSuccess = (
+      hasPaymentSourceId ? successOrFailure : configOrSuccess
+    ) as BuyerVerificationSuccessCallback | undefined;
+    const onBuyerVerificationFailure = (
+      hasPaymentSourceId ? failureOrNonce : successOrFailure
+    ) as FailureCallback | undefined;
+    const onCardEntryCancel = (
+      hasPaymentSourceId ? maybeCancel : nonceOrCancel
+    ) as CancelAndCompleteCallback | undefined;
+    const { locationId, buyerAction, money, contact } =
+      buildVerificationNativeParams(cardEntryConfig);
     NativeSQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
-      paymentSourceId,
-      cardEntryConfig.squareLocationId!,
-      cardEntryConfig.buyerAction!,
+      locationId,
+      buyerAction,
       money,
       contact,
       (verificationResult) => {
@@ -444,10 +434,8 @@ export namespace SQIPCardEntry {
           onBuyerVerificationFailure(errorDetails as ErrorDetails);
         }
       },
-      (cardDetails: CardDetails) => {
-        if (onCardNonceRequestSuccessCached) {
-          onCardNonceRequestSuccessCached(cardDetails);
-        }
+      (_cardDetails: CardDetails) => {
+        // Gift card entry auto-completes before 3DS; this callback is unused.
       },
       () => {
         if (onCardEntryCancel) onCardEntryCancel();
@@ -472,39 +460,12 @@ export namespace SQIPBuyer {
       paymentSourceId,
       'paymentSourceId should be a valid string'
     );
-    verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object');
-    verifyStringType(
-      cardEntryConfig.squareLocationId,
-      'squareLocationId should be a valid string'
-    );
-    verifyStringType(
-      cardEntryConfig.buyerAction,
-      'buyerAction should be a valid string'
-    );
-    verifyNumberType(cardEntryConfig.amount, 'amount should be a valid number');
-    verifyStringType(
-      cardEntryConfig.currencyCode,
-      'currencyCode should be a valid string'
-    );
-    const money = {
-      amount: cardEntryConfig.amount,
-      currencyCode: cardEntryConfig.currencyCode,
-    };
-    const contact = {
-      givenName: cardEntryConfig.givenName,
-      familyName: cardEntryConfig.familyName,
-      addressLines: cardEntryConfig.addressLines,
-      city: cardEntryConfig.city,
-      countryCode: cardEntryConfig.countryCode,
-      email: cardEntryConfig.email,
-      phone: cardEntryConfig.phone,
-      postalCode: cardEntryConfig.postalCode,
-      region: cardEntryConfig.region,
-    };
+    const { locationId, buyerAction, money, contact } =
+      buildVerificationNativeParams(cardEntryConfig);
     NativeSQIPBuyer.startBuyerVerificationFlow(
       paymentSourceId,
-      cardEntryConfig.squareLocationId!,
-      cardEntryConfig.buyerAction!,
+      locationId,
+      buyerAction,
       money,
       contact,
       (verificationResult) => {
@@ -594,6 +555,23 @@ export namespace SQIPGooglePay {
     }
   }
 
+  /**
+   * Collects a Google Pay nonce, then runs buyer verification (3DS) on that nonce.
+   * Do not pass a `paymentSourceId` — verification always uses the collected nonce.
+   */
+  export async function requestGooglePayNonceWithBuyerVerification(
+    cardEntryConfig: CardEntryConfig,
+    googlePayConfig: GooglePayConfig,
+    onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
+    onBuyerVerificationFailure?: FailureCallback,
+    onGooglePayNonceRequestSuccess?: NonceSuccessCallback,
+    onGooglePayNonceRequestFailure?: FailureCallback,
+    onGooglePayCanceled?: CancelAndCompleteCallback
+  ): Promise<void>;
+  /**
+   * @deprecated `paymentSourceId` is ignored. Combined verification methods
+   * collect a nonce first, then run 3DS on that nonce.
+   */
   export async function requestGooglePayNonceWithBuyerVerification(
     paymentSourceId: string,
     cardEntryConfig: CardEntryConfig,
@@ -603,12 +581,38 @@ export namespace SQIPGooglePay {
     onGooglePayNonceRequestSuccess?: NonceSuccessCallback,
     onGooglePayNonceRequestFailure?: FailureCallback,
     onGooglePayCanceled?: CancelAndCompleteCallback
+  ): Promise<void>;
+  export async function requestGooglePayNonceWithBuyerVerification(
+    paymentSourceIdOrConfig: string | CardEntryConfig,
+    configOrGooglePayConfig: CardEntryConfig | GooglePayConfig,
+    googlePayConfigOrSuccess?:
+      | GooglePayConfig
+      | BuyerVerificationSuccessCallback,
+    successOrFailure?: BuyerVerificationSuccessCallback | FailureCallback,
+    failureOrNonceSuccess?: FailureCallback | NonceSuccessCallback,
+    nonceSuccessOrNonceFailure?: NonceSuccessCallback | FailureCallback,
+    nonceFailureOrCancel?: FailureCallback | CancelAndCompleteCallback,
+    maybeCancel?: CancelAndCompleteCallback
   ): Promise<void> {
-    verifyStringType(
-      paymentSourceId,
-      'paymentSourceId should be a valid string'
-    );
-    verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object');
+    const hasPaymentSourceId = typeof paymentSourceIdOrConfig === 'string';
+    const cardEntryConfig = (
+      hasPaymentSourceId ? configOrGooglePayConfig : paymentSourceIdOrConfig
+    ) as CardEntryConfig;
+    const googlePayConfig = (
+      hasPaymentSourceId ? googlePayConfigOrSuccess : configOrGooglePayConfig
+    ) as GooglePayConfig;
+    const onBuyerVerificationSuccess = (
+      hasPaymentSourceId ? successOrFailure : googlePayConfigOrSuccess
+    ) as BuyerVerificationSuccessCallback | undefined;
+    const onBuyerVerificationFailure = (
+      hasPaymentSourceId ? failureOrNonceSuccess : successOrFailure
+    ) as FailureCallback | undefined;
+    const onGooglePayNonceRequestFailure = (
+      hasPaymentSourceId ? nonceFailureOrCancel : nonceSuccessOrNonceFailure
+    ) as FailureCallback | undefined;
+    const onGooglePayCanceled = (
+      hasPaymentSourceId ? maybeCancel : nonceFailureOrCancel
+    ) as CancelAndCompleteCallback | undefined;
     verifyObjectType(googlePayConfig, 'googlePayConfig should be an object');
     verifyStringType(
       googlePayConfig.price,
@@ -622,40 +626,13 @@ export namespace SQIPGooglePay {
       googlePayConfig.priceStatus.valueOf(),
       'googlePayConfig.priceStatus should be a valid integer'
     );
-    verifyStringType(
-      cardEntryConfig.squareLocationId,
-      'squareLocationId should be a valid string'
-    );
-    verifyStringType(
-      cardEntryConfig.buyerAction,
-      'buyerAction should be a valid string'
-    );
-    verifyNumberType(cardEntryConfig.amount, 'amount should be a valid number');
-    verifyStringType(
-      cardEntryConfig.currencyCode,
-      'currencyCode should be a valid string'
-    );
-    const money = {
-      amount: cardEntryConfig.amount,
-      currencyCode: cardEntryConfig.currencyCode,
-    };
-    const contact = {
-      givenName: cardEntryConfig.givenName,
-      familyName: cardEntryConfig.familyName,
-      addressLines: cardEntryConfig.addressLines,
-      city: cardEntryConfig.city,
-      countryCode: cardEntryConfig.countryCode,
-      email: cardEntryConfig.email,
-      phone: cardEntryConfig.phone,
-      postalCode: cardEntryConfig.postalCode,
-      region: cardEntryConfig.region,
-    };
+    const { locationId, buyerAction, money, contact } =
+      buildVerificationNativeParams(cardEntryConfig);
     try {
       await NativeSQIPGooglePay.requestGooglePayNonceWithBuyerVerification(
         googlePayConfig,
-        paymentSourceId,
-        cardEntryConfig.squareLocationId!,
-        cardEntryConfig.buyerAction!,
+        locationId,
+        buyerAction,
         money,
         contact,
         (verificationResult) => {
@@ -668,10 +645,8 @@ export namespace SQIPGooglePay {
             onBuyerVerificationFailure(errorDetails as ErrorDetails);
           }
         },
-        (cardDetails: CardDetails) => {
-          if (onGooglePayNonceRequestSuccess) {
-            onGooglePayNonceRequestSuccess(cardDetails);
-          }
+        (_cardDetails: CardDetails) => {
+          // Google Pay auto-completes before 3DS; this callback is unused.
         },
         (errorDetails) => {
           if (onGooglePayNonceRequestFailure) {
@@ -869,6 +844,23 @@ export namespace SQIPApplePay {
     }
   }
 
+  /**
+   * Collects an Apple Pay nonce, then runs buyer verification (3DS) on that nonce.
+   * Do not pass a `paymentSourceId` — verification always uses the collected nonce.
+   */
+  export async function requestApplePayNonceWithBuyerVerification(
+    cardEntryConfig: CardEntryConfig,
+    applePayConfig: ApplePayConfig,
+    onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
+    onBuyerVerificationFailure?: FailureCallback,
+    onApplePayNonceRequestSuccess?: ApplePayNonceSuccessCallbackWithResult,
+    onApplePayNonceRequestFailure?: FailureCallback,
+    onApplePayComplete?: ApplePayCancelAndCompleteCallback
+  ): Promise<void>;
+  /**
+   * @deprecated `paymentSourceId` is ignored. Combined verification methods
+   * collect a nonce first, then run 3DS on that nonce.
+   */
   export async function requestApplePayNonceWithBuyerVerification(
     paymentSourceId: string,
     cardEntryConfig: CardEntryConfig,
@@ -878,13 +870,43 @@ export namespace SQIPApplePay {
     onApplePayNonceRequestSuccess?: ApplePayNonceSuccessCallbackWithResult,
     onApplePayNonceRequestFailure?: FailureCallback,
     onApplePayComplete?: ApplePayCancelAndCompleteCallback
+  ): Promise<void>;
+  export async function requestApplePayNonceWithBuyerVerification(
+    paymentSourceIdOrConfig: string | CardEntryConfig,
+    configOrApplePayConfig: CardEntryConfig | ApplePayConfig,
+    applePayConfigOrSuccess?: ApplePayConfig | BuyerVerificationSuccessCallback,
+    successOrFailure?: BuyerVerificationSuccessCallback | FailureCallback,
+    failureOrNonceSuccess?:
+      | FailureCallback
+      | ApplePayNonceSuccessCallbackWithResult,
+    nonceSuccessOrNonceFailure?:
+      | ApplePayNonceSuccessCallbackWithResult
+      | FailureCallback,
+    nonceFailureOrComplete?:
+      | FailureCallback
+      | ApplePayCancelAndCompleteCallback,
+    maybeComplete?: ApplePayCancelAndCompleteCallback
   ): Promise<void> {
+    const hasPaymentSourceId = typeof paymentSourceIdOrConfig === 'string';
+    const cardEntryConfig = (
+      hasPaymentSourceId ? configOrApplePayConfig : paymentSourceIdOrConfig
+    ) as CardEntryConfig;
+    const applePayConfig = (
+      hasPaymentSourceId ? applePayConfigOrSuccess : configOrApplePayConfig
+    ) as ApplePayConfig;
+    const onBuyerVerificationSuccess = (
+      hasPaymentSourceId ? successOrFailure : applePayConfigOrSuccess
+    ) as BuyerVerificationSuccessCallback | undefined;
+    const onBuyerVerificationFailure = (
+      hasPaymentSourceId ? failureOrNonceSuccess : successOrFailure
+    ) as FailureCallback | undefined;
+    const onApplePayNonceRequestFailure = (
+      hasPaymentSourceId ? nonceFailureOrComplete : nonceSuccessOrNonceFailure
+    ) as FailureCallback | undefined;
+    const onApplePayComplete = (
+      hasPaymentSourceId ? maybeComplete : nonceFailureOrComplete
+    ) as ApplePayCancelAndCompleteCallback | undefined;
     verifyObjectType(applePayConfig, 'applePayConfig should be a valid object');
-    verifyStringType(
-      paymentSourceId,
-      'paymentSourceId should be a valid string'
-    );
-    verifyObjectType(cardEntryConfig, 'cardEntryConfig should be an object');
     verifyStringType(
       applePayConfig.price,
       'applePayConfig.price should be a valid string'
@@ -910,34 +932,8 @@ export namespace SQIPApplePay {
         'applePayConfig.paymentType should be a valid integer'
       );
     }
-    verifyStringType(
-      cardEntryConfig.squareLocationId,
-      'squareLocationId should be a valid string'
-    );
-    verifyStringType(
-      cardEntryConfig.buyerAction,
-      'buyerAction should be a valid string'
-    );
-    verifyNumberType(cardEntryConfig.amount, 'amount should be a valid number');
-    verifyStringType(
-      cardEntryConfig.currencyCode,
-      'currencyCode should be a valid string'
-    );
-    const money = {
-      amount: cardEntryConfig.amount,
-      currencyCode: cardEntryConfig.currencyCode,
-    };
-    const contact = {
-      givenName: cardEntryConfig.givenName,
-      familyName: cardEntryConfig.familyName,
-      addressLines: cardEntryConfig.addressLines,
-      city: cardEntryConfig.city,
-      countryCode: cardEntryConfig.countryCode,
-      email: cardEntryConfig.email,
-      phone: cardEntryConfig.phone,
-      postalCode: cardEntryConfig.postalCode,
-      region: cardEntryConfig.region,
-    };
+    const { locationId, buyerAction, money, contact } =
+      buildVerificationNativeParams(cardEntryConfig);
     try {
       await NativeSQIPApplePay.requestApplePayNonceWithBuyerVerification(
         applePayConfig.price,
@@ -945,9 +941,8 @@ export namespace SQIPApplePay {
         applePayConfig.countryCode,
         applePayConfig.currencyCode,
         paymentType!.valueOf(),
-        paymentSourceId,
-        cardEntryConfig.squareLocationId!,
-        cardEntryConfig.buyerAction!,
+        locationId,
+        buyerAction,
         money,
         contact,
         (verificationResult) => {
@@ -960,33 +955,8 @@ export namespace SQIPApplePay {
             onBuyerVerificationFailure(errorDetails as ErrorDetails);
           }
         },
-        (cardDetails: CardDetails) => {
-          if (onApplePayNonceRequestSuccess) {
-            Promise.resolve(onApplePayNonceRequestSuccess(cardDetails)).then(
-              (result) => {
-                if (result) {
-                  lastApplePayNonceRequestState = {
-                    state: result.state,
-                    errorMessage: result.errorMessage,
-                  };
-                  completeApplePayAuthorizationInternal(
-                    result.state === ApplePayNonceSuccessState.Succeeded,
-                    result.errorMessage
-                  );
-                } else {
-                  lastApplePayNonceRequestState = {
-                    state: ApplePayNonceSuccessState.Failure,
-                    errorMessage:
-                      'Not returned result from onApplePayNonceRequestSuccess callback',
-                  };
-                  completeApplePayAuthorizationInternal(
-                    false,
-                    'Not returned result from onApplePayNonceRequestSuccess callback'
-                  );
-                }
-              }
-            );
-          }
+        (_cardDetails: CardDetails) => {
+          // Apple Pay auto-completes before 3DS; this callback is unused.
         },
         (errorDetails) => {
           if (onApplePayNonceRequestFailure) {

@@ -14,10 +14,21 @@
         onBuyerVerificationFailure:
             (nonnull RCTResponseSenderBlock)onBuyerVerificationFailure;
 
-+ (void)applyShouldContinueWithGiftCardEntry;
++ (void)prepareBuyerVerificationWithLocationId:(nonnull NSString *)locationId
+                                   buyerAction:(nonnull NSString *)buyerAction
+                                         money:(nonnull NSDictionary *)money
+                                       contact:(nonnull NSDictionary *)contact
+                    onBuyerVerificationSuccess:
+                        (nonnull RCTResponseSenderBlock)onBuyerVerificationSuccess
+                    onBuyerVerificationFailure:
+                        (nonnull RCTResponseSenderBlock)onBuyerVerificationFailure;
 
-+ (void)applyShouldContinueWithCardEntry;
++ (BOOL)isBuyerVerificationPrepared;
 
-+ (void)applyShouldContinueWithApplePayEntry;
++ (void)setPreparedCardDetails:(nonnull NSDictionary *)cardDetails;
+
++ (BOOL)startPreparedBuyerVerification;
+
++ (void)clearPreparedBuyerVerification;
 
 @end

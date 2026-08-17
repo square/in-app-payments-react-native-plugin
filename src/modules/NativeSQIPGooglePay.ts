@@ -11,7 +11,6 @@ export interface Spec extends TurboModule {
   ): Promise<void>;
   requestGooglePayNonceWithBuyerVerification(
     googlePayConfig: Object,
-    paymentSourceId: string,
     locationId: string,
     buyerAction: string,
     money: Object,

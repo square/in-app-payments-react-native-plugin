@@ -33,8 +33,6 @@
                                   countryCode:(nonnull NSString *)countryCode
                                  currencyCode:(nonnull NSString *)currencyCode
                                   paymentType:(double)paymentType
-                              paymentSourceId:
-                                  (nonnull NSString *)paymentSourceId
                                    locationId:(nonnull NSString *)locationId
                                   buyerAction:(nonnull NSString *)buyerAction
                                         money:(nonnull NSDictionary *)money
@@ -53,7 +51,5 @@
                                                   resolve
                                        reject:(nonnull RCTPromiseRejectBlock)
                                                   reject;
-
-+ (void)requestApplePayNonceFromBuyerVerification;
 
 @end

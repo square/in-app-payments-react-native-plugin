@@ -54,8 +54,12 @@ import {
   type AppToastMessageRef,
 } from '../components/AppToastMessage';
 
-// Mock data
-const paymentSourceId = 'ccof:customer-card-id-requires-verification';
+// Sandbox-only card-on-file ID for testing standalone startBuyerVerificationFlow.
+// Combined *WithBuyerVerification methods collect a nonce first and do not use this.
+// Production: pass a real card-on-file ID (ccof:...) from CreateCard, or a nonce (cnon:...)
+// from card entry / Apple Pay / Google Pay.
+const sandboxCardOnFileRequiresVerification =
+  'ccof:customer-card-id-requires-verification';
 const cardEntryConfig: CardEntryConfig = {
   collectPostalCode: true,
   squareLocationId: strings.SQUARE_LOCATION_ID,
@@ -139,8 +143,12 @@ export function Home() {
   useEffect(() => {
     SQIPCore.setSquareApplicationId(strings.SQUARE_APP_ID);
     if (Platform.OS === 'android') {
+      const googlePayLocationId =
+        strings.GOOGLE_PAY_LOCATION_ID === 'REPLACE_ME'
+          ? strings.SQUARE_LOCATION_ID
+          : strings.GOOGLE_PAY_LOCATION_ID;
       SQIPGooglePay.initializeGooglePay(
-        strings.GOOGLE_PAY_LOCATION_ID,
+        googlePayLocationId,
         GooglePayEnvironment.EnvironmentTest
       );
     } else if (Platform.OS === 'ios') {
@@ -279,15 +287,22 @@ export function Home() {
 
   const handleStartCardEntryFlow = () => {
     if (useWithBuyerVerification) {
-      SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
-        true,
-        paymentSourceId,
-        cardEntryConfig,
-        handleBuyerVerificationSuccess,
-        handleBuyerVerificationFailure,
-        handleCardNonceRequestSuccess,
-        handleCardEntryCancel
-      );
+      try {
+        SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
+          true,
+          cardEntryConfig,
+          handleBuyerVerificationSuccess,
+          handleBuyerVerificationFailure,
+          undefined,
+          handleCardEntryCancel
+        );
+      } catch (error) {
+        showCommonAlert({
+          title: 'Card entry failed to start',
+          description: String(error),
+          status: false,
+        });
+      }
     } else {
       if (useDeprecatedMethods) {
         SQIPCardEntry.startCardEntryFlow(
@@ -308,11 +323,10 @@ export function Home() {
   const handleStartGiftCardEntryFlow = () => {
     if (useWithBuyerVerification) {
       SQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
-        paymentSourceId,
         cardEntryConfig,
         handleBuyerVerificationSuccess,
         handleBuyerVerificationFailure,
-        handleCardNonceRequestSuccess,
+        undefined,
         handleCardEntryCancel
       );
     } else {
@@ -332,14 +346,30 @@ export function Home() {
 
   // <------------------------ Buyer Verification ----------------------------->
 
-  const handleBuyerVerificationSuccess = (
+  const handleBuyerVerificationSuccess = async (
     verificationResult: VerificationResult
   ) => {
-    showToastMessage({
-      title: 'Buyer verification successful',
-      description: 'Token: ' + (verificationResult.token ?? 'Unknown token'),
-      status: true,
-    });
+    try {
+      if (!verificationResult.nonce || !verificationResult.token) {
+        throw new Error('No nonce or verification token found');
+      }
+      await chargeService.chargeCardNonce(
+        verificationResult.nonce,
+        verificationResult.token
+      );
+      showToastMessage({
+        title: 'Congratulation, Your order was successful',
+        description:
+          'Go to your Square dashboard to see this order reflected in the sales tab.',
+        status: true,
+      });
+    } catch (error: any) {
+      showToastMessage({
+        title: 'Buyer verification charge failed',
+        description: error.message ?? 'Unknown error',
+        status: false,
+      });
+    }
   };
 
   const handleBuyerVerificationFailure = (errorInfo: ErrorDetails) => {
@@ -353,7 +383,7 @@ export function Home() {
   const handleStartBuyerVerificationFlow = () => {
     if (useDeprecatedMethods) {
       SQIPCardEntry.startBuyerVerificationFlow(
-        paymentSourceId,
+        sandboxCardOnFileRequiresVerification,
         cardEntryConfig,
         handleBuyerVerificationSuccess,
         handleBuyerVerificationFailure,
@@ -364,7 +394,7 @@ export function Home() {
       );
     } else {
       SQIPBuyer.startBuyerVerificationFlow(
-        paymentSourceId,
+        sandboxCardOnFileRequiresVerification,
         cardEntryConfig,
         handleBuyerVerificationSuccess,
         handleBuyerVerificationFailure
@@ -416,12 +446,11 @@ export function Home() {
     try {
       if (useWithBuyerVerification) {
         await SQIPGooglePay.requestGooglePayNonceWithBuyerVerification(
-          paymentSourceId,
           cardEntryConfig,
           googlePayConfig,
           handleBuyerVerificationSuccess,
           handleBuyerVerificationFailure,
-          handleGooglePayNonceRequestSuccess,
+          undefined,
           handleGooglePayNonceRequestFailure,
           handleGooglePayCanceled
         );
@@ -564,12 +593,11 @@ export function Home() {
     try {
       if (useWithBuyerVerification) {
         await SQIPApplePay.requestApplePayNonceWithBuyerVerification(
-          paymentSourceId,
           cardEntryConfig,
           applePayConfig,
           handleBuyerVerificationSuccess,
           handleBuyerVerificationFailure,
-          handleApplePayNonceRequestSuccess,
+          undefined,
           handleApplePayNonceRequestFailure,
           handleApplePayComplete
         );

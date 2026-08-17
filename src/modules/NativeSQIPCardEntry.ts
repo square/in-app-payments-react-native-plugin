@@ -17,7 +17,6 @@ export interface Spec extends TurboModule {
   ): void;
   startCardEntryFlowWithBuyerVerification(
     collectPostalCode: boolean,
-    paymentSourceId: string,
     locationId: string,
     buyerAction: string,
     money: Object,
@@ -28,7 +27,6 @@ export interface Spec extends TurboModule {
     onCardEntryCancel: () => void
   ): void;
   startGiftCardEntryFlowWithBuyerVerification(
-    paymentSourceId: string,
     locationId: string,
     buyerAction: string,
     money: Object,

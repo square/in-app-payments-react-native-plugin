@@ -43,13 +43,17 @@ class SQIPCardEntry {
 
     public var cardResult: CardDetails? = null
     private var collectPostalCode: Boolean? = null
+    @Volatile private var preparedVerificationScheduled: Boolean = false
 
     init {
       CardEntry.setCardNonceBackgroundHandler(object : 
-        CardNonceBackgroundHandler {
+            CardNonceBackgroundHandler {
           override fun handleEnteredCardInBackground(cardDetails: CardDetails):
             CardEntryActivityCommand {
-            if (SQIPBuyer.contact != null) {
+            if (SQIPBuyer.isPrepared()) {
+              SQIPCardEntry.cardResult = cardDetails
+              SQIPFlowLog.collectVerifyStep(2, "card entry", cardDetails.nonce)
+              schedulePreparedBuyerVerification(cardDetails.nonce)
               return CardEntryActivityCommand.Finish()
             }
             SQIPCardEntry.countDownLatch = CountDownLatch(1)
@@ -84,12 +88,16 @@ class SQIPCardEntry {
               override fun onResult(
                 cardEntryActivityResult: CardEntryActivityResult
               ) {
-                if (cardEntryActivityResult.isSuccess() 
-                  && SQIPBuyer.contact != null) {
+                if (cardEntryActivityResult.isSuccess()
+                  && SQIPBuyer.isPrepared()) {
                   var successValue = cardEntryActivityResult.getSuccessValue()
-                  SQIPCardEntry.cardResult = successValue
-                  val paymentSourceId = successValue.nonce
-                  SQIPBuyer.reVerifyBuyer(paymentSourceId)
+                  if (SQIPCardEntry.cardResult == null) {
+                    SQIPCardEntry.cardResult = successValue
+                    SQIPFlowLog.collectVerifyStep(2, "card entry", successValue.nonce)
+                  }
+                  schedulePreparedBuyerVerification(
+                    SQIPCardEntry.cardResult?.nonce ?: successValue.nonce
+                  )
                 } else {
                   val delayDurationMs 
                     = readCardEntryCloseExitAnimationDurationMs()
@@ -129,7 +137,7 @@ class SQIPCardEntry {
       this.onCardNonceRequestSuccess = onCardNonceRequestSuccess
       this.onCardEntryCancel = onCardEntryCancel
       this.collectPostalCode = collectPostalCode
-      SQIPBuyer.invalidateShouldContinue()
+      SQIPBuyer.clearPreparedBuyerVerification()
       if (activity != null) {
         CardEntry.startCardEntryActivity(activity!!, collectPostalCode)
       }
@@ -142,7 +150,7 @@ class SQIPCardEntry {
     ) {
       this.onCardNonceRequestSuccess = onCardNonceRequestSuccess
       this.onCardEntryCancel = onCardEntryCancel
-      SQIPBuyer.invalidateShouldContinue()
+      SQIPBuyer.clearPreparedBuyerVerification()
       if (activity != null) {
         CardEntry.startGiftCardEntryActivity(activity!!);
       }
@@ -168,7 +176,6 @@ class SQIPCardEntry {
     //React Method
     public fun startCardEntryFlowWithBuyerVerification(
       collectPostalCode: Boolean,
-      paymentSourceId: String,
       locationId: String,
       buyerAction: String,
       money: ReadableMap,
@@ -181,9 +188,7 @@ class SQIPCardEntry {
       this.onCardNonceRequestSuccess = onCardNonceRequestSuccess
       this.onCardEntryCancel = onCardEntryCancel
       this.collectPostalCode = collectPostalCode
-      SQIPBuyer.applyShouldContinueWithCardEntry()
-      SQIPBuyer.startBuyerVerificationFlow(
-        paymentSourceId,
+      SQIPBuyer.prepareBuyerVerification(
         locationId,
         buyerAction,
         money,
@@ -191,11 +196,15 @@ class SQIPCardEntry {
         onBuyerVerificationSuccess,
         onBuyerVerificationFailure,
       )
+      preparedVerificationScheduled = false
+      SQIPFlowLog.collectVerifyStep(1, "card entry")
+      if (activity != null) {
+        CardEntry.startCardEntryActivity(activity!!, collectPostalCode)
+      }
     }
 
     //React Method
     public fun startGiftCardEntryFlowWithBuyerVerification(
-      paymentSourceId: String,
       locationId: String,
       buyerAction: String,
       money: ReadableMap,
@@ -207,9 +216,7 @@ class SQIPCardEntry {
     ) {
       this.onCardNonceRequestSuccess = onCardNonceRequestSuccess
       this.onCardEntryCancel = onCardEntryCancel
-      SQIPBuyer.applyShouldContinueWithGiftCardEntry()
-      SQIPBuyer.startBuyerVerificationFlow(
-        paymentSourceId,
+      SQIPBuyer.prepareBuyerVerification(
         locationId,
         buyerAction,
         money,
@@ -217,6 +224,11 @@ class SQIPCardEntry {
         onBuyerVerificationSuccess,
         onBuyerVerificationFailure,
       )
+      preparedVerificationScheduled = false
+      SQIPFlowLog.collectVerifyStep(1, "gift card entry")
+      if (activity != null) {
+        CardEntry.startGiftCardEntryActivity(activity!!);
+      }
     }
 
     //React Method
@@ -224,20 +236,6 @@ class SQIPCardEntry {
       onCardNonceRequestSuccess: Callback
     ) {
       this.onCardNonceRequestSuccess = onCardNonceRequestSuccess
-    }
-
-    //internal
-    public fun startCardEntryFlowFromBuyerVerification() {
-      if (activity != null && collectPostalCode != null) {
-        CardEntry.startCardEntryActivity(activity!!, collectPostalCode!!)
-      }
-    }
-
-    //internal
-    public fun startGiftCardEntryFlowFromBuyerVerification() {
-      if (activity != null) {
-        CardEntry.startGiftCardEntryActivity(activity!!);
-      }
     }
 
     //internal
@@ -268,11 +266,24 @@ class SQIPCardEntry {
         this.reference.set(CardEntryActivityCommand.Finish())
         this.countDownLatch?.countDown()
       }
+      SQIPBuyer.clearPreparedBuyerVerification()
       //invalidate callbacks
       onCardEntryComplete=null
       onCardNonceRequestSuccess=null
       onCardEntryCancel?.invoke(null)
       onCardEntryCancel = null
+    }
+
+    private fun schedulePreparedBuyerVerification(nonce: String) {
+      if (preparedVerificationScheduled) return
+      preparedVerificationScheduled = true
+      val delayDurationMs = readCardEntryCloseExitAnimationDurationMs()
+      mainLooperHandler.postDelayed({
+        if (SQIPBuyer.isPrepared()) {
+          SQIPBuyer.reVerifyBuyer(nonce)
+        }
+        preparedVerificationScheduled = false
+      }, delayDurationMs)
     }
 
     private fun readCardEntryCloseExitAnimationDurationMs(): Long {

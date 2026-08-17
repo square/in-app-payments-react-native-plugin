@@ -12,11 +12,46 @@ static SQIPCardEntryInternal *internalDelegate = nil;
 
 static SQIPTheme *internalTheme = nil;
 static CompletionHandler _completionHandler = nil;
-static BOOL _collectPostalCode = false;
 
 static RCTResponseSenderBlock _onCardNonceRequestSuccessCallback = nil;
 static RCTResponseSenderBlock _onCardEntryCancelCallback = nil;
 static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
+
+#define SQIPFlowLog(fmt, ...) \
+  NSLog(@"[SQIPFlow] " fmt, ##__VA_ARGS__)
+
+static NSString *_SQIPCollectVerifyStepMessage(
+    NSInteger step, NSString *_Nullable paymentUiOverride) {
+  switch (step) {
+  case 1:
+    return paymentUiOverride
+               ? [NSString stringWithFormat:@"Open %@ first", paymentUiOverride]
+               : @"Open card entry / Apple Pay / Google Pay first";
+  case 2:
+    return @"Buyer picks or types a card → we get a nonce";
+  case 3:
+    return @"Run 3DS verification on that nonce";
+  case 4:
+    return @"Return the nonce + the verification token together";
+  default:
+    return @"unknown step";
+  }
+}
+
+#define SQIPCollectVerifyStep(step, paymentUiOverride)                         \
+  SQIPFlowLog(@"[%ld/4] ✓ %@", (long)(step),                                   \
+              _SQIPCollectVerifyStepMessage(step, paymentUiOverride))
+
+#define SQIPCollectVerifyStepWithNonce(step, paymentUiOverride, nonce)         \
+  SQIPFlowLog(@"[%ld/4] ✓ %@ nonce code: %@", (long)(step),                   \
+              _SQIPCollectVerifyStepMessage(step, paymentUiOverride), nonce)
+
+static NSString *_SQIPFlowMaskId(NSString *idValue) {
+  if (idValue == nil || idValue.length == 0) {
+    return @"(none)";
+  }
+  return idValue;
+}
 
 @implementation SQIPCardEntryInternal
 
@@ -75,7 +110,6 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
 
 + (void)
     startCardEntryFlowWithBuyerVerification:(BOOL)collectPostalCode
-                            paymentSourceId:(nonnull NSString *)paymentSourceId
                                  locationId:(nonnull NSString *)locationId
                                 buyerAction:(nonnull NSString *)buyerAction
                                       money:(nonnull NSDictionary *)money
@@ -88,17 +122,18 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
                       (nonnull RCTResponseSenderBlock)onCardNonceRequestSuccess
                           onCardEntryCancel:(nonnull RCTResponseSenderBlock)
                                                 onCardEntryCancel {
-  _collectPostalCode = collectPostalCode;
   _onCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   _onCardEntryCancelCallback = onCardEntryCancel;
-  [SQIPBuyerInternal applyShouldContinueWithCardEntry];
-  [SQIPBuyerInternal startBuyerVerificationFlow:paymentSourceId
-                                     locationId:locationId
-                                    buyerAction:buyerAction
-                                          money:money
-                                        contact:contact
-                     onBuyerVerificationSuccess:onBuyerVerificationSuccess
-                     onBuyerVerificationFailure:onBuyerVerificationFailure];
+  [SQIPBuyerInternal prepareBuyerVerificationWithLocationId:locationId
+                                                buyerAction:buyerAction
+                                                      money:money
+                                                    contact:contact
+                                 onBuyerVerificationSuccess:onBuyerVerificationSuccess
+                                 onBuyerVerificationFailure:onBuyerVerificationFailure];
+  SQIPCollectVerifyStep(1, @"card entry");
+  [SQIPCardEntryInternal startCardEntryFlow:collectPostalCode
+                  onCardNonceRequestSuccess:onCardNonceRequestSuccess
+                          onCardEntryCancel:onCardEntryCancel];
 }
 
 + (void)startGiftCardEntryFlow:
@@ -130,9 +165,7 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
 }
 
 + (void)
-    startGiftCardEntryFlowWithBuyerVerification:
-        (nonnull NSString *)paymentSourceId
-                                     locationId:(nonnull NSString *)locationId
+    startGiftCardEntryFlowWithBuyerVerification:(nonnull NSString *)locationId
                                     buyerAction:(nonnull NSString *)buyerAction
                                           money:(nonnull NSDictionary *)money
                                         contact:(nonnull NSDictionary *)contact
@@ -146,37 +179,21 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
                                                     onCardEntryCancel {
   _onCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
   _onCardEntryCancelCallback = onCardEntryCancel;
-  [SQIPBuyerInternal applyShouldContinueWithGiftCardEntry];
-  [SQIPBuyerInternal startBuyerVerificationFlow:paymentSourceId
-                                     locationId:locationId
-                                    buyerAction:buyerAction
-                                          money:money
-                                        contact:contact
-                     onBuyerVerificationSuccess:onBuyerVerificationSuccess
-                     onBuyerVerificationFailure:onBuyerVerificationFailure];
+  [SQIPBuyerInternal prepareBuyerVerificationWithLocationId:locationId
+                                                buyerAction:buyerAction
+                                                      money:money
+                                                    contact:contact
+                                 onBuyerVerificationSuccess:onBuyerVerificationSuccess
+                                 onBuyerVerificationFailure:onBuyerVerificationFailure];
+  SQIPCollectVerifyStep(1, @"gift card entry");
+  [SQIPCardEntryInternal
+      startGiftCardEntryFlow:onCardNonceRequestSuccess
+           onCardEntryCancel:onCardEntryCancel];
 }
 
 + (void)updateOnCardNonceRequestSuccessCallback:
     (nonnull RCTResponseSenderBlock)onCardNonceRequestSuccess {
   _onCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
-}
-
-+ (void)startCardEntryFlowFromBuyerVerification {
-  if (_onCardNonceRequestSuccessCallback != nil &&
-      _onCardEntryCancelCallback != nil) {
-    [SQIPCardEntryInternal startCardEntryFlow:_collectPostalCode
-                    onCardNonceRequestSuccess:_onCardNonceRequestSuccessCallback
-                            onCardEntryCancel:_onCardEntryCancelCallback];
-  }
-}
-
-+ (void)startGiftCardEntryFlowFromBuyerVerification {
-  if (_onCardNonceRequestSuccessCallback != nil &&
-      _onCardEntryCancelCallback != nil) {
-    [SQIPCardEntryInternal
-        startGiftCardEntryFlow:_onCardNonceRequestSuccessCallback
-             onCardEntryCancel:_onCardEntryCancelCallback];
-  }
 }
 
 + (SQIPTheme *_Nonnull)theme {
@@ -209,6 +226,7 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
 + (void)onCardEntryCancelCallback {
   _onCardEntryCompleteCallback = nil;
   _onCardNonceRequestSuccessCallback = nil;
+  [SQIPBuyerInternal clearPreparedBuyerVerification];
   if (_onCardEntryCancelCallback != nil) {
     _onCardEntryCancelCallback(@[]);
   }
@@ -239,6 +257,13 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
             (SQIPCardEntryViewController *)cardEntryViewController
            didObtainCardDetails:(SQIPCardDetails *)cardDetails
               completionHandler:(CompletionHandler)completionHandler {
+  if ([SQIPBuyerInternal isBuyerVerificationPrepared]) {
+    // Auto-finish card entry so we can verify the collected nonce, matching 1.x.
+    SQIPCollectVerifyStepWithNonce(2, @"card entry", cardDetails.nonce);
+    [SQIPBuyerInternal setPreparedCardDetails:[cardDetails jsonDictionary]];
+    completionHandler(nil);
+    return;
+  }
   _completionHandler = completionHandler;
   [SQIPCardEntryInternal
       onCardNonceRequestSuccessCallback:[cardDetails jsonDictionary]];
@@ -247,6 +272,24 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
 - (void)cardEntryViewController:
             (SQIPCardEntryViewController *)cardEntryViewController
           didCompleteWithStatus:(SQIPCardEntryCompletionStatus)status {
+  if ([SQIPBuyerInternal isBuyerVerificationPrepared] &&
+      status == SQIPCardEntryCompletionStatusSuccess) {
+    SQIPCollectVerifyStep(2, @"card entry");
+    // If card entry was pushed onto a navigation stack, pop it first so 3DS
+    // is not presented on top of the form. Modal presentation is dismissed
+    // inside SQIPBuyerInternal before 3DS is shown.
+    if (cardEntryViewController.navigationController &&
+        cardEntryViewController.navigationController.viewControllers.count > 1) {
+      [cardEntryViewController.navigationController popViewControllerAnimated:YES];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [SQIPBuyerInternal startPreparedBuyerVerification];
+      });
+    } else {
+      [SQIPBuyerInternal startPreparedBuyerVerification];
+    }
+    return;
+  }
+
   void (^callbacks)(void) = ^{
     if (status == SQIPCardEntryCompletionStatusCanceled) {
       [SQIPCardEntryInternal onCardEntryCancelCallback];

@@ -26,6 +26,42 @@ static RCTResponseSenderBlock _onApplePayNonceRequestSuccessCallback = nil;
 static RCTResponseSenderBlock _onApplePayNonceRequestFailureCallback = nil;
 static RCTResponseSenderBlock _onApplePayCompleteCallback = nil;
 
+#define SQIPFlowLog(fmt, ...) \
+  NSLog(@"[SQIPFlow] " fmt, ##__VA_ARGS__)
+
+static NSString *_SQIPCollectVerifyStepMessage(
+    NSInteger step, NSString *_Nullable paymentUiOverride) {
+  switch (step) {
+  case 1:
+    return paymentUiOverride
+               ? [NSString stringWithFormat:@"Open %@ first", paymentUiOverride]
+               : @"Open card entry / Apple Pay / Google Pay first";
+  case 2:
+    return @"Buyer picks or types a card → we get a nonce";
+  case 3:
+    return @"Run 3DS verification on that nonce";
+  case 4:
+    return @"Return the nonce + the verification token together";
+  default:
+    return @"unknown step";
+  }
+}
+
+#define SQIPCollectVerifyStep(step, paymentUiOverride)                         \
+  SQIPFlowLog(@"[%ld/4] ✓ %@", (long)(step),                                   \
+              _SQIPCollectVerifyStepMessage(step, paymentUiOverride))
+
+#define SQIPCollectVerifyStepWithNonce(step, paymentUiOverride, nonce)         \
+  SQIPFlowLog(@"[%ld/4] ✓ %@ nonce code: %@", (long)(step),                   \
+              _SQIPCollectVerifyStepMessage(step, paymentUiOverride), nonce)
+
+static NSString *_SQIPFlowMaskId(NSString *idValue) {
+  if (idValue == nil || idValue.length == 0) {
+    return @"(none)";
+  }
+  return idValue;
+}
+
 @implementation SQIPApplePayInternal
 
 + (void)canUseApplePay:(nonnull RCTPromiseResolveBlock)resolve
@@ -103,6 +139,7 @@ static RCTResponseSenderBlock _onApplePayCompleteCallback = nil;
   _onApplePayNonceRequestSuccessCallback = onApplePayNonceRequestSuccess;
   _onApplePayNonceRequestFailureCallback = onApplePayNonceRequestFailure;
   _onApplePayCompleteCallback = onApplePayComplete;
+  [SQIPBuyerInternal clearPreparedBuyerVerification];
 
   PKPaymentRequest *paymentRequest = [PKPaymentRequest
       squarePaymentRequestWithMerchantIdentifier:_applePayMerchantId
@@ -141,8 +178,6 @@ static RCTResponseSenderBlock _onApplePayCompleteCallback = nil;
                                   countryCode:(nonnull NSString *)countryCode
                                  currencyCode:(nonnull NSString *)currencyCode
                                   paymentType:(double)paymentType
-                              paymentSourceId:
-                                  (nonnull NSString *)paymentSourceId
                                    locationId:(nonnull NSString *)locationId
                                   buyerAction:(nonnull NSString *)buyerAction
                                         money:(nonnull NSDictionary *)money
@@ -186,53 +221,43 @@ static RCTResponseSenderBlock _onApplePayCompleteCallback = nil;
   _currencyCode = currencyCode;
   _paymentType = paymentType;
 
-  [SQIPBuyerInternal applyShouldContinueWithApplePayEntry];
-  [SQIPBuyerInternal startBuyerVerificationFlow:paymentSourceId
-                                     locationId:locationId
-                                    buyerAction:buyerAction
-                                          money:money
-                                        contact:contact
-                     onBuyerVerificationSuccess:onBuyerVerificationSuccess
-                     onBuyerVerificationFailure:onBuyerVerificationFailure];
-  resolve([NSNull null]);
-}
+  [SQIPBuyerInternal prepareBuyerVerificationWithLocationId:locationId
+                                                buyerAction:buyerAction
+                                                      money:money
+                                                    contact:contact
+                                 onBuyerVerificationSuccess:onBuyerVerificationSuccess
+                                 onBuyerVerificationFailure:onBuyerVerificationFailure];
+  SQIPCollectVerifyStep(1, @"Apple Pay");
 
-+ (void)requestApplePayNonceFromBuyerVerification {
-  if (_price != nil && _summaryLabel != nil && _countryCode != nil &&
-      _currencyCode != nil && _paymentType != 0) {
-    PKPaymentRequest *paymentRequest = [PKPaymentRequest
-        squarePaymentRequestWithMerchantIdentifier:_applePayMerchantId
-                                       countryCode:_countryCode
-                                      currencyCode:_currencyCode];
-    if ((int)_paymentType == 1) {
-      paymentRequest.paymentSummaryItems = @[ [PKPaymentSummaryItem
-          summaryItemWithLabel:_summaryLabel
-                        amount:[NSDecimalNumber decimalNumberWithString:_price]
-                          type:PKPaymentSummaryItemTypePending] ];
-    } else {
-      paymentRequest.paymentSummaryItems = @[ [PKPaymentSummaryItem
-          summaryItemWithLabel:_summaryLabel
-                        amount:[NSDecimalNumber decimalNumberWithString:_price]
-                          type:PKPaymentSummaryItemTypeFinal] ];
-    }
-    // Wait the buyer verification overlay to be dismissed
-    int64_t delay = (int64_t)(0.5 * NSEC_PER_SEC);
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), ^{
-      PKPaymentAuthorizationViewController *paymentAuthorizationViewController =
-          [[PKPaymentAuthorizationViewController alloc]
-              initWithPaymentRequest:paymentRequest];
-
-      paymentAuthorizationViewController.delegate =
-          [SQIPApplePayInternal delegate];
-      UIViewController *rootViewController =
-          [UiUtilities activeRootViewController];
-
-      [rootViewController
-          presentViewController:paymentAuthorizationViewController
-                       animated:NO
-                     completion:nil];
-    });
+  PKPaymentRequest *paymentRequest = [PKPaymentRequest
+      squarePaymentRequestWithMerchantIdentifier:_applePayMerchantId
+                                     countryCode:countryCode
+                                    currencyCode:currencyCode];
+  if ((int)paymentType == 1) {
+    paymentRequest.paymentSummaryItems = @[ [PKPaymentSummaryItem
+        summaryItemWithLabel:summaryLabel
+                      amount:[NSDecimalNumber decimalNumberWithString:price]
+                        type:PKPaymentSummaryItemTypePending] ];
+  } else {
+    paymentRequest.paymentSummaryItems = @[ [PKPaymentSummaryItem
+        summaryItemWithLabel:summaryLabel
+                      amount:[NSDecimalNumber decimalNumberWithString:price]
+                        type:PKPaymentSummaryItemTypeFinal] ];
   }
+  dispatch_async(dispatch_get_main_queue(), ^{
+    PKPaymentAuthorizationViewController *paymentAuthorizationViewController =
+        [[PKPaymentAuthorizationViewController alloc]
+            initWithPaymentRequest:paymentRequest];
+
+    paymentAuthorizationViewController.delegate =
+        [SQIPApplePayInternal delegate];
+    UIViewController *rootViewController =
+        [UiUtilities activeRootViewController];
+    [rootViewController presentViewController:paymentAuthorizationViewController
+                                     animated:NO
+                                   completion:nil];
+    resolve([NSNull null]);
+  });
 }
 
 + (void)onApplePayNonceRequestSuccessCallback:(nonnull NSDictionary *)response {
@@ -271,15 +296,21 @@ static RCTResponseSenderBlock _onApplePayCompleteCallback = nil;
 
 - (void)paymentAuthorizationViewControllerDidFinish:
     (nonnull PKPaymentAuthorizationViewController *)controller {
+  void (^afterDismiss)(void) = ^{
+    if ([SQIPBuyerInternal isBuyerVerificationPrepared]) {
+      BOOL started = [SQIPBuyerInternal startPreparedBuyerVerification];
+      if (!started) {
+        [SQIPApplePayInternal onApplePayCompleteCallback];
+      }
+    } else {
+      [SQIPApplePayInternal onApplePayCompleteCallback];
+    }
+  };
   if ([controller isKindOfClass:[UINavigationController class]]) {
     [controller.navigationController popViewControllerAnimated:YES];
-    [SQIPApplePayInternal onApplePayCompleteCallback];
+    afterDismiss();
   } else {
-    [controller
-        dismissViewControllerAnimated:YES
-                           completion:^{
-                             [SQIPApplePayInternal onApplePayCompleteCallback];
-                           }];
+    [controller dismissViewControllerAnimated:YES completion:afterDismiss];
   }
 }
 
@@ -300,12 +331,25 @@ static RCTResponseSenderBlock _onApplePayCompleteCallback = nil;
           NSString *debugCode = error.userInfo[SQIPErrorDebugCodeKey];
           NSString *debugMessage = error.userInfo[SQIPErrorDebugMessageKey];
 
+          [SQIPBuyerInternal clearPreparedBuyerVerification];
           [SQIPApplePayInternal
               onApplePayNonceRequestFailureCallback:
                   [ErrorUtilities callbackErrorObject:RNSQIPUsageError
                                               message:error.localizedDescription
                                             debugCode:debugCode
                                          debugMessage:debugMessage]];
+        } else if ([SQIPBuyerInternal isBuyerVerificationPrepared]) {
+          // Auto-complete the Apple Pay sheet, then 3DS runs after dismiss.
+          SQIPCollectVerifyStepWithNonce(2, @"Apple Pay", result.nonce);
+          [SQIPBuyerInternal setPreparedCardDetails:[result jsonDictionary]];
+          if (_completionHandler != nil) {
+            PKPaymentAuthorizationResult *authResult =
+                [[PKPaymentAuthorizationResult alloc]
+                    initWithStatus:PKPaymentAuthorizationStatusSuccess
+                            errors:nil];
+            _completionHandler(authResult);
+            _completionHandler = nil;
+          }
         } else {
           [SQIPApplePayInternal
               onApplePayNonceRequestSuccessCallback:[result jsonDictionary]];

@@ -38,8 +38,6 @@
 - (void)
     requestGooglePayNonceWithBuyerVerification:
         (nonnull NSDictionary *)googlePayConfig
-                               paymentSourceId:
-                                   (nonnull NSString *)paymentSourceId
                                     locationId:(nonnull NSString *)locationId
                                    buyerAction:(nonnull NSString *)buyerAction
                                          money:(nonnull NSDictionary *)money

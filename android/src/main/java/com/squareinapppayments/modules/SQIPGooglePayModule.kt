@@ -49,8 +49,7 @@ class SQIPGooglePayModule(reactContext: ReactApplicationContext) :
   }
 
   override fun requestGooglePayNonceWithBuyerVerification(
-    googlePayConfig: ReadableMap, 
-    paymentSourceId: String, 
+    googlePayConfig: ReadableMap,
     locationId: String,
     buyerAction: String,
     money: ReadableMap,
@@ -64,7 +63,6 @@ class SQIPGooglePayModule(reactContext: ReactApplicationContext) :
   ) {
     SQIPGooglePay.requestGooglePayNonceWithBuyerVerification(
       googlePayConfig,
-      paymentSourceId,
       locationId,
       buyerAction,
       money,

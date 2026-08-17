@@ -12,7 +12,6 @@ import com.facebook.react.bridge.BaseActivityEventListener
 
 
 import sqip.BuyerVerificationResult
-import sqip.BuyerVerificationResult.Error
 import sqip.BuyerVerification
 import sqip.VerificationParameters
 import sqip.SquareIdentifier
@@ -40,10 +39,6 @@ class SQIPBuyer {
     public var buyerAction: BuyerAction? = null
     public var contact: Contact? = null
 
-    private var shouldContinueWithGiftCardEntry: Boolean = false
-    private var shouldContinueWithCardEntry: Boolean = false
-    private var shouldContinueWithGooglePayNonceRequest: Boolean = false
-
     private fun setActivityListener(reactContext: ReactApplicationContext) {
       reactContext.addActivityEventListener(object :
         BaseActivityEventListener() {
@@ -67,6 +62,10 @@ class SQIPBuyer {
                       mapToReturn.putString(
                         "token",
                         result.getSuccessValue().verificationToken)
+                      SQIPFlowLog.collectVerifyResult(
+                        mapToReturn.getString("nonce"),
+                        mapToReturn.getString("token")
+                      )
                       onBuyerVerificationSuccessCallback(mapToReturn)
                     } else {
                       var mapToReturn = WritableNativeMap()
@@ -74,20 +73,14 @@ class SQIPBuyer {
                       mapToReturn.putString(
                         "token",
                         result.getSuccessValue().verificationToken)
+                      SQIPFlowLog.collectVerifyResult(
+                        mapToReturn.getString("nonce"),
+                        mapToReturn.getString("token")
+                      )
                       onBuyerVerificationSuccessCallback(mapToReturn)
                     }
-                    if (SQIPBuyer.shouldContinueWithCardEntry) {
-                      SQIPBuyer.invalidateShouldContinue()
-                      SQIPCardEntry.startCardEntryFlowFromBuyerVerification();
-                    } else if (SQIPBuyer.shouldContinueWithGiftCardEntry) {
-                      SQIPBuyer.invalidateShouldContinue()
-                      SQIPCardEntry.startGiftCardEntryFlowFromBuyerVerification();
-                    } else if (SQIPBuyer.shouldContinueWithGooglePayNonceRequest) {
-                      SQIPBuyer.invalidateShouldContinue()
-                      SQIPGooglePay.requestGooglePayNonceFromBuyerVerification();
-                    }
                   } else if (result.isError()) {
-                    SQIPBuyer.invalidateShouldContinue()
+                    SQIPFlowLog.step("[3/4] ✗ 3DS failed — ${result.getErrorValue().debugCode}")
                     var error = result.getErrorValue();
                     var errorMap: WritableMap =
                       ErrorHandlerUtils.getCallbackErrorObject(
@@ -115,13 +108,60 @@ class SQIPBuyer {
       setActivityListener(reactContext)
     }
 
+    fun isPrepared(): Boolean {
+      return this.buyerAction != null &&
+        this.squareIdentifier != null &&
+        this.contact != null
+    }
+
+    fun clearPreparedBuyerVerification() {
+      this.paymentSourceId = null
+      this.squareIdentifier = null
+      this.buyerAction = null
+      this.contact = null
+      this.onBuyerVerificationSuccess = null
+      this.onBuyerVerificationFailure = null
+    }
+
+    /**
+     * Store buyer-verification parameters without starting 3DS. Combined
+     * *WithBuyerVerification methods call this, collect a nonce, then
+     * [reVerifyBuyer] with that nonce.
+     */
+    fun prepareBuyerVerification(
+      locationId: String,
+      buyerActionString: String,
+      moneyMap: ReadableMap,
+      contactMap: ReadableMap,
+      onBuyerVerificationSuccess: Callback,
+      onBuyerVerificationFailure: Callback
+    ) {
+      SQIPFlowLog.step("setup: 3DS params stored (location, amount, buyer contact)")
+      this.onBuyerVerificationSuccess = onBuyerVerificationSuccess
+      this.onBuyerVerificationFailure = onBuyerVerificationFailure
+      this.paymentSourceId = null
+
+      var money = MoneyConverter.getMoney(moneyMap);
+      this.squareIdentifier = SquareIdentifier.LocationToken(locationId);
+      this.buyerAction = BuyerActionConverter.getBuyerAction(
+        buyerActionString,
+        money
+      )
+      this.contact = ContactConverter.getContact(contactMap);
+    }
+
     //internal
     fun reVerifyBuyer(paymentSourceId: String) {
       if (
         this.buyerAction == null ||
         this.squareIdentifier == null ||
-        this.contact == null)
-        return;
+        this.contact == null) {
+        SQIPFlowLog.step(
+          "reVerifyBuyer skipped — 3DS params missing (was prepareBuyerVerification called?)"
+        )
+        return
+      }
+      SQIPFlowLog.collectVerifyStep(3, null, paymentSourceId)
       val verificationParameters = VerificationParameters(
         paymentSourceId,
         this.buyerAction!!,
@@ -133,6 +173,8 @@ class SQIPBuyer {
           this.activity!!,
           verificationParameters
         )
+      } else {
+        SQIPFlowLog.step("reVerifyBuyer skipped — activity is null")
       }
     }
 
@@ -146,6 +188,10 @@ class SQIPBuyer {
       onBuyerVerificationSuccess: Callback,
       onBuyerVerificationFailure: Callback
     ) {
+      SQIPFlowLog.step(
+        "standalone startBuyerVerificationFlow — verify caller-supplied payment source",
+        paymentSourceId
+      )
       this.onBuyerVerificationSuccess = onBuyerVerificationSuccess
       this.onBuyerVerificationFailure = onBuyerVerificationFailure
       this.paymentSourceId = paymentSourceId
@@ -175,38 +221,12 @@ class SQIPBuyer {
 
     fun onBuyerVerificationSuccessCallback(verificationResult: WritableMap) {
       onBuyerVerificationSuccess?.invoke(verificationResult)
-      onBuyerVerificationSuccess = null
-      onBuyerVerificationFailure = null
+      clearPreparedBuyerVerification()
     }
 
     fun onBuyerVerificationFailureCallback(errorDetails: WritableMap) {
       onBuyerVerificationFailure?.invoke(errorDetails)
-      onBuyerVerificationSuccess = null
-      onBuyerVerificationFailure = null
-    }
-
-    public fun applyShouldContinueWithGiftCardEntry() {
-      this.shouldContinueWithGiftCardEntry = true
-      this.shouldContinueWithCardEntry = false
-      this.shouldContinueWithGooglePayNonceRequest = false
-    }
-
-    public fun applyShouldContinueWithCardEntry() {
-      this.shouldContinueWithCardEntry = true
-      this.shouldContinueWithGiftCardEntry = false
-      this.shouldContinueWithGooglePayNonceRequest = false
-    }
-
-    public fun applyShouldContinueWithGooglePayEntry() {
-      this.shouldContinueWithGooglePayNonceRequest = true
-      this.shouldContinueWithCardEntry = false
-      this.shouldContinueWithGiftCardEntry = false
-    }
-
-    public fun invalidateShouldContinue() {
-      this.shouldContinueWithGiftCardEntry = false
-      this.shouldContinueWithCardEntry = false
-      this.shouldContinueWithGooglePayNonceRequest = false
+      clearPreparedBuyerVerification()
     }
   }
 }
