@@ -17,42 +17,6 @@ static RCTResponseSenderBlock _onCardNonceRequestSuccessCallback = nil;
 static RCTResponseSenderBlock _onCardEntryCancelCallback = nil;
 static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
 
-#define SQIPFlowLog(fmt, ...) \
-  NSLog(@"[SQIPFlow] " fmt, ##__VA_ARGS__)
-
-static NSString *_SQIPCollectVerifyStepMessage(
-    NSInteger step, NSString *_Nullable paymentUiOverride) {
-  switch (step) {
-  case 1:
-    return paymentUiOverride
-               ? [NSString stringWithFormat:@"Open %@ first", paymentUiOverride]
-               : @"Open card entry / Apple Pay / Google Pay first";
-  case 2:
-    return @"Buyer picks or types a card → we get a nonce";
-  case 3:
-    return @"Run 3DS verification on that nonce";
-  case 4:
-    return @"Return the nonce + the verification token together";
-  default:
-    return @"unknown step";
-  }
-}
-
-#define SQIPCollectVerifyStep(step, paymentUiOverride)                         \
-  SQIPFlowLog(@"[%ld/4] ✓ %@", (long)(step),                                   \
-              _SQIPCollectVerifyStepMessage(step, paymentUiOverride))
-
-#define SQIPCollectVerifyStepWithNonce(step, paymentUiOverride, nonce)         \
-  SQIPFlowLog(@"[%ld/4] ✓ %@ nonce code: %@", (long)(step),                   \
-              _SQIPCollectVerifyStepMessage(step, paymentUiOverride), nonce)
-
-static NSString *_SQIPFlowMaskId(NSString *idValue) {
-  if (idValue == nil || idValue.length == 0) {
-    return @"(none)";
-  }
-  return idValue;
-}
-
 @implementation SQIPCardEntryInternal
 
 + (void)completeCardEntry:(nonnull RCTResponseSenderBlock)onCardEntryComplete {
@@ -130,7 +94,6 @@ static NSString *_SQIPFlowMaskId(NSString *idValue) {
                                                     contact:contact
                                  onBuyerVerificationSuccess:onBuyerVerificationSuccess
                                  onBuyerVerificationFailure:onBuyerVerificationFailure];
-  SQIPCollectVerifyStep(1, @"card entry");
   [SQIPCardEntryInternal startCardEntryFlow:collectPostalCode
                   onCardNonceRequestSuccess:onCardNonceRequestSuccess
                           onCardEntryCancel:onCardEntryCancel];
@@ -185,7 +148,6 @@ static NSString *_SQIPFlowMaskId(NSString *idValue) {
                                                     contact:contact
                                  onBuyerVerificationSuccess:onBuyerVerificationSuccess
                                  onBuyerVerificationFailure:onBuyerVerificationFailure];
-  SQIPCollectVerifyStep(1, @"gift card entry");
   [SQIPCardEntryInternal
       startGiftCardEntryFlow:onCardNonceRequestSuccess
            onCardEntryCancel:onCardEntryCancel];
@@ -259,7 +221,6 @@ static NSString *_SQIPFlowMaskId(NSString *idValue) {
               completionHandler:(CompletionHandler)completionHandler {
   if ([SQIPBuyerInternal isBuyerVerificationPrepared]) {
     // Auto-finish card entry so we can verify the collected nonce, matching 1.x.
-    SQIPCollectVerifyStepWithNonce(2, @"card entry", cardDetails.nonce);
     [SQIPBuyerInternal setPreparedCardDetails:[cardDetails jsonDictionary]];
     completionHandler(nil);
     return;
@@ -274,7 +235,6 @@ static NSString *_SQIPFlowMaskId(NSString *idValue) {
           didCompleteWithStatus:(SQIPCardEntryCompletionStatus)status {
   if ([SQIPBuyerInternal isBuyerVerificationPrepared] &&
       status == SQIPCardEntryCompletionStatusSuccess) {
-    SQIPCollectVerifyStep(2, @"card entry");
     // If card entry was pushed onto a navigation stack, pop it first so 3DS
     // is not presented on top of the form. Modal presentation is dismissed
     // inside SQIPBuyerInternal before 3DS is shown.

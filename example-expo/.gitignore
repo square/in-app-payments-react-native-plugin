@@ -41,7 +41,3 @@ app-example
 # generated native folders
 /ios
 /android
-
-# Bundler (CocoaPods for iOS; keeps Square refinement gem out of pod install)
-/vendor/bundle
-/.bundle

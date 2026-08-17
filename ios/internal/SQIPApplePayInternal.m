@@ -26,42 +26,6 @@ static RCTResponseSenderBlock _onApplePayNonceRequestSuccessCallback = nil;
 static RCTResponseSenderBlock _onApplePayNonceRequestFailureCallback = nil;
 static RCTResponseSenderBlock _onApplePayCompleteCallback = nil;
 
-#define SQIPFlowLog(fmt, ...) \
-  NSLog(@"[SQIPFlow] " fmt, ##__VA_ARGS__)
-
-static NSString *_SQIPCollectVerifyStepMessage(
-    NSInteger step, NSString *_Nullable paymentUiOverride) {
-  switch (step) {
-  case 1:
-    return paymentUiOverride
-               ? [NSString stringWithFormat:@"Open %@ first", paymentUiOverride]
-               : @"Open card entry / Apple Pay / Google Pay first";
-  case 2:
-    return @"Buyer picks or types a card → we get a nonce";
-  case 3:
-    return @"Run 3DS verification on that nonce";
-  case 4:
-    return @"Return the nonce + the verification token together";
-  default:
-    return @"unknown step";
-  }
-}
-
-#define SQIPCollectVerifyStep(step, paymentUiOverride)                         \
-  SQIPFlowLog(@"[%ld/4] ✓ %@", (long)(step),                                   \
-              _SQIPCollectVerifyStepMessage(step, paymentUiOverride))
-
-#define SQIPCollectVerifyStepWithNonce(step, paymentUiOverride, nonce)         \
-  SQIPFlowLog(@"[%ld/4] ✓ %@ nonce code: %@", (long)(step),                   \
-              _SQIPCollectVerifyStepMessage(step, paymentUiOverride), nonce)
-
-static NSString *_SQIPFlowMaskId(NSString *idValue) {
-  if (idValue == nil || idValue.length == 0) {
-    return @"(none)";
-  }
-  return idValue;
-}
-
 @implementation SQIPApplePayInternal
 
 + (void)canUseApplePay:(nonnull RCTPromiseResolveBlock)resolve
@@ -227,7 +191,6 @@ static NSString *_SQIPFlowMaskId(NSString *idValue) {
                                                     contact:contact
                                  onBuyerVerificationSuccess:onBuyerVerificationSuccess
                                  onBuyerVerificationFailure:onBuyerVerificationFailure];
-  SQIPCollectVerifyStep(1, @"Apple Pay");
 
   PKPaymentRequest *paymentRequest = [PKPaymentRequest
       squarePaymentRequestWithMerchantIdentifier:_applePayMerchantId
@@ -340,7 +303,6 @@ static NSString *_SQIPFlowMaskId(NSString *idValue) {
                                          debugMessage:debugMessage]];
         } else if ([SQIPBuyerInternal isBuyerVerificationPrepared]) {
           // Auto-complete the Apple Pay sheet, then 3DS runs after dismiss.
-          SQIPCollectVerifyStepWithNonce(2, @"Apple Pay", result.nonce);
           [SQIPBuyerInternal setPreparedCardDetails:[result jsonDictionary]];
           if (_completionHandler != nil) {
             PKPaymentAuthorizationResult *authResult =

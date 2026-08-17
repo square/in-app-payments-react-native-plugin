@@ -304,7 +304,6 @@ export namespace SQIPCardEntry {
     cardEntryConfig: CardEntryConfig,
     onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
     onBuyerVerificationFailure?: FailureCallback,
-    onCardNonceRequestSuccess?: NonceSuccessCallbackWithResult,
     onCardEntryCancel?: CancelAndCompleteCallback
   ): void;
   /**
@@ -325,8 +324,11 @@ export namespace SQIPCardEntry {
     paymentSourceIdOrConfig: string | CardEntryConfig,
     configOrSuccess?: CardEntryConfig | BuyerVerificationSuccessCallback,
     successOrFailure?: BuyerVerificationSuccessCallback | FailureCallback,
-    failureOrNonce?: FailureCallback | NonceSuccessCallbackWithResult,
-    nonceOrCancel?: NonceSuccessCallbackWithResult | CancelAndCompleteCallback,
+    failureOrNonceOrCancel?:
+      | FailureCallback
+      | NonceSuccessCallbackWithResult
+      | CancelAndCompleteCallback,
+    _nonceOrCancel?: NonceSuccessCallbackWithResult | CancelAndCompleteCallback,
     maybeCancel?: CancelAndCompleteCallback
   ): void {
     verifyBooleanType(
@@ -341,10 +343,10 @@ export namespace SQIPCardEntry {
       hasPaymentSourceId ? successOrFailure : configOrSuccess
     ) as BuyerVerificationSuccessCallback | undefined;
     const onBuyerVerificationFailure = (
-      hasPaymentSourceId ? failureOrNonce : successOrFailure
+      hasPaymentSourceId ? failureOrNonceOrCancel : successOrFailure
     ) as FailureCallback | undefined;
     const onCardEntryCancel = (
-      hasPaymentSourceId ? maybeCancel : nonceOrCancel
+      hasPaymentSourceId ? maybeCancel : failureOrNonceOrCancel
     ) as CancelAndCompleteCallback | undefined;
     const { locationId, buyerAction, money, contact } =
       buildVerificationNativeParams(cardEntryConfig);
@@ -381,7 +383,6 @@ export namespace SQIPCardEntry {
     cardEntryConfig: CardEntryConfig,
     onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
     onBuyerVerificationFailure?: FailureCallback,
-    onCardNonceRequestSuccess?: NonceSuccessCallbackWithResult,
     onCardEntryCancel?: CancelAndCompleteCallback
   ): void;
   /**
@@ -400,8 +401,11 @@ export namespace SQIPCardEntry {
     paymentSourceIdOrConfig: string | CardEntryConfig,
     configOrSuccess?: CardEntryConfig | BuyerVerificationSuccessCallback,
     successOrFailure?: BuyerVerificationSuccessCallback | FailureCallback,
-    failureOrNonce?: FailureCallback | NonceSuccessCallbackWithResult,
-    nonceOrCancel?: NonceSuccessCallbackWithResult | CancelAndCompleteCallback,
+    failureOrNonceOrCancel?:
+      | FailureCallback
+      | NonceSuccessCallbackWithResult
+      | CancelAndCompleteCallback,
+    _nonceOrCancel?: NonceSuccessCallbackWithResult | CancelAndCompleteCallback,
     maybeCancel?: CancelAndCompleteCallback
   ): void {
     const hasPaymentSourceId = typeof paymentSourceIdOrConfig === 'string';
@@ -412,10 +416,10 @@ export namespace SQIPCardEntry {
       hasPaymentSourceId ? successOrFailure : configOrSuccess
     ) as BuyerVerificationSuccessCallback | undefined;
     const onBuyerVerificationFailure = (
-      hasPaymentSourceId ? failureOrNonce : successOrFailure
+      hasPaymentSourceId ? failureOrNonceOrCancel : successOrFailure
     ) as FailureCallback | undefined;
     const onCardEntryCancel = (
-      hasPaymentSourceId ? maybeCancel : nonceOrCancel
+      hasPaymentSourceId ? maybeCancel : failureOrNonceOrCancel
     ) as CancelAndCompleteCallback | undefined;
     const { locationId, buyerAction, money, contact } =
       buildVerificationNativeParams(cardEntryConfig);
@@ -564,7 +568,6 @@ export namespace SQIPGooglePay {
     googlePayConfig: GooglePayConfig,
     onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
     onBuyerVerificationFailure?: FailureCallback,
-    onGooglePayNonceRequestSuccess?: NonceSuccessCallback,
     onGooglePayNonceRequestFailure?: FailureCallback,
     onGooglePayCanceled?: CancelAndCompleteCallback
   ): Promise<void>;
@@ -590,7 +593,10 @@ export namespace SQIPGooglePay {
       | BuyerVerificationSuccessCallback,
     successOrFailure?: BuyerVerificationSuccessCallback | FailureCallback,
     failureOrNonceSuccess?: FailureCallback | NonceSuccessCallback,
-    nonceSuccessOrNonceFailure?: NonceSuccessCallback | FailureCallback,
+    nonceSuccessOrNonceFailure?:
+      | NonceSuccessCallback
+      | FailureCallback
+      | CancelAndCompleteCallback,
     nonceFailureOrCancel?: FailureCallback | CancelAndCompleteCallback,
     maybeCancel?: CancelAndCompleteCallback
   ): Promise<void> {
@@ -608,10 +614,10 @@ export namespace SQIPGooglePay {
       hasPaymentSourceId ? failureOrNonceSuccess : successOrFailure
     ) as FailureCallback | undefined;
     const onGooglePayNonceRequestFailure = (
-      hasPaymentSourceId ? nonceFailureOrCancel : nonceSuccessOrNonceFailure
+      hasPaymentSourceId ? nonceFailureOrCancel : failureOrNonceSuccess
     ) as FailureCallback | undefined;
     const onGooglePayCanceled = (
-      hasPaymentSourceId ? maybeCancel : nonceFailureOrCancel
+      hasPaymentSourceId ? maybeCancel : nonceSuccessOrNonceFailure
     ) as CancelAndCompleteCallback | undefined;
     verifyObjectType(googlePayConfig, 'googlePayConfig should be an object');
     verifyStringType(
@@ -853,7 +859,6 @@ export namespace SQIPApplePay {
     applePayConfig: ApplePayConfig,
     onBuyerVerificationSuccess?: BuyerVerificationSuccessCallback,
     onBuyerVerificationFailure?: FailureCallback,
-    onApplePayNonceRequestSuccess?: ApplePayNonceSuccessCallbackWithResult,
     onApplePayNonceRequestFailure?: FailureCallback,
     onApplePayComplete?: ApplePayCancelAndCompleteCallback
   ): Promise<void>;
@@ -881,7 +886,8 @@ export namespace SQIPApplePay {
       | ApplePayNonceSuccessCallbackWithResult,
     nonceSuccessOrNonceFailure?:
       | ApplePayNonceSuccessCallbackWithResult
-      | FailureCallback,
+      | FailureCallback
+      | ApplePayCancelAndCompleteCallback,
     nonceFailureOrComplete?:
       | FailureCallback
       | ApplePayCancelAndCompleteCallback,
@@ -901,10 +907,10 @@ export namespace SQIPApplePay {
       hasPaymentSourceId ? failureOrNonceSuccess : successOrFailure
     ) as FailureCallback | undefined;
     const onApplePayNonceRequestFailure = (
-      hasPaymentSourceId ? nonceFailureOrComplete : nonceSuccessOrNonceFailure
+      hasPaymentSourceId ? nonceFailureOrComplete : failureOrNonceSuccess
     ) as FailureCallback | undefined;
     const onApplePayComplete = (
-      hasPaymentSourceId ? maybeComplete : nonceFailureOrComplete
+      hasPaymentSourceId ? maybeComplete : nonceSuccessOrNonceFailure
     ) as ApplePayCancelAndCompleteCallback | undefined;
     verifyObjectType(applePayConfig, 'applePayConfig should be a valid object');
     verifyStringType(

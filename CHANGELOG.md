@@ -3,7 +3,7 @@
 ### Unreleased
 
 * Fix combined `*WithBuyerVerification` methods verifying the wrong payment source. In 2.0–2.1.0 they ran 3DS on the `paymentSourceId` argument first, then opened card entry / Apple Pay / Google Pay, so the verification token did not belong to the card the buyer actually paid with. They now collect the nonce first, then verify that nonce (matching 1.x). `paymentSourceId` is removed from these methods; only `startBuyerVerificationFlow` still takes it. Deprecated JS overloads still accept the old argument and ignore it.
-* Document the 2.x buyer-verification APIs in `docs/reference.md`, including `SQIPBuyer`, gift-card and wallet combined flows, and `cardEntryConfig`'s role as 3DS parameters.
+* Document the collect-then-verify signatures of the combined `*WithBuyerVerification` methods in `docs/reference.md`.
 * Example app no longer passes the sandbox-only `ccof:customer-card-id-requires-verification` value into combined buyer-verification methods.
 
 ### v2.1.0 Jul 23, 2026

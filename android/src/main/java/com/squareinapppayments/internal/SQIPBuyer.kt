@@ -62,10 +62,6 @@ class SQIPBuyer {
                       mapToReturn.putString(
                         "token",
                         result.getSuccessValue().verificationToken)
-                      SQIPFlowLog.collectVerifyResult(
-                        mapToReturn.getString("nonce"),
-                        mapToReturn.getString("token")
-                      )
                       onBuyerVerificationSuccessCallback(mapToReturn)
                     } else {
                       var mapToReturn = WritableNativeMap()
@@ -73,14 +69,9 @@ class SQIPBuyer {
                       mapToReturn.putString(
                         "token",
                         result.getSuccessValue().verificationToken)
-                      SQIPFlowLog.collectVerifyResult(
-                        mapToReturn.getString("nonce"),
-                        mapToReturn.getString("token")
-                      )
                       onBuyerVerificationSuccessCallback(mapToReturn)
                     }
                   } else if (result.isError()) {
-                    SQIPFlowLog.step("[3/4] ✗ 3DS failed — ${result.getErrorValue().debugCode}")
                     var error = result.getErrorValue();
                     var errorMap: WritableMap =
                       ErrorHandlerUtils.getCallbackErrorObject(
@@ -136,7 +127,6 @@ class SQIPBuyer {
       onBuyerVerificationSuccess: Callback,
       onBuyerVerificationFailure: Callback
     ) {
-      SQIPFlowLog.step("setup: 3DS params stored (location, amount, buyer contact)")
       this.onBuyerVerificationSuccess = onBuyerVerificationSuccess
       this.onBuyerVerificationFailure = onBuyerVerificationFailure
       this.paymentSourceId = null
@@ -156,12 +146,8 @@ class SQIPBuyer {
         this.buyerAction == null ||
         this.squareIdentifier == null ||
         this.contact == null) {
-        SQIPFlowLog.step(
-          "reVerifyBuyer skipped — 3DS params missing (was prepareBuyerVerification called?)"
-        )
         return
       }
-      SQIPFlowLog.collectVerifyStep(3, null, paymentSourceId)
       val verificationParameters = VerificationParameters(
         paymentSourceId,
         this.buyerAction!!,
@@ -173,8 +159,6 @@ class SQIPBuyer {
           this.activity!!,
           verificationParameters
         )
-      } else {
-        SQIPFlowLog.step("reVerifyBuyer skipped — activity is null")
       }
     }
 
@@ -188,10 +172,6 @@ class SQIPBuyer {
       onBuyerVerificationSuccess: Callback,
       onBuyerVerificationFailure: Callback
     ) {
-      SQIPFlowLog.step(
-        "standalone startBuyerVerificationFlow — verify caller-supplied payment source",
-        paymentSourceId
-      )
       this.onBuyerVerificationSuccess = onBuyerVerificationSuccess
       this.onBuyerVerificationFailure = onBuyerVerificationFailure
       this.paymentSourceId = paymentSourceId

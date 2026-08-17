@@ -52,7 +52,6 @@ class SQIPCardEntry {
             CardEntryActivityCommand {
             if (SQIPBuyer.isPrepared()) {
               SQIPCardEntry.cardResult = cardDetails
-              SQIPFlowLog.collectVerifyStep(2, "card entry", cardDetails.nonce)
               schedulePreparedBuyerVerification(cardDetails.nonce)
               return CardEntryActivityCommand.Finish()
             }
@@ -93,7 +92,6 @@ class SQIPCardEntry {
                   var successValue = cardEntryActivityResult.getSuccessValue()
                   if (SQIPCardEntry.cardResult == null) {
                     SQIPCardEntry.cardResult = successValue
-                    SQIPFlowLog.collectVerifyStep(2, "card entry", successValue.nonce)
                   }
                   schedulePreparedBuyerVerification(
                     SQIPCardEntry.cardResult?.nonce ?: successValue.nonce
@@ -197,7 +195,6 @@ class SQIPCardEntry {
         onBuyerVerificationFailure,
       )
       preparedVerificationScheduled = false
-      SQIPFlowLog.collectVerifyStep(1, "card entry")
       if (activity != null) {
         CardEntry.startCardEntryActivity(activity!!, collectPostalCode)
       }
@@ -225,7 +222,6 @@ class SQIPCardEntry {
         onBuyerVerificationFailure,
       )
       preparedVerificationScheduled = false
-      SQIPFlowLog.collectVerifyStep(1, "gift card entry")
       if (activity != null) {
         CardEntry.startGiftCardEntryActivity(activity!!);
       }

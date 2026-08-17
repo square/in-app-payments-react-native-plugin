@@ -94,7 +94,6 @@ class SQIPGooglePay {
                       if (result.isSuccess()) {
                         val successValue = result.getSuccessValue()
                         if (SQIPBuyer.isPrepared()) {
-                          SQIPFlowLog.collectVerifyStep(2, "Google Pay", successValue.nonce)
                           SQIPCardEntry.cardResult = successValue
                           SQIPBuyer.reVerifyBuyer(successValue.nonce)
                         } else {
@@ -346,7 +345,6 @@ class SQIPGooglePay {
         onBuyerVerificationSuccess,
         onBuyerVerificationFailure
       );
-      SQIPFlowLog.collectVerifyStep(1, "Google Pay")
 
       AutoResolveHelper.resolveTask(
         googlePayClients!!

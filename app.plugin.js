@@ -294,7 +294,7 @@ function withSquarePaymentsSDK(config, opts = {}) {
         // Kotlin pinned by React Native (2.1.x as of RN 0.86) and cannot
         // read the SDK's metadata. Pin a compatible version explicitly.
         src = src.replace(
-          /classpath\(['"]org\.jetbrains\.kotlin:kotlin-gradle-plugin(?:['"]|:)[^'")]*['"]?\)/g,
+          /classpath\((['"])org\.jetbrains\.kotlin:kotlin-gradle-plugin\1\)/,
           `classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:${SQIP_KOTLIN_VERSION}')`
         );
 

@@ -19,42 +19,6 @@ static NSDictionary *_preparedCardDetails = nil;
 static RCTResponseSenderBlock _preparedSuccess = nil;
 static RCTResponseSenderBlock _preparedFailure = nil;
 
-static NSString *_SQIPFlowMaskId(NSString *idValue) {
-  if (idValue == nil || idValue.length == 0) {
-    return @"(none)";
-  }
-  return idValue;
-}
-
-#define SQIPFlowLog(fmt, ...) \
-  NSLog(@"[SQIPFlow] " fmt, ##__VA_ARGS__)
-
-static NSString *_SQIPCollectVerifyStepMessage(
-    NSInteger step, NSString *_Nullable paymentUiOverride) {
-  switch (step) {
-  case 1:
-    return paymentUiOverride
-               ? [NSString stringWithFormat:@"Open %@ first", paymentUiOverride]
-               : @"Open card entry / Apple Pay / Google Pay first";
-  case 2:
-    return @"Buyer picks or types a card → we get a nonce";
-  case 3:
-    return @"Run 3DS verification on that nonce";
-  case 4:
-    return @"Return the nonce + the verification token together";
-  default:
-    return @"unknown step";
-  }
-}
-
-#define SQIPCollectVerifyStep(step, paymentUiOverride)                         \
-  SQIPFlowLog(@"[%ld/4] ✓ %@", (long)(step),                                   \
-              _SQIPCollectVerifyStepMessage(step, paymentUiOverride))
-
-#define SQIPCollectVerifyStepWithNonce(step, paymentUiOverride, nonce)         \
-  SQIPFlowLog(@"[%ld/4] ✓ %@ nonce code: %@", (long)(step),                   \
-              _SQIPCollectVerifyStepMessage(step, paymentUiOverride), nonce)
-
 @implementation SQIPBuyerInternal
 
 + (void)startBuyerVerificationFlow:(nonnull NSString *)paymentSourceId
@@ -66,9 +30,6 @@ static NSString *_SQIPCollectVerifyStepMessage(
             (nonnull RCTResponseSenderBlock)onBuyerVerificationSuccess
                     onBuyerVerificationFailure:
                         (nonnull RCTResponseSenderBlock)onBuyerVerificationFailure {
-  SQIPFlowLog(@"standalone startBuyerVerificationFlow — verify caller-supplied "
-              @"paymentSourceId=%@",
-              _SQIPFlowMaskId(paymentSourceId));
   [SQIPBuyerInternal verifyPaymentSourceId:paymentSourceId
                                 locationId:locationId
                                buyerAction:buyerActionString
@@ -87,7 +48,6 @@ static NSString *_SQIPCollectVerifyStepMessage(
                         (nonnull RCTResponseSenderBlock)onBuyerVerificationSuccess
                     onBuyerVerificationFailure:
                         (nonnull RCTResponseSenderBlock)onBuyerVerificationFailure {
-  SQIPFlowLog(@"setup: 3DS params stored (location, amount, buyer contact)");
   _preparedLocationId = [locationId copy];
   _preparedBuyerActionString = [buyerAction copy];
   _preparedMoneyMap = [money copy];
@@ -111,7 +71,6 @@ static NSString *_SQIPCollectVerifyStepMessage(
     [SQIPBuyerInternal clearPreparedBuyerVerification];
     return NO;
   }
-  SQIPCollectVerifyStepWithNonce(3, nil, nonce);
   [SQIPBuyerInternal verifyPaymentSourceId:nonce
                                 locationId:_preparedLocationId
                                buyerAction:_preparedBuyerActionString
@@ -172,15 +131,11 @@ static NSString *_SQIPCollectVerifyStepMessage(
               verificationResult[@"nonce"] = paymentSourceId;
             }
             verificationResult[@"token"] = verifiedDetails.verificationToken;
-            SQIPFlowLog(@"[4/4] ✓ Return the nonce + the verification token together");
-            SQIPFlowLog(@"     nonce code: %@", verificationResult[@"nonce"] ?: @"(none)");
-            SQIPFlowLog(@"     verification token: %@", verificationResult[@"token"] ?: @"(none)");
             onSuccess(@[ verificationResult ]);
             [SQIPBuyerInternal clearPreparedBuyerVerification];
           }
           failure:^(NSError *_Nonnull error) {
             NSString *debugCode = error.userInfo[SQIPErrorDebugCodeKey];
-            SQIPFlowLog(@"[3/4] ✗ 3DS failed — %@", debugCode ?: error.localizedDescription);
             NSString *debugMessage = error.userInfo[SQIPErrorDebugMessageKey];
             [SQIPBuyerInternal clearPreparedBuyerVerification];
             onFailure(@[ [ErrorUtilities

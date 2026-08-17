@@ -143,12 +143,8 @@ export function Home() {
   useEffect(() => {
     SQIPCore.setSquareApplicationId(strings.SQUARE_APP_ID);
     if (Platform.OS === 'android') {
-      const googlePayLocationId =
-        strings.GOOGLE_PAY_LOCATION_ID === 'REPLACE_ME'
-          ? strings.SQUARE_LOCATION_ID
-          : strings.GOOGLE_PAY_LOCATION_ID;
       SQIPGooglePay.initializeGooglePay(
-        googlePayLocationId,
+        strings.GOOGLE_PAY_LOCATION_ID,
         GooglePayEnvironment.EnvironmentTest
       );
     } else if (Platform.OS === 'ios') {
@@ -287,22 +283,13 @@ export function Home() {
 
   const handleStartCardEntryFlow = () => {
     if (useWithBuyerVerification) {
-      try {
-        SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
-          true,
-          cardEntryConfig,
-          handleBuyerVerificationSuccess,
-          handleBuyerVerificationFailure,
-          undefined,
-          handleCardEntryCancel
-        );
-      } catch (error) {
-        showCommonAlert({
-          title: 'Card entry failed to start',
-          description: String(error),
-          status: false,
-        });
-      }
+      SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
+        true,
+        cardEntryConfig,
+        handleBuyerVerificationSuccess,
+        handleBuyerVerificationFailure,
+        handleCardEntryCancel
+      );
     } else {
       if (useDeprecatedMethods) {
         SQIPCardEntry.startCardEntryFlow(
@@ -326,7 +313,6 @@ export function Home() {
         cardEntryConfig,
         handleBuyerVerificationSuccess,
         handleBuyerVerificationFailure,
-        undefined,
         handleCardEntryCancel
       );
     } else {
@@ -450,7 +436,6 @@ export function Home() {
           googlePayConfig,
           handleBuyerVerificationSuccess,
           handleBuyerVerificationFailure,
-          undefined,
           handleGooglePayNonceRequestFailure,
           handleGooglePayCanceled
         );
@@ -597,7 +582,6 @@ export function Home() {
           applePayConfig,
           handleBuyerVerificationSuccess,
           handleBuyerVerificationFailure,
-          undefined,
           handleApplePayNonceRequestFailure,
           handleApplePayComplete
         );
