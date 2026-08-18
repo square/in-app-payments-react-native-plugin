@@ -10,8 +10,6 @@ export interface Spec extends TurboModule {
     onBuyerVerificationSuccess: (verificationResult: Object) => void,
     onBuyerVerificationFailure: (errorDetails: Object) => void
   ): void;
-  // FIXME: Dev Testing
-  setMockBuyerVerificationSuccess(mockBuyerVerificationSuccess: boolean): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('SQIPBuyer');

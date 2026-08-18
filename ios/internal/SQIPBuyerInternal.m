@@ -11,17 +11,11 @@
 #import <SquareBuyerVerificationSDK/SQIPVerificationParameters.h>
 #import <SquareInAppPaymentsSDK/SQIPErrorConstants.h>
 
-static BOOL _mockBuyerVerification = NO;
-
 static BOOL _shouldContinueWithGiftCardEntry = NO;
 static BOOL _shouldContinueWithCardEntry = NO;
 static BOOL _shouldContinueWithApplePayNonceRequest = NO;
 
 @implementation SQIPBuyerInternal
-
-+ (void)setMockBuyerVerificationSuccess:(BOOL)mockBuyerVerificationSuccess {
-  _mockBuyerVerification = mockBuyerVerificationSuccess;
-}
 
 + (void)startBuyerVerificationFlow:(nonnull NSString *)paymentSourceId
                         locationId:(nonnull NSString *)locationId
@@ -65,19 +59,12 @@ static BOOL _shouldContinueWithApplePayNonceRequest = NO;
           failure:^(NSError *_Nonnull error) {
             NSString *debugCode = error.userInfo[SQIPErrorDebugCodeKey];
             NSString *debugMessage = error.userInfo[SQIPErrorDebugMessageKey];
-            if (_mockBuyerVerification) {
-              NSDictionary *verificationResult =
-                  @{@"nonce" : paymentSourceId, @"token" : @"mock-token"};
-              onBuyerVerificationSuccess(@[ verificationResult ]);
-              [SQIPBuyerInternal shouldContinue];
-            } else {
-              [SQIPBuyerInternal invalidateShouldContinue];
-              onBuyerVerificationFailure(@[ [ErrorUtilities
-                  callbackErrorObject:RNSQIPUsageError
-                              message:error.localizedDescription
-                            debugCode:debugCode
-                         debugMessage:debugMessage] ]);
-            }
+            [SQIPBuyerInternal invalidateShouldContinue];
+            onBuyerVerificationFailure(@[ [ErrorUtilities
+                callbackErrorObject:RNSQIPUsageError
+                            message:error.localizedDescription
+                          debugCode:debugCode
+                       debugMessage:debugMessage] ]);
           }];
     };
 

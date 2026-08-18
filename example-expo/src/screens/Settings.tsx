@@ -18,8 +18,6 @@ export function Settings() {
     setUseDeprecatedMethods,
     useWithBuyerVerification,
     setUseWithBuyerVerification,
-    mockBuyerVerificationSuccess,
-    setMockBuyerVerificationSuccess,
   } = useSettings();
   const { top } = useSafeAreaInsets();
   return (
@@ -51,15 +49,6 @@ export function Settings() {
             thumbColor={colors.primary}
             value={useMockBackend}
             onValueChange={setUseMockBackend}
-          />
-        </View>
-        <View style={styles.row}>
-          <AppText size="body">Mock buyer verification success</AppText>
-          <Switch
-            trackColor={{ false: colors.surface, true: colors.primary }}
-            thumbColor={colors.primary}
-            value={mockBuyerVerificationSuccess}
-            onValueChange={setMockBuyerVerificationSuccess}
           />
         </View>
         <View style={styles.row}>

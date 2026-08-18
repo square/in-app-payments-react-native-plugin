@@ -4,8 +4,6 @@
 
 @interface SQIPBuyerInternal : NSObject
 
-+ (void)setMockBuyerVerificationSuccess:(BOOL)mockBuyerVerificationSuccess;
-
 + (void)startBuyerVerificationFlow:(nonnull NSString *)paymentSourceId
                         locationId:(nonnull NSString *)locationId
                        buyerAction:(nonnull NSString *)buyerAction
