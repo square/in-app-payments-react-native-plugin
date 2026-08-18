@@ -1,6 +1,6 @@
 ## Changelog
 
-### Unreleased
+### v2.1.1 Aug 18, 2026
 
 * Fix combined `*WithBuyerVerification` methods verifying the wrong payment source. In 2.0–2.1.0 they ran 3DS on the `paymentSourceId` argument first, then opened card entry / Apple Pay / Google Pay, so the verification token did not belong to the card the buyer actually paid with. They now collect the nonce first, then verify that nonce (matching 1.x). `paymentSourceId` is removed from these methods; only `startBuyerVerificationFlow` still takes it. Deprecated JS overloads still accept the old argument and ignore it.
 * Document the collect-then-verify signatures of the combined `*WithBuyerVerification` methods in `docs/reference.md`.
