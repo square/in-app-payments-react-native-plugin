@@ -22,7 +22,8 @@ Method                                                       | Return Object    
 :----------------------------------------------------------- | :------------------------ | :------------------------------
 [setSquareApplicationId](#setsquareapplicationid)            | void                      | Sets the Square Application ID.
 [startCardEntryFlow](#startcardentryflow)                    | void                      | Displays a full-screen card entry view.
-[startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) | void | Displays a full-screen card entry view with buyer verification flow enabled.
+[startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) | void | Displays a full-screen card entry view, then runs buyer verification on the collected nonce.
+[startGiftCardEntryFlowWithBuyerVerification](#startgiftcardentryflowwithbuyerverification) | void | Displays a gift card entry view, then runs buyer verification on the collected nonce.
 [completeCardEntry](#completecardentry)                      | void                      | Closes the card entry form on success.
 [showCardNonceProcessingError](#showcardnonceprocessingerror)| void                      | Shows an error in the card entry form without closing the form.
 [setIOSCardEntryTheme](#setioscardentrytheme)                | void                      | Sets the customization theme for the card entry view controller in the native layer.
@@ -35,6 +36,7 @@ Method                                                          | Return Object 
 [initializeApplePay](#initializeapplepay)                       | void                      | Initializes the In-App Payments React Native plugin for Apple Pay.
 [canUseApplePay](#canuseapplepay)                               | bool                      | Returns `true` if the device supports Apple Pay and the user has added at least one card that Square supports.
 [requestApplePayNonce](#requestapplepaynonce)                   | void                      | Starts the Apple Pay payment authorization and returns a nonce based on the authorized Apple Pay payment token.
+[requestApplePayNonceWithBuyerVerification](#requestapplepaynoncewithbuyerverification) | void | Starts Apple Pay, then runs buyer verification on the collected nonce.
 [completeApplePayAuthorization](#completeapplepayauthorization) | void                      | Notifies the native layer to close the Apple Pay sheet with success or failure status.
 
 
@@ -45,6 +47,7 @@ Method                                                       | Return Object    
 [initalizeGooglePay](#initializegooglepay)                   | void                              | Initializes the React Native plugin for Google Pay.
 [canUseGooglePay](#canusegooglepay)                          | bool                              | Returns `true` if the device supports Google Pay and the user has added at least one card that Square supports.
 [requestGooglePayNonce](#requestgooglepaynonce)              | void                              | Starts the Google Pay payment authorization and returns a nonce based on the authorized Google Pay payment token.
+[requestGooglePayNonceWithBuyerVerification](#requestgooglepaynoncewithbuyerverification) | void | Starts Google Pay, then runs buyer verification on the collected nonce.
 
 
 
@@ -106,13 +109,17 @@ await SQIPCardEntry.startCardEntryFlow(
 ---
 ### startCardEntryFlowWithBuyerVerification
 
-Displays a full-screen card entry view with buyer verification flow enabled. The method takes one configuration object and three call back parameters which correspond
-to the possible results of the request.
+Displays a full-screen card entry view, then runs buyer verification (3DS) on the nonce of the card the buyer entered. This is the combined collect-then-verify flow: the plugin collects the card first, then verifies **that** card. Do not pass a `paymentSourceId`; verification always uses the collected nonce.
+
+`cardEntryConfig` carries the buyer-verification parameters (`squareLocationId`, `buyerAction`, `amount`/`currencyCode`, and buyer contact fields). Those fields are required for this call.
+
+On success, `onBuyerVerificationSuccess` receives `{ nonce, card, token }`. Charge on your backend with `source_id` = nonce and `verification_token` = token.
 
 Parameter                          | Type                                                                          | Description
 :----------------------------------| :---------------------------------------------------------------------------- | :-----------
-cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Configuration object for card entry behavior, pass `null` for default configuration
-onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when card entry with buyer verification is completed successfully.
+collectPostalCode                  | Boolean                                                                       | Whether to collect the postal code on the card entry form.
+cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Card entry plus buyer-verification parameters. Must include `squareLocationId`, `buyerAction`, `amount`, `currencyCode`, and buyer contact fields.
+onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when card entry and buyer verification complete successfully.
 onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when card entry with buyer verification encounters errors.
 onCardEntryCancel                  | [cardEntryCancelCallback](#cardentrycancelcallback)                           | Invoked when card entry is canceled.
 
@@ -140,9 +147,44 @@ const cardEntryConfig = {
 };
 
 await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
+  true, // collectPostalCode
   cardEntryConfig,
-  (buyerVerificationDetails) => { ... }, // onBuyerVerificationSuccess
+  (buyerVerificationDetails) => {
+    // Charge with buyerVerificationDetails.nonce and buyerVerificationDetails.token
+  },
   (errorInfo) => { ... }, // onBuyerVerificationFailure
+  () => { ... }, // onCardEntryCancel
+);
+```
+
+
+---
+### startGiftCardEntryFlowWithBuyerVerification
+
+Displays a full-screen Square gift card entry view, then runs buyer verification (3DS) on the nonce of the gift card the buyer entered. Same collect-then-verify order as [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification). Do not pass a `paymentSourceId`.
+
+On success, `onBuyerVerificationSuccess` receives `{ nonce, card, token }`. Charge on your backend with `source_id` = nonce and `verification_token` = token.
+
+Parameter                          | Type                                                                          | Description
+:----------------------------------| :---------------------------------------------------------------------------- | :-----------
+cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Buyer-verification parameters. Must include `squareLocationId`, `buyerAction`, `amount`, `currencyCode`, and buyer contact fields.
+onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when gift card entry and buyer verification complete successfully.
+onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when gift card entry with buyer verification encounters errors.
+onCardEntryCancel                  | [cardEntryCancelCallback](#cardentrycancelcallback)                           | Invoked when gift card entry is canceled.
+
+#### Example usage
+
+```javascript
+import {
+  SQIPCardEntry
+} from 'react-native-square-in-app-payments';
+
+await SQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
+  cardEntryConfig,
+  (buyerVerificationDetails) => {
+    // Charge with buyerVerificationDetails.nonce and buyerVerificationDetails.token
+  },
+  (errorInfo) => { ... },
   () => { ... }, // onCardEntryCancel
 );
 ```
@@ -418,6 +460,78 @@ if (Platform.OS === 'ios') {
 
 
 ---
+### requestApplePayNonceWithBuyerVerification
+**iOS Only**
+
+Starts the Apple Pay payment authorization, then runs buyer verification (3DS) on the nonce of the card the buyer authorized. This is the combined collect-then-verify flow: the plugin collects the Apple Pay nonce first, then verifies **that** nonce. Do not pass a `paymentSourceId`.
+
+`cardEntryConfig` carries the buyer-verification parameters (`squareLocationId`, `buyerAction`, `amount`/`currencyCode`, and buyer contact fields). `applePayConfig` configures the Apple Pay sheet itself.
+
+On success, `onBuyerVerificationSuccess` receives `{ nonce, card, token }`. Charge on your backend with `source_id` = nonce and `verification_token` = token.
+
+Parameter                          | Type                                                                          | Description
+:----------------------------------| :---------------------------------------------------------------------------- | :-----------
+cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Buyer-verification parameters. Must include `squareLocationId`, `buyerAction`, `amount`, `currencyCode`, and buyer contact fields.
+applePayConfig                     | [applePayConfig](#applePayConfig)                                             | Configuration for the Apple Pay sheet.
+onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when Apple Pay and buyer verification complete successfully.
+onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when buyer verification encounters errors.
+onApplePayNonceRequestFailure| [applePayNonceRequestFailureCallback](#applepaynoncerequestfailurecallback) | Invoked if Apple Pay fails to produce a nonce.
+onApplePayComplete | [applePayCompleteCallback](#applepaycompletecallback) | Invoked when the Apple Pay sheet is closed after cancellation (verification success uses `onBuyerVerificationSuccess` instead).
+
+Throws [InAppPaymentsException](#inapppaymentsexception)
+
+#### Example usage
+
+```javascript
+import {
+  Platform
+} from 'react-native';
+import {
+  SQIPApplePay
+} from 'react-native-square-in-app-payments';
+
+if (Platform.OS === 'ios') {
+  const cardEntryConfig = {
+    collectPostalCode: true,
+    squareLocationId: SQUARE_LOCATION_ID,
+    buyerAction: 'Charge',
+    amount: 100,
+    currencyCode: 'USD',
+    givenName: 'John',
+    familyName: 'Doe',
+    addressLines: ['London Eye', 'Riverside Walk'],
+    city: 'London',
+    countryCode: 'GB',
+    email: 'johndoe@example.com',
+    phone: '8001234567',
+    postalCode: 'SE1 7'
+  };
+  const applePayConfig = {
+    price: '1.00',
+    summaryLabel: 'Test Item',
+    countryCode: 'US',
+    currencyCode: 'USD',
+    paymentType: SQIPApplePay.PaymentTypeFinal,
+  };
+  try {
+    await SQIPApplePay.requestApplePayNonceWithBuyerVerification(
+      cardEntryConfig,
+      applePayConfig,
+      (buyerVerificationDetails) => {
+        // Charge with buyerVerificationDetails.nonce and buyerVerificationDetails.token
+      },
+      (errorInfo) => { ... },
+      (errorInfo) => { ... },
+      () => { ... },
+    );
+  } catch(ex) {
+    // handle InAppPaymentsException
+  }
+}
+```
+
+
+---
 ### completeApplePayAuthorization
 **iOS Only**
 
@@ -587,6 +701,76 @@ if (Platform.OS === 'android') {
       (cardDetails) => { ... }, // onGooglePayNonceRequestSuccess
       (errorInfo) => { ... }, // onGooglePayNonceRequestFailure
       () => { ... }, // onGooglePayCancel
+    );
+  } catch (ex) {
+    // Handle InAppPaymentsException
+  }
+}
+```
+
+
+---
+### requestGooglePayNonceWithBuyerVerification
+**Android Only**
+
+Starts the Google Pay payment authorization, then runs buyer verification (3DS) on the nonce of the card the buyer authorized. This is the combined collect-then-verify flow: the plugin collects the Google Pay nonce first, then verifies **that** nonce. Do not pass a `paymentSourceId`.
+
+`cardEntryConfig` carries the buyer-verification parameters (`squareLocationId`, `buyerAction`, `amount`/`currencyCode`, and buyer contact fields). `googlePayConfig` configures the Google Pay sheet itself.
+
+On success, `onBuyerVerificationSuccess` receives `{ nonce, card, token }`. Charge on your backend with `source_id` = nonce and `verification_token` = token.
+
+Parameter                          | Type                                                                          | Description
+:----------------------------------| :---------------------------------------------------------------------------- | :-----------
+cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Buyer-verification parameters. Must include `squareLocationId`, `buyerAction`, `amount`, `currencyCode`, and buyer contact fields.
+googlePayConfig                    | [googlePayConfig](#googlePayConfig)                                           | Configuration for the Google Pay sheet.
+onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when Google Pay and buyer verification complete successfully.
+onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when buyer verification encounters errors.
+onGooglePayNonceRequestFailure | [googlePayNonceRequestFailureCallback](#googlepaynoncerequestfailurecallback) | Invoked if Google Pay fails to produce a nonce.
+onGooglePayCanceled | [googlePayCancelCallback](#googlepaycancelcallback) | Invoked when the buyer cancels Google Pay.
+
+Throws [InAppPaymentsException](#inapppaymentsexception)
+
+#### Example usage
+
+```javascript
+import {
+  Platform
+} from 'react-native';
+import {
+  SQIPGooglePay
+} from 'react-native-square-in-app-payments';
+
+if (Platform.OS === 'android') {
+  const cardEntryConfig = {
+    collectPostalCode: true,
+    squareLocationId: SQUARE_LOCATION_ID,
+    buyerAction: 'Charge',
+    amount: 100,
+    currencyCode: 'USD',
+    givenName: 'John',
+    familyName: 'Doe',
+    addressLines: ['London Eye', 'Riverside Walk'],
+    city: 'London',
+    countryCode: 'GB',
+    email: 'johndoe@example.com',
+    phone: '8001234567',
+    postalCode: 'SE1 7'
+  };
+  const googlePayConfig = {
+    price: '1.00',
+    currencyCode: 'USD',
+    priceStatus: SQIPGooglePay.TotalPriceStatusFinal,
+  };
+  try {
+    await SQIPGooglePay.requestGooglePayNonceWithBuyerVerification(
+      cardEntryConfig,
+      googlePayConfig,
+      (buyerVerificationDetails) => {
+        // Charge with buyerVerificationDetails.nonce and buyerVerificationDetails.token
+      },
+      (errorInfo) => { ... },
+      (errorInfo) => { ... },
+      () => { ... },
     );
   } catch (ex) {
     // Handle InAppPaymentsException

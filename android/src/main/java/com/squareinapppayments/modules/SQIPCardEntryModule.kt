@@ -61,7 +61,6 @@ class SQIPCardEntryModule(reactContext: ReactApplicationContext) :
 
   override fun startCardEntryFlowWithBuyerVerification(
     collectPostalCode: Boolean,
-    paymentSourceId: String,
     locationId: String,
     buyerAction: String,
     money: ReadableMap,
@@ -73,7 +72,6 @@ class SQIPCardEntryModule(reactContext: ReactApplicationContext) :
   ) {
     SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
       collectPostalCode,
-      paymentSourceId,
       locationId,
       buyerAction,
       money,
@@ -86,7 +84,6 @@ class SQIPCardEntryModule(reactContext: ReactApplicationContext) :
   }
 
   override fun startGiftCardEntryFlowWithBuyerVerification(
-    paymentSourceId: String,
     locationId: String,
     buyerAction: String,
     money: ReadableMap,
@@ -97,7 +94,6 @@ class SQIPCardEntryModule(reactContext: ReactApplicationContext) :
     onCardEntryCancel: Callback
   ) {
     SQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
-      paymentSourceId,
       locationId,
       buyerAction,
       money,

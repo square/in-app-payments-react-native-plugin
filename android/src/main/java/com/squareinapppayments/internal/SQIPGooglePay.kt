@@ -92,10 +92,16 @@ class SQIPGooglePay {
                   object : SQIPCallback<GooglePayNonceResult> {
                     override fun onResult(result: GooglePayNonceResult) {
                       if (result.isSuccess()) {
-                        val cardDetails = CardDetailsConverter.toMapObject(
-                          result.getSuccessValue()
-                        )
-                        onGooglePayNonceRequestSuccessCallback(cardDetails)
+                        val successValue = result.getSuccessValue()
+                        if (SQIPBuyer.isPrepared()) {
+                          SQIPCardEntry.cardResult = successValue
+                          SQIPBuyer.reVerifyBuyer(successValue.nonce)
+                        } else {
+                          val cardDetails = CardDetailsConverter.toMapObject(
+                            successValue
+                          )
+                          onGooglePayNonceRequestSuccessCallback(cardDetails)
+                        }
                       } else if (result.isError()) {
                         val error = result as GooglePayNonceResult.Error
                         val errorDetails = 
@@ -112,6 +118,7 @@ class SQIPGooglePay {
                 )
               }
               Activity.RESULT_CANCELED -> {
+                SQIPBuyer.clearPreparedBuyerVerification()
                 onGooglePayCanceledCallback()
               }
               AutoResolveHelper.RESULT_ERROR -> {
@@ -173,6 +180,7 @@ class SQIPGooglePay {
     }
 
     fun onGooglePayNonceRequestFailureCallback(errorDetails: WritableMap) {
+      SQIPBuyer.clearPreparedBuyerVerification()
       onGooglePayNonceRequestFailure?.invoke(errorDetails)
       onGooglePayNonceRequestFailure = null;
       onGooglePayCanceled = null;
@@ -257,6 +265,7 @@ class SQIPGooglePay {
       this.onGooglePayNonceRequestSuccess = onGooglePayNonceRequestSuccess;
       this.onGooglePayNonceRequestFailure = onGooglePayNonceRequestFailure;
       this.onGooglePayCanceled = onGooglePayCanceled;
+      SQIPBuyer.clearPreparedBuyerVerification()
       
       AutoResolveHelper.resolveTask(
         googlePayClients!!
@@ -273,8 +282,7 @@ class SQIPGooglePay {
     }
 
     fun requestGooglePayNonceWithBuyerVerification(
-      googlePayConfig: ReadableMap, 
-      paymentSourceId: String, 
+      googlePayConfig: ReadableMap,
       locationId: String,
       buyerAction: String,
       money: ReadableMap,
@@ -328,10 +336,8 @@ class SQIPGooglePay {
       this.onGooglePayNonceRequestSuccess = onGooglePayNonceRequestSuccess;
       this.onGooglePayNonceRequestFailure = onGooglePayNonceRequestFailure;
       this.onGooglePayCanceled = onGooglePayCanceled;
-      
-      SQIPBuyer.applyShouldContinueWithGooglePayEntry();
-      SQIPBuyer.startBuyerVerificationFlow(
-        paymentSourceId,
+
+      SQIPBuyer.prepareBuyerVerification(
         locationId,
         buyerAction,
         money,
@@ -339,26 +345,14 @@ class SQIPGooglePay {
         onBuyerVerificationSuccess,
         onBuyerVerificationFailure
       );
-    }
 
-
-    public fun requestGooglePayNonceFromBuyerVerification() {
-      if (googlePayClients == null
-        || squareLocationId == null
-        || this.activity == null
-        || this.price == null
-        || this.currencyCode == null
-        || this.priceStatus == null
-      ) { 
-        return;
-      }
       AutoResolveHelper.resolveTask(
         googlePayClients!!
           .loadPaymentData(
             createPaymentChargeRequest(
-              squareLocationId!!, 
-              this.price!!, 
-              this.currencyCode!!, 
+              squareLocationId!!,
+              this.price!!,
+              this.currencyCode!!,
               this.priceStatus!!
         )),
         this.activity!!,

@@ -58,8 +58,6 @@
                                   countryCode:(nonnull NSString *)countryCode
                                  currencyCode:(nonnull NSString *)currencyCode
                                   paymentType:(double)paymentType
-                              paymentSourceId:
-                                  (nonnull NSString *)paymentSourceId
                                    locationId:(nonnull NSString *)locationId
                                   buyerAction:(nonnull NSString *)buyerAction
                                         money:(nonnull NSDictionary *)money
@@ -84,7 +82,6 @@
                                     countryCode:countryCode
                                    currencyCode:currencyCode
                                     paymentType:paymentType
-                                paymentSourceId:paymentSourceId
                                      locationId:locationId
                                     buyerAction:buyerAction
                                           money:money

@@ -1,5 +1,6 @@
 #import "SQIPCardEntry.h"
 #import "SQIPCardEntryInternal.h"
+#import "SQIPBuyerInternal.h"
 
 @implementation SQIPCardEntry
 
@@ -29,6 +30,7 @@
         (nonnull RCTResponseSenderBlock)onCardNonceRequestSuccess
             onCardEntryCancel:
                 (nonnull RCTResponseSenderBlock)onCardEntryCancel {
+  [SQIPBuyerInternal clearPreparedBuyerVerification];
   [SQIPCardEntryInternal startCardEntryFlow:collectPostalCode
                   onCardNonceRequestSuccess:onCardNonceRequestSuccess
                           onCardEntryCancel:onCardEntryCancel];
@@ -36,7 +38,6 @@
 
 - (void)
     startCardEntryFlowWithBuyerVerification:(BOOL)collectPostalCode
-                            paymentSourceId:(nonnull NSString *)paymentSourceId
                                  locationId:(nonnull NSString *)locationId
                                 buyerAction:(nonnull NSString *)buyerAction
                                       money:(nonnull NSDictionary *)money
@@ -51,7 +52,6 @@
                                                 onCardEntryCancel {
   [SQIPCardEntryInternal
       startCardEntryFlowWithBuyerVerification:collectPostalCode
-                              paymentSourceId:paymentSourceId
                                    locationId:locationId
                                   buyerAction:buyerAction
                                         money:money
@@ -66,6 +66,7 @@
             (nonnull RCTResponseSenderBlock)onCardNonceRequestSuccess
              onCardEntryCancel:
                  (nonnull RCTResponseSenderBlock)onCardEntryCancel {
+  [SQIPBuyerInternal clearPreparedBuyerVerification];
   [SQIPCardEntryInternal startGiftCardEntryFlow:onCardNonceRequestSuccess
                               onCardEntryCancel:onCardEntryCancel
 
@@ -73,9 +74,7 @@
 }
 
 - (void)
-    startGiftCardEntryFlowWithBuyerVerification:
-        (nonnull NSString *)paymentSourceId
-                                     locationId:(nonnull NSString *)locationId
+    startGiftCardEntryFlowWithBuyerVerification:(nonnull NSString *)locationId
                                     buyerAction:(nonnull NSString *)buyerAction
                                           money:(nonnull NSDictionary *)money
                                         contact:(nonnull NSDictionary *)contact
@@ -88,8 +87,7 @@
                               onCardEntryCancel:(nonnull RCTResponseSenderBlock)
                                                     onCardEntryCancel {
   [SQIPCardEntryInternal
-      startGiftCardEntryFlowWithBuyerVerification:paymentSourceId
-                                       locationId:locationId
+      startGiftCardEntryFlowWithBuyerVerification:locationId
                                       buyerAction:buyerAction
                                             money:money
                                           contact:contact
