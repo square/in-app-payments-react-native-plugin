@@ -44,9 +44,6 @@ class SQIPBuyer {
     private var shouldContinueWithCardEntry: Boolean = false
     private var shouldContinueWithGooglePayNonceRequest: Boolean = false
 
-    // FIXME: Dev Testing
-    private var mockBuyerVerificationSuccess: Boolean = false
-
     private fun setActivityListener(reactContext: ReactApplicationContext) {
       reactContext.addActivityEventListener(object :
         BaseActivityEventListener() {
@@ -62,28 +59,21 @@ class SQIPBuyer {
               data, 
               object : SQIPCallback<BuyerVerificationResult>  {
                 override fun onResult(result: BuyerVerificationResult) {
-                  if (result.isSuccess() || SQIPBuyer.mockBuyerVerificationSuccess) {
-                    if(!SQIPBuyer.mockBuyerVerificationSuccess) {
-                      if(SQIPBuyer.paymentSourceId == null) {
-                        var mapToReturn: WritableMap = 
-                          CardDetailsConverter
-                            .toMapObject(SQIPCardEntry.cardResult)
-                        mapToReturn.putString(
-                          "token", 
-                          result.getSuccessValue().verificationToken)
-                        onBuyerVerificationSuccessCallback(mapToReturn)
-                      } else {
-                        var mapToReturn = WritableNativeMap()
-                        mapToReturn.putString("nonce", SQIPBuyer.paymentSourceId)
-                        mapToReturn.putString(
-                          "token", 
-                          result.getSuccessValue().verificationToken)
-                        onBuyerVerificationSuccessCallback(mapToReturn)
-                      }
+                  if (result.isSuccess()) {
+                    if(SQIPBuyer.paymentSourceId == null) {
+                      var mapToReturn: WritableMap =
+                        CardDetailsConverter
+                          .toMapObject(SQIPCardEntry.cardResult)
+                      mapToReturn.putString(
+                        "token",
+                        result.getSuccessValue().verificationToken)
+                      onBuyerVerificationSuccessCallback(mapToReturn)
                     } else {
                       var mapToReturn = WritableNativeMap()
-                      mapToReturn.putString("nonce", "mock-nonce")
-                      mapToReturn.putString("token", "mock-token")
+                      mapToReturn.putString("nonce", SQIPBuyer.paymentSourceId)
+                      mapToReturn.putString(
+                        "token",
+                        result.getSuccessValue().verificationToken)
                       onBuyerVerificationSuccessCallback(mapToReturn)
                     }
                     if (SQIPBuyer.shouldContinueWithCardEntry) {
@@ -123,14 +113,6 @@ class SQIPBuyer {
       if (this.reactContext != null) return;
       this.reactContext = reactContext
       setActivityListener(reactContext)
-    }
-
-    // FIXME: Dev Testing
-    // React Method
-    public fun setMockBuyerVerificationSuccess(
-      mockBuyerVerificationSuccess: Boolean
-    ) {
-      this.mockBuyerVerificationSuccess = mockBuyerVerificationSuccess
     }
 
     //internal

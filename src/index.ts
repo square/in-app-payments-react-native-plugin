@@ -519,15 +519,6 @@ export namespace SQIPBuyer {
       }
     );
   }
-
-  // FIXME: Dev Testing
-  export function setMockBuyerVerificationSuccess(
-    mockBuyerVerificationSuccess: boolean
-  ): void {
-    NativeSQIPBuyer.setMockBuyerVerificationSuccess(
-      mockBuyerVerificationSuccess
-    );
-  }
 }
 
 export namespace SQIPGooglePay {

@@ -41,13 +41,6 @@ class SQIPBuyerModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  // FIXME: Dev Testing
-  override fun setMockBuyerVerificationSuccess(
-    mockBuyerVerificationSuccess: Boolean
-  ) {
-    SQIPBuyer.setMockBuyerVerificationSuccess(mockBuyerVerificationSuccess)
-  }
-
   companion object {
     const val NAME = "SQIPBuyer"
   }

@@ -1,5 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { SQIPBuyer } from 'react-native-square-in-app-payments';
+import { createContext, useContext, useState } from 'react';
 
 export const SettingsContext = createContext({
   useMockBackend: false,
@@ -8,8 +7,6 @@ export const SettingsContext = createContext({
   setUseDeprecatedMethods: (_: boolean) => {},
   useWithBuyerVerification: false,
   setUseWithBuyerVerification: (_: boolean) => {},
-  mockBuyerVerificationSuccess: false,
-  setMockBuyerVerificationSuccess: (_: boolean) => {},
 });
 
 export const SettingsProvider = ({
@@ -21,17 +18,6 @@ export const SettingsProvider = ({
   const [useWithBuyerVerification, setUseWithBuyerVerification] =
     useState(false);
   const [useMockBackend, setUseMockBackend] = useState(true);
-  const [mockBuyerVerificationSuccess, setMockBuyerVerificationSuccess] =
-    useState(false);
-
-  // FIXME: Dev Testing
-  useEffect(() => {
-    if (mockBuyerVerificationSuccess) {
-      SQIPBuyer.setMockBuyerVerificationSuccess(true);
-    } else {
-      SQIPBuyer.setMockBuyerVerificationSuccess(false);
-    }
-  }, [mockBuyerVerificationSuccess]);
 
   return (
     <SettingsContext.Provider
@@ -42,8 +28,6 @@ export const SettingsProvider = ({
         setUseDeprecatedMethods,
         useWithBuyerVerification,
         setUseWithBuyerVerification,
-        mockBuyerVerificationSuccess,
-        setMockBuyerVerificationSuccess,
       }}
     >
       {children}

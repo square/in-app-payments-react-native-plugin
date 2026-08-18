@@ -12,11 +12,6 @@
   return @"SQIPBuyer";
 }
 
-- (void)setMockBuyerVerificationSuccess:(BOOL)mockBuyerVerificationSuccess {
-  [SQIPBuyerInternal
-      setMockBuyerVerificationSuccess:mockBuyerVerificationSuccess];
-}
-
 - (void)startBuyerVerificationFlow:(nonnull NSString *)paymentSourceId
                         locationId:(nonnull NSString *)locationId
                        buyerAction:(nonnull NSString *)buyerAction
