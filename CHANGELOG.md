@@ -1,5 +1,9 @@
 ## Changelog
 
+### Unreleased
+
+* Upgrade IAP SDK for Android `1.7.0`. It is a hotfix on top of `1.6.9`: buyer verification no longer sets a `threeDSRequestorAppURL` the app can never receive on, which fixes 3DS out-of-band challenge flows. No API changes; the Kotlin `2.2.21` pin and the `META-INF/versions/9/OSGI-INF/MANIFEST.MF` exclude from 2.1.0 still apply.
+
 ### v2.1.1 Aug 18, 2026
 
 * Fix combined `*WithBuyerVerification` methods verifying the wrong payment source. In 2.0–2.1.0 they ran 3DS on the `paymentSourceId` argument first, then opened card entry / Apple Pay / Google Pay, so the verification token did not belong to the card the buyer actually paid with. They now collect the nonce first, then verify that nonce (matching 1.x). `paymentSourceId` is removed from these methods; only `startBuyerVerificationFlow` still takes it. Deprecated JS overloads still accept the old argument and ignore it.

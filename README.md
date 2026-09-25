@@ -6,7 +6,7 @@ The In-App Payments plugin for Square [In-App Payments SDK] is a wrapper for the
 supports the following native In-App Payments SDK versions:
 
   * iOS: `1.6.7`
-  * Android: `1.6.9`
+  * Android: `1.7.0`
 
 <!-- TODO(kotlin-2.2-workaround): delete this section once the minimum
 supported React Native ships Kotlin 2.2+ (facebook/react-native#56838,
