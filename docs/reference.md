@@ -23,7 +23,6 @@ Method                                                       | Return Object    
 [setSquareApplicationId](#setsquareapplicationid)            | void                      | Sets the Square Application ID.
 [startCardEntryFlow](#startcardentryflow)                    | void                      | Displays a full-screen card entry view.
 [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification) | void | Displays a full-screen card entry view, then runs buyer verification on the collected nonce.
-[startGiftCardEntryFlowWithBuyerVerification](#startgiftcardentryflowwithbuyerverification) | void | Displays a gift card entry view, then runs buyer verification on the collected nonce.
 [completeCardEntry](#completecardentry)                      | void                      | Closes the card entry form on success.
 [showCardNonceProcessingError](#showcardnonceprocessingerror)| void                      | Shows an error in the card entry form without closing the form.
 [setIOSCardEntryTheme](#setioscardentrytheme)                | void                      | Sets the customization theme for the card entry view controller in the native layer.
@@ -156,39 +155,6 @@ await SQIPCardEntry.startCardEntryFlowWithBuyerVerification(
   () => { ... }, // onCardEntryCancel
 );
 ```
-
-
----
-### startGiftCardEntryFlowWithBuyerVerification
-
-Displays a full-screen Square gift card entry view, then runs buyer verification (3DS) on the nonce of the gift card the buyer entered. Same collect-then-verify order as [startCardEntryFlowWithBuyerVerification](#startcardentryflowwithbuyerverification). Do not pass a `paymentSourceId`.
-
-On success, `onBuyerVerificationSuccess` receives `{ nonce, card, token }`. Charge on your backend with `source_id` = nonce and `verification_token` = token.
-
-Parameter                          | Type                                                                          | Description
-:----------------------------------| :---------------------------------------------------------------------------- | :-----------
-cardEntryConfig                    | [cardEntryConfig](#cardentryconfig)                                           | Buyer-verification parameters. Must include `squareLocationId`, `buyerAction`, `amount`, `currencyCode`, and buyer contact fields.
-onBuyerVerificationSuccess | [BuyerVerificationSuccessCallback](#BuyerVerificationSuccessCallback) | Invoked when gift card entry and buyer verification complete successfully.
-onBuyerVerificationFailure | [BuyerVerificationErrorCallback](#BuyerVerificationErrorCallback) | Invoked when gift card entry with buyer verification encounters errors.
-onCardEntryCancel                  | [cardEntryCancelCallback](#cardentrycancelcallback)                           | Invoked when gift card entry is canceled.
-
-#### Example usage
-
-```javascript
-import {
-  SQIPCardEntry
-} from 'react-native-square-in-app-payments';
-
-await SQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
-  cardEntryConfig,
-  (buyerVerificationDetails) => {
-    // Charge with buyerVerificationDetails.nonce and buyerVerificationDetails.token
-  },
-  (errorInfo) => { ... },
-  () => { ... }, // onCardEntryCancel
-);
-```
-
 
 
 ---

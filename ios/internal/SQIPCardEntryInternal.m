@@ -127,32 +127,6 @@ static RCTResponseSenderBlock _onCardEntryCompleteCallback = nil;
   });
 }
 
-+ (void)
-    startGiftCardEntryFlowWithBuyerVerification:(nonnull NSString *)locationId
-                                    buyerAction:(nonnull NSString *)buyerAction
-                                          money:(nonnull NSDictionary *)money
-                                        contact:(nonnull NSDictionary *)contact
-                     onBuyerVerificationSuccess:(nonnull RCTResponseSenderBlock)
-                                                    onBuyerVerificationSuccess
-                     onBuyerVerificationFailure:(nonnull RCTResponseSenderBlock)
-                                                    onBuyerVerificationFailure
-                      onCardNonceRequestSuccess:(nonnull RCTResponseSenderBlock)
-                                                    onCardNonceRequestSuccess
-                              onCardEntryCancel:(nonnull RCTResponseSenderBlock)
-                                                    onCardEntryCancel {
-  _onCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;
-  _onCardEntryCancelCallback = onCardEntryCancel;
-  [SQIPBuyerInternal prepareBuyerVerificationWithLocationId:locationId
-                                                buyerAction:buyerAction
-                                                      money:money
-                                                    contact:contact
-                                 onBuyerVerificationSuccess:onBuyerVerificationSuccess
-                                 onBuyerVerificationFailure:onBuyerVerificationFailure];
-  [SQIPCardEntryInternal
-      startGiftCardEntryFlow:onCardNonceRequestSuccess
-           onCardEntryCancel:onCardEntryCancel];
-}
-
 + (void)updateOnCardNonceRequestSuccessCallback:
     (nonnull RCTResponseSenderBlock)onCardNonceRequestSuccess {
   _onCardNonceRequestSuccessCallback = onCardNonceRequestSuccess;

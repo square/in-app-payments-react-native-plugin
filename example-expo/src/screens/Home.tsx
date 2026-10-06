@@ -308,25 +308,16 @@ export function Home() {
   };
 
   const handleStartGiftCardEntryFlow = () => {
-    if (useWithBuyerVerification) {
-      SQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
-        cardEntryConfig,
-        handleBuyerVerificationSuccess,
-        handleBuyerVerificationFailure,
+    if (useDeprecatedMethods) {
+      SQIPCardEntry.startGiftCardEntryFlow(
+        handleDeprecatedCardNonceRequestSuccess,
         handleCardEntryCancel
       );
     } else {
-      if (useDeprecatedMethods) {
-        SQIPCardEntry.startGiftCardEntryFlow(
-          handleDeprecatedCardNonceRequestSuccess,
-          handleCardEntryCancel
-        );
-      } else {
-        SQIPCardEntry.startGiftCardEntryFlow(
-          handleCardNonceRequestSuccess,
-          handleCardEntryCancel
-        );
-      }
+      SQIPCardEntry.startGiftCardEntryFlow(
+        handleCardNonceRequestSuccess,
+        handleCardEntryCancel
+      );
     }
   };
 

@@ -201,33 +201,6 @@ class SQIPCardEntry {
     }
 
     //React Method
-    public fun startGiftCardEntryFlowWithBuyerVerification(
-      locationId: String,
-      buyerAction: String,
-      money: ReadableMap,
-      contact: ReadableMap,
-      onBuyerVerificationSuccess: Callback,
-      onBuyerVerificationFailure: Callback,
-      onCardNonceRequestSuccess: Callback,
-      onCardEntryCancel: Callback
-    ) {
-      this.onCardNonceRequestSuccess = onCardNonceRequestSuccess
-      this.onCardEntryCancel = onCardEntryCancel
-      SQIPBuyer.prepareBuyerVerification(
-        locationId,
-        buyerAction,
-        money,
-        contact,
-        onBuyerVerificationSuccess,
-        onBuyerVerificationFailure,
-      )
-      preparedVerificationScheduled = false
-      if (activity != null) {
-        CardEntry.startGiftCardEntryActivity(activity!!);
-      }
-    }
-
-    //React Method
     public fun updateOnCardNonceRequestSuccessCallback(
       onCardNonceRequestSuccess: Callback
     ) {

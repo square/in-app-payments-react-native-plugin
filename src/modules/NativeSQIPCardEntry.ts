@@ -26,16 +26,6 @@ export interface Spec extends TurboModule {
     onCardNonceRequestSuccess: (cardDetails: Object) => void,
     onCardEntryCancel: () => void
   ): void;
-  startGiftCardEntryFlowWithBuyerVerification(
-    locationId: string,
-    buyerAction: string,
-    money: Object,
-    contact: Object,
-    onBuyerVerificationSuccess: (verificationResult: Object) => void,
-    onBuyerVerificationFailure: (errorDetails: Object) => void,
-    onCardNonceRequestSuccess: (cardDetails: Object) => void,
-    onCardEntryCancel: () => void
-  ): void;
   setIOSCardEntryTheme(theme: Object): void;
 }
 

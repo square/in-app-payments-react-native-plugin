@@ -83,28 +83,6 @@ class SQIPCardEntryModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  override fun startGiftCardEntryFlowWithBuyerVerification(
-    locationId: String,
-    buyerAction: String,
-    money: ReadableMap,
-    contact: ReadableMap,
-    onBuyerVerificationSuccess: Callback,
-    onBuyerVerificationFailure: Callback,
-    onCardNonceRequestSuccess: Callback,
-    onCardEntryCancel: Callback
-  ) {
-    SQIPCardEntry.startGiftCardEntryFlowWithBuyerVerification(
-      locationId,
-      buyerAction,
-      money,
-      contact,
-      onBuyerVerificationSuccess,
-      onBuyerVerificationFailure,
-      onCardNonceRequestSuccess,
-      onCardEntryCancel
-    )
-  }
-
   override fun setIOSCardEntryTheme(theme: ReadableMap) {
     // override this method to do nothing on Android
     // Maybe setting the theme dynamically here? on android

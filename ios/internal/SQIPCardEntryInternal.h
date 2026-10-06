@@ -36,20 +36,6 @@
              onCardEntryCancel:
                  (nonnull RCTResponseSenderBlock)onCardEntryCancel;
 
-+ (void)
-    startGiftCardEntryFlowWithBuyerVerification:(nonnull NSString *)locationId
-                                    buyerAction:(nonnull NSString *)buyerAction
-                                          money:(nonnull NSDictionary *)money
-                                        contact:(nonnull NSDictionary *)contact
-                     onBuyerVerificationSuccess:(nonnull RCTResponseSenderBlock)
-                                                    onBuyerVerificationSuccess
-                     onBuyerVerificationFailure:(nonnull RCTResponseSenderBlock)
-                                                    onBuyerVerificationFailure
-                      onCardNonceRequestSuccess:(nonnull RCTResponseSenderBlock)
-                                                    onCardNonceRequestSuccess
-                              onCardEntryCancel:(nonnull RCTResponseSenderBlock)
-                                                    onCardEntryCancel;
-
 + (void)updateOnCardNonceRequestSuccessCallback:
     (nonnull RCTResponseSenderBlock)onCardNonceRequestSuccess;
 
