@@ -33,6 +33,7 @@
       "minSdkVersion": 28
     },
     "plugins": [
+      "./plugins/with-ios-pod-deployment-target",
       "expo-router",
       [
         "../app.plugin.js",
