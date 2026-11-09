@@ -494,6 +494,10 @@ function withSquarePaymentsSDK(config, opts = {}) {
         const shellScript = `
       SETUP_SCRIPT=\${BUILT_PRODUCTS_DIR}/\${FRAMEWORKS_FOLDER_PATH}/SquareInAppPaymentsSDK.framework/setup
       if [ -f "\${SETUP_SCRIPT}" ]; then
+        # The SDK setup script signs unpacked frameworks even in unsigned builds.
+        if [ "\${CODE_SIGNING_ALLOWED:-}" = "NO" ] && [ -z "\${EXPANDED_CODE_SIGN_IDENTITY:-}" ]; then
+          export EXPANDED_CODE_SIGN_IDENTITY=-
+        fi
         "\${SETUP_SCRIPT}"
       else
         echo "warning: \${SETUP_SCRIPT} not found. Ensure this phase runs after ${IOS_EMBED_PODS_PHASE_NAME}."

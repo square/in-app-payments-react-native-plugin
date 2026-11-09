@@ -3,7 +3,7 @@ const { withPodfile } = require('@expo/config-plugins');
 const MARKER = '# @generated example-ios-pod-deployment-target';
 
 // Some dependency resource bundles still declare iOS 9. Xcode 27 rejects
-// those targets even though the application already requires iOS 15.1.
+// those targets even though the application uses a newer deployment target.
 module.exports = function withIosPodDeploymentTarget(config) {
   return withPodfile(config, (mod) => {
     const contents = mod.modResults.contents;

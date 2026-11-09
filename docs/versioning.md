@@ -11,7 +11,7 @@ You can override the default In-App Payments SDK versions by following this guid
 
     ```ruby
     # Uncomment this line to define a global platform for your project
-    platform :ios, '12.0'
+    platform :ios, '17.1'
 
     # specify the version of SquareInAppPaymentsSDK
     $sqipVersion = '1.7.1'
