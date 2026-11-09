@@ -1,5 +1,11 @@
 ## Changelog
 
+### v2.1.3
+
+* Fix Expo iOS launch crashes caused by the Square SDK setup phase running before CocoaPods embeds frameworks. The config plugin now reorders the setup phase after pod integration, targets the application, and warns when the SDK setup script is missing.
+
+* Upgrade the native iOS In-App Payments SDK and Buyer Verification SDK to `1.7.0`. Both SDKs require iOS 17.1 or later.
+
 ### v2.1.2 Sep 25, 2026
 
 * Upgrade IAP SDK for Android `1.7.0`. It is a hotfix on top of `1.6.9`: buyer verification no longer sets a `threeDSRequestorAppURL` the app can never receive on, which fixes 3DS out-of-band challenge flows. No API changes; the Kotlin `2.2.21` pin and the `META-INF/versions/9/OSGI-INF/MANIFEST.MF` exclude from 2.1.0 still apply.

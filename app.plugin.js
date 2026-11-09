@@ -3,13 +3,14 @@ const {
   withProjectBuildGradle,
   withAppBuildGradle,
   withXcodeProject,
+  withPodfile,
   createRunOncePlugin,
   withAndroidStyles,
   withAndroidColors,
   withAndroidColorsNight,
   withStringsXml,
 } = configPlugins;
-const { AndroidConfig } = configPlugins;
+const { AndroidConfig, IOSConfig } = configPlugins;
 const { Resources } = AndroidConfig;
 
 const STYLE_NAME = 'sqip.Theme.CardEntry';
@@ -24,6 +25,45 @@ const PLUGIN_PREFIX = 'sqip_card_entry_';
 // once the minimum supported React Native ships Kotlin 2.2+ — merged to RN
 // main in facebook/react-native#56838 (May 2026), expected in RN 0.87.
 const SQIP_KOTLIN_VERSION = '2.2.21';
+
+const IOS_SETUP_PHASE_NAME = '[CP] Square In-App Payments SDK Setup';
+const IOS_EMBED_PODS_PHASE_NAME = '[CP] Embed Pods Frameworks';
+const PODFILE_HOOK_MARKER = '# @generated sqip-setup-phase-order';
+
+// Expo adds our phase before pod install creates the embed phase. Reorder
+// after CocoaPods integration, once both phases exist in the user project.
+const PODFILE_REORDER_BODY = `  ${PODFILE_HOOK_MARKER}
+  installer.aggregate_targets.map(&:user_project).compact.uniq.each do |sqip_project|
+    sqip_changed = false
+    sqip_project.native_targets.each do |sqip_target|
+      sqip_phases = sqip_target.build_phases
+      sqip_setup = sqip_phases.find { |phase| phase.display_name == '${IOS_SETUP_PHASE_NAME}' }
+      sqip_embed = sqip_phases.find { |phase| phase.display_name == '${IOS_EMBED_PODS_PHASE_NAME}' }
+      next unless sqip_setup && sqip_embed
+      next if sqip_phases.index(sqip_setup) > sqip_phases.index(sqip_embed)
+
+      sqip_phases.delete(sqip_setup)
+      sqip_phases.insert(sqip_phases.index(sqip_embed) + 1, sqip_setup)
+      sqip_changed = true
+    end
+    sqip_project.save if sqip_changed
+  end
+  # @end sqip-setup-phase-order`;
+
+function addSetupPhaseOrderHook(podfile) {
+  if (podfile.includes(PODFILE_HOOK_MARKER)) return podfile;
+
+  // CocoaPods accepts only one post_integrate hook, so reuse it when present.
+  const existingHook =
+    /^([ \t]*post_integrate\s+do\s*\|\s*(\w+)\s*\|[^\n]*\n)/m;
+  const match = podfile.match(existingHook);
+  if (match) {
+    const body = PODFILE_REORDER_BODY.replace(/\binstaller\./, `${match[2]}.`);
+    return podfile.replace(existingHook, (_, opening) => `${opening}${body}\n`);
+  }
+  const separator = podfile.endsWith('\n') ? '' : '\n';
+  return `${podfile}${separator}\npost_integrate do |installer|\n${PODFILE_REORDER_BODY}\nend\n`;
+}
 
 const COLOR_MAPPINGS = [
   {
@@ -450,33 +490,38 @@ function withSquarePaymentsSDK(config, opts = {}) {
       cfg = withXcodeProject(cfg, (mod) => {
         const project = mod.modResults;
 
-        const buildPhaseName = '[CP] Square In-App Payments SDK Setup';
+        const buildPhaseName = IOS_SETUP_PHASE_NAME;
         const shellScript = `
       SETUP_SCRIPT=\${BUILT_PRODUCTS_DIR}/\${FRAMEWORKS_FOLDER_PATH}/SquareInAppPaymentsSDK.framework/setup
       if [ -f "\${SETUP_SCRIPT}" ]; then
+        # The SDK setup script signs unpacked frameworks even in unsigned builds.
+        if [ "\${CODE_SIGNING_ALLOWED:-}" = "NO" ] && [ -z "\${EXPANDED_CODE_SIGN_IDENTITY:-}" ]; then
+          export EXPANDED_CODE_SIGN_IDENTITY=-
+        fi
         "\${SETUP_SCRIPT}"
+      else
+        echo "warning: \${SETUP_SCRIPT} not found. Ensure this phase runs after ${IOS_EMBED_PODS_PHASE_NAME}."
       fi
       `;
 
-        // Resolve a valid native target
-        const targets = project.pbxNativeTargetSection();
-        const targetUuid = Object.keys(targets).find(
-          (key) => !key.endsWith('_comment')
-        );
-        if (!targetUuid) return mod;
-        const target = targets[targetUuid];
+        const [targetUuid, target] =
+          IOSConfig.Target.findFirstNativeTarget(project);
 
         // Avoid duplicates
         const objects = project.hash.project.objects;
         const shellPhases =
           objects.PBXShellScriptBuildPhase ||
           (objects.PBXShellScriptBuildPhase = {});
-        const exists = Object.values(shellPhases).some((p) => {
-          const rawName = p && p.name ? p.name : '';
-          const normalized = String(rawName).replace(/^\"|\"$/g, '');
-          return normalized === buildPhaseName;
-        });
-        if (exists) return mod;
+        const existingPhase = target.buildPhases
+          .map((phase) => shellPhases[phase.value])
+          .find((phase) => {
+            const name = String(phase?.name || '').replace(/^"|"$/g, '');
+            return name === buildPhaseName;
+          });
+        if (existingPhase) {
+          existingPhase.shellScript = JSON.stringify(shellScript.trim());
+          return mod;
+        }
 
         // Create PBXShellScriptBuildPhase using API
         project.addBuildPhase(
@@ -495,10 +540,17 @@ function withSquarePaymentsSDK(config, opts = {}) {
         return mod;
       });
 
+      cfg = withPodfile(cfg, (mod) => {
+        mod.modResults.contents = addSetupPhaseOrderHook(
+          mod.modResults.contents
+        );
+        return mod;
+      });
+
       return cfg;
     },
     'react-native-square-in-app-payments',
-    '1.0.0'
+    require('./package.json').version
   )(config);
 }
 

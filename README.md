@@ -5,7 +5,7 @@
 The In-App Payments plugin for Square [In-App Payments SDK] is a wrapper for the native Android and iOS SDKs and 
 supports the following native In-App Payments SDK versions:
 
-  * iOS: `1.6.7`
+  * iOS: `1.7.0`
   * Android: `1.7.0`
 
 <!-- TODO(kotlin-2.2-workaround): delete this section once the minimum
@@ -39,8 +39,8 @@ In addition to this README, the following is available in the [React Native plug
 ### iOS
 
 * Xcode version: 15.0 or greater.
-* iOS Base SDK: 13.0 or greater.
-* Deployment target: iOS 13.0 or greater.
+* iOS Base SDK: 17.1 or greater.
+* Deployment target: iOS 17.1 or greater. For Expo, set `ios.deploymentTarget` in the `expo-build-properties` plugin before running prebuild.
 
 ## In-App Payments SDK requirements and limitations
 
